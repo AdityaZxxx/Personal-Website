@@ -1,0 +1,139 @@
+// src/app/blog/[slug]/page.tsx
+
+import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
+import { PortableText } from "@/components/portable-text";
+import { ShareButtons } from "@/components/share-buttons";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { urlForImage } from "@/lib/sanity/image";
+import { getAllPostSlugs, getPostBySlug } from "@/lib/sanity/queries";
+import { formatDate } from "@/lib/utils";
+
+interface PostPageProps {
+  params: {
+    slug: string;
+  };
+}
+
+export async function generateMetadata({
+  params,
+}: PostPageProps): Promise<Metadata> {
+  const post = await getPostBySlug(params.slug);
+
+  if (!post) {
+    return {
+      title: "Post Not Found | Aditya",
+    };
+  }
+
+  return {
+    title: `${post.title} | Aditya`,
+    description: post.excerpt,
+    openGraph: post.mainImage
+      ? {
+          images: [
+            urlForImage(post.mainImage)?.width(1200).height(630).url() ??
+              "/placeholder.svg",
+          ],
+        }
+      : undefined,
+  };
+}
+
+export async function generateStaticParams() {
+  const posts: string[] = await getAllPostSlugs();
+
+  return posts.map((slug: any) => ({
+    slug,
+  }));
+}
+
+export default async function PostPage({ params }: PostPageProps) {
+  const post = await getPostBySlug(params.slug);
+
+  if (!post) {
+    notFound();
+  }
+
+  function getImageUrl(image: any): string {
+    try {
+      return (
+        urlForImage(image)?.width(600).height(340).url() ?? "/placeholder.svg"
+      );
+    } catch {
+      return "/placeholder.svg";
+    }
+  }
+
+  return (
+    <main className="container px-4 py-12 md:px-6 md:py-24">
+      <div className="mx-auto max-w-3xl">
+        <Link href="/blog">
+          <Button variant="ghost" className="mb-8 pl-0">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Blog
+          </Button>
+        </Link>
+
+        <div className="space-y-6">
+          <div className="space-y-2">
+            {post.categories && post.categories.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {post.categories.map((category: any) => (
+                  <Link
+                    key={category._id}
+                    href={`/blog?category=${category.slug}`}
+                  >
+                    <Badge variant="secondary">{category.title}</Badge>
+                  </Link>
+                ))}
+              </div>
+            )}
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+              {post.title}
+            </h1>
+            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <Calendar className="h-4 w-4" />
+                <time dateTime={post.publishedAt}>
+                  {formatDate(post.publishedAt)}
+                </time>
+              </div>
+              {post.estimatedReadingTime && (
+                <div className="flex items-center gap-1">
+                  <Clock className="h-4 w-4" />
+                  <span>{post.estimatedReadingTime} min read</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {post.mainImage && (
+            <div className="relative aspect-video overflow-hidden rounded-lg">
+              <Image
+                src={getImageUrl(post.mainImage)}
+                alt={post.title}
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+          )}
+
+          <div className="prose prose-gray dark:prose-invert max-w-none">
+            <PortableText value={post.body} />
+          </div>
+
+          <div className="border-t pt-6">
+            <ShareButtons title={post.title} />
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
