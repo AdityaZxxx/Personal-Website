@@ -2,13 +2,20 @@ import { PostCard } from "@/components/post-card";
 import { getAllPosts } from "@/lib/sanity/queries";
 
 interface PostListProps {
-  category?: string;
+  searchParams: {
+    category?: string;
+  };
 }
 
-export async function PostList({ category }: PostListProps) {
-  const posts = await getAllPosts(category);
+export async function PostList({ searchParams }: PostListProps) {
+  // Extract category from searchParams here
+  const category = searchParams?.category;
+  console.log("PostList - Category:", category);
 
-  if (posts.length === 0) {
+  const posts = await getAllPosts(category);
+  console.log("PostList - Posts:", posts);
+
+  if (!posts || posts.length === 0) {
     return (
       <div className="text-center py-10">
         <p className="text-muted-foreground">No posts found.</p>

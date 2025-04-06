@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Blog | Aditya",
+  title: "Blog | Your Name",
   description: "Read my thoughts on web development, design, and technology.",
 };
 
@@ -17,7 +17,7 @@ interface BlogPageProps {
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
-  const category = searchParams.category;
+  // Fix: Don't try to access searchParams directly, pass it to the components that need it
   const categories = await getAllCategories();
 
   return (
@@ -31,11 +31,13 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         </p>
       </div>
 
-      <CategoryFilter categories={categories} activeCategory={category} />
+      {/* Pass the entire searchParams object to CategoryFilter */}
+      <CategoryFilter categories={categories} searchParams={searchParams} />
 
       <div className="mt-8">
         <Suspense fallback={<PostListSkeleton />}>
-          <PostList category={category} />
+          {/* Pass the entire searchParams object to PostList */}
+          <PostList searchParams={searchParams} />
         </Suspense>
       </div>
     </main>

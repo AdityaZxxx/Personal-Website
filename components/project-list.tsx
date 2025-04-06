@@ -1,15 +1,21 @@
 import { ProjectCard } from "@/components/project-card";
 import { getAllProjects } from "@/lib/sanity/queries";
-import { ProjectType } from "@/types/ProjectType";
 
 interface ProjectListProps {
-  category?: string;
+  searchParams: {
+    category?: string;
+  };
 }
 
-export async function ProjectList({ category }: ProjectListProps) {
-  const projects = await getAllProjects(category);
+export async function ProjectList({ searchParams }: ProjectListProps) {
+  // Extract category from searchParams here
+  const category = searchParams?.category;
+  console.log("ProjectList - Category:", category);
 
-  if (projects.length === 0) {
+  const projects = await getAllProjects(category);
+  console.log("ProjectList - Projects:", projects);
+
+  if (!projects || projects.length === 0) {
     return (
       <div className="text-center py-10">
         <p className="text-muted-foreground">No projects found.</p>
@@ -19,7 +25,7 @@ export async function ProjectList({ category }: ProjectListProps) {
 
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {projects.map((project: ProjectType) => (
+      {projects.map((project: any) => (
         <ProjectCard key={project._id} project={project} />
       ))}
     </div>

@@ -8,55 +8,81 @@ export async function getAllPosts(category?: string) {
     : "";
 
   return client.fetch(
-    groq`*[_type == "post" && publishedAt < now() ${filter}] | order(publishedAt desc) {
+    groq`*[_type == "post" ${filter}] | order(publishedAt desc) {
       _id,
       title,
-      slug,
+      "slug": slug.current,
       excerpt,
       mainImage,
       publishedAt,
-      "categories": categories[]->{ _id, title, slug },
-      "estimatedReadingTime": round(length(pt::text(body)) / 5 / 180)
+      estimatedReadingTime,
+      "categories": categories[]->{
+        _id,
+        title,
+        "slug": slug.current
+      }
     }`
   );
 }
 
 export async function getLatestPosts(limit = 3) {
   return client.fetch(
-    groq`*[_type == "post" && publishedAt < now()] | order(publishedAt desc)[0...${limit}] {
+    groq`*[_type == "post"] | order(publishedAt desc)[0...${limit}] {
       _id,
       title,
-      slug,
+      "slug": slug.current,
       excerpt,
       mainImage,
       publishedAt,
-      "categories": categories[]->{ _id, title, slug },
-      "estimatedReadingTime": round(length(pt::text(body)) / 5 / 180)
+      estimatedReadingTime,
+      "categories": categories[]->{
+        _id,
+        title,
+        "slug": slug.current
+      }
     }`
   );
 }
 
+// Add debugging to getPostBySlug
 export async function getPostBySlug(slug: string) {
-  return client.fetch(
+  console.log("Fetching post with slug:", slug);
+
+  const post = await client.fetch(
     groq`*[_type == "post" && slug.current == $slug][0] {
       _id,
       title,
-      slug,
-      excerpt,
+      "slug": slug.current,
+      author->{
+        name,
+        image,
+        bio
+      },
       mainImage,
-      body,
+      categories[]->{
+        _id,
+        title,
+        "slug": slug.current
+      },
       publishedAt,
-      "categories": categories[]->{ _id, title, slug },
-      "estimatedReadingTime": round(length(pt::text(body)) / 5 / 180)
+      excerpt,
+      body,
+      estimatedReadingTime
     }`,
     { slug }
   );
+
+  console.log("Post data:", post);
+  return post;
 }
 
+// Update the getAllPostSlugs function to return objects with slug property
 export async function getAllPostSlugs() {
-  return client.fetch(
+  const slugs = await client.fetch(
     groq`*[_type == "post" && defined(slug.current)][].slug.current`
   );
+
+  return slugs.map((slug: string) => ({ slug }));
 }
 
 export async function getAllCategories() {
@@ -64,7 +90,8 @@ export async function getAllCategories() {
     groq`*[_type == "category"] | order(title asc) {
       _id,
       title,
-      slug
+      "slug": slug.current,
+      description
     }`
   );
 }
@@ -76,56 +103,77 @@ export async function getAllProjects(category?: string) {
     : "";
 
   return client.fetch(
-    groq`*[_type == "project" ${filter}] | order(completedAt desc) {
+    groq`*[_type == "project" ${filter}] | order(_createdAt desc) {
       _id,
       title,
-      slug,
+      "slug": slug.current,
       excerpt,
       mainImage,
       technologies,
-      "categories": categories[]->{ _id, title, slug }
+      "categories": categories[]->{
+        _id,
+        title,
+        "slug": slug.current
+      }
     }`
   );
 }
 
 export async function getFeaturedProjects(limit = 3) {
   return client.fetch(
-    groq`*[_type == "project" && featured == true] | order(completedAt desc)[0...${limit}] {
+    groq`*[_type == "project" && featured == true] | order(_createdAt desc)[0...${limit}] {
       _id,
       title,
-      slug,
+      "slug": slug.current,
       excerpt,
       mainImage,
       technologies,
-      "categories": categories[]->{ _id, title, slug }
+      "categories": categories[]->{
+        _id,
+        title,
+        "slug": slug.current
+      }
     }`
   );
 }
 
+// Add debugging to getProjectBySlug
 export async function getProjectBySlug(slug: string) {
-  return client.fetch(
+  console.log("Fetching project with slug:", slug);
+
+  const project = await client.fetch(
     groq`*[_type == "project" && slug.current == $slug][0] {
       _id,
       title,
-      slug,
-      excerpt,
+      "slug": slug.current,
       mainImage,
+      categories[]->{
+        _id,
+        title,
+        "slug": slug.current
+      },
+      excerpt,
       description,
       technologies,
       completedAt,
       demoUrl,
       repoUrl,
-      images,
-      "categories": categories[]->{ _id, title, slug }
+      images
     }`,
     { slug }
   );
+
+  console.log("Project data:", project);
+  return project;
 }
 
+// Update the getAllProjectSlugs function to return objects with slug property
 export async function getAllProjectSlugs() {
-  return client.fetch(
+  const slugs = await client.fetch(
     groq`*[_type == "project" && defined(slug.current)][].slug.current`
   );
+
+  return slugs.map((slug: string) => ({ slug }));
 }
 
 export async function getAllProjectCategories() {
@@ -133,12 +181,13 @@ export async function getAllProjectCategories() {
     groq`*[_type == "projectCategory"] | order(title asc) {
       _id,
       title,
-      slug
+      "slug": slug.current,
+      description
     }`
   );
 }
 
-// Gallery queries
+// Gallery queries - Adding the missing functions
 export async function getAllGalleryItems(category?: string) {
   const filter = category
     ? `&& references(*[_type == "galleryCategory" && slug.current == "${category}"]._id)`
@@ -148,14 +197,18 @@ export async function getAllGalleryItems(category?: string) {
     groq`*[_type == "galleryItem" ${filter}] | order(date desc) {
       _id,
       title,
-      slug,
+      "slug": slug.current,
       description,
       mediaType,
       image,
       "video": video.asset->url,
       videoThumbnail,
       date,
-      "categories": categories[]->{ _id, title, slug }
+      "categories": categories[]->{
+        _id,
+        title,
+        "slug": slug.current
+      }
     }`
   );
 }
@@ -165,14 +218,18 @@ export async function getFeaturedGalleryItems(limit = 6) {
     groq`*[_type == "galleryItem" && featured == true] | order(date desc)[0...${limit}] {
       _id,
       title,
-      slug,
+      "slug": slug.current,
       description,
       mediaType,
       image,
       "video": video.asset->url,
       videoThumbnail,
       date,
-      "categories": categories[]->{ _id, title, slug }
+      "categories": categories[]->{
+        _id,
+        title,
+        "slug": slug.current
+      }
     }`
   );
 }
@@ -182,7 +239,7 @@ export async function getGalleryItemBySlug(slug: string) {
     groq`*[_type == "galleryItem" && slug.current == $slug][0] {
       _id,
       title,
-      slug,
+      "slug": slug.current,
       description,
       mediaType,
       image,
@@ -190,7 +247,11 @@ export async function getGalleryItemBySlug(slug: string) {
       videoThumbnail,
       date,
       tags,
-      "categories": categories[]->{ _id, title, slug }
+      "categories": categories[]->{
+        _id,
+        title,
+        "slug": slug.current
+      }
     }`,
     { slug }
   );
@@ -201,7 +262,7 @@ export async function getAllGalleryCategories() {
     groq`*[_type == "galleryCategory"] | order(title asc) {
       _id,
       title,
-      slug,
+      "slug": slug.current,
       description
     }`
   );

@@ -11,13 +11,13 @@ export const metadata: Metadata = {
 };
 
 interface GalleryPageProps {
-  searchParams: {
+  searchParams: Promise<{
     category?: string;
-  };
+  }>;
 }
 
 export default async function GalleryPage({ searchParams }: GalleryPageProps) {
-  const category = searchParams.category;
+  const { category } = await searchParams;
   const categories = await getAllGalleryCategories();
 
   return (

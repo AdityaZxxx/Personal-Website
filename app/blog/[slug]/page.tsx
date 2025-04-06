@@ -1,5 +1,3 @@
-// src/app/blog/[slug]/page.tsx
-
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -23,51 +21,55 @@ interface PostPageProps {
 export async function generateMetadata({
   params,
 }: PostPageProps): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
+  // Fix: Access slug directly from params
+  const slug = params.slug;
+  console.log("generateMetadata - Slug:", slug);
+
+  if (!slug) {
+    return {
+      title: "Post Not Found | Your Name",
+    };
+  }
+
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     return {
-      title: "Post Not Found | Aditya",
+      title: "Post Not Found | Your Name",
     };
   }
 
   return {
-    title: `${post.title} | Aditya`,
+    title: `${post.title} | Your Name`,
     description: post.excerpt,
     openGraph: post.mainImage
       ? {
-          images: [
-            urlForImage(post.mainImage)?.width(1200).height(630).url() ??
-              "/placeholder.svg",
-          ],
+          images: [urlForImage(post.mainImage).width(1200).height(630).url()],
         }
       : undefined,
   };
 }
 
 export async function generateStaticParams() {
-  const posts: string[] = await getAllPostSlugs();
-
-  return posts.map((slug: any) => ({
-    slug,
-  }));
+  const slugs = await getAllPostSlugs();
+  console.log("generateStaticParams - Post slugs:", slugs);
+  return slugs;
 }
 
 export default async function PostPage({ params }: PostPageProps) {
-  const post = await getPostBySlug(params.slug);
+  // Fix: Access slug directly from params
+  const slug = params.slug;
+  console.log("PostPage - Slug:", slug);
 
-  if (!post) {
+  if (!slug) {
     notFound();
   }
 
-  function getImageUrl(image: any): string {
-    try {
-      return (
-        urlForImage(image)?.width(600).height(340).url() ?? "/placeholder.svg"
-      );
-    } catch {
-      return "/placeholder.svg";
-    }
+  const post = await getPostBySlug(slug);
+  console.log("PostPage - Post data:", post);
+
+  if (!post) {
+    notFound();
   }
 
   return (
@@ -84,7 +86,7 @@ export default async function PostPage({ params }: PostPageProps) {
           <div className="space-y-2">
             {post.categories && post.categories.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                {post.categories.map((category: any) => (
+                {post.categories.map((category) => (
                   <Link
                     key={category._id}
                     href={`/blog?category=${category.slug}`}
@@ -116,7 +118,7 @@ export default async function PostPage({ params }: PostPageProps) {
           {post.mainImage && (
             <div className="relative aspect-video overflow-hidden rounded-lg">
               <Image
-                src={getImageUrl(post.mainImage)}
+                src={urlForImage(post.mainImage).url() || "/placeholder.svg"}
                 alt={post.title}
                 fill
                 className="object-cover"

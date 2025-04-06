@@ -35,7 +35,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   }
 
   return (
-    <Link href={`/projects/${project.slug.current}`}>
+    <Link href={`/projects/${project.slug}`}>
       <Card className="overflow-hidden transition-all hover:shadow-md">
         <div className="relative aspect-video overflow-hidden">
           {project.mainImage ? (

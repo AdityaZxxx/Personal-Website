@@ -1,5 +1,5 @@
+import { GalleryItem } from "@/components/gallery-item";
 import { getAllGalleryItems } from "@/lib/sanity/queries";
-import { GalleryItem } from "./gallery-item";
 
 interface GalleryGridProps {
   category?: string;

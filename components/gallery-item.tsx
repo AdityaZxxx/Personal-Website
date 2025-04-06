@@ -19,7 +19,7 @@ interface GalleryItemProps {
   item: {
     _id: string;
     title: string;
-    slug: { current: string };
+    slug: string;
     description?: string;
     mediaType: "image" | "video";
     image?: any;
@@ -29,7 +29,7 @@ interface GalleryItemProps {
     categories?: Array<{
       _id: string;
       title: string;
-      slug: { current: string };
+      slug: string;
     }>;
   };
 }
@@ -37,23 +37,13 @@ interface GalleryItemProps {
 export function GalleryItem({ item }: GalleryItemProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  function getImageUrl(image: any): string {
-    try {
-      return (
-        urlForImage(image)?.width(600).height(600).url() ?? "/placeholder.svg"
-      );
-    } catch {
-      return "/placeholder.svg";
-    }
-  }
-
   const thumbnailSrc =
     item.mediaType === "image"
       ? item.image
-        ? getImageUrl(item.image)
+        ? urlForImage(item.image)?.width(600).height(600).url()
         : null
       : item.videoThumbnail
-      ? getImageUrl(item.videoThumbnail)
+      ? urlForImage(item.videoThumbnail)?.width(600).height(600).url()
       : null;
 
   return (
@@ -118,7 +108,7 @@ export function GalleryItem({ item }: GalleryItemProps) {
               >
                 <Image
                   src={
-                    urlForImage(item.image)?.width(1200).height(675).url() ??
+                    urlForImage(item.image)?.width(1200).height(675).url() ||
                     "/placeholder.svg"
                   }
                   alt={item.title}
