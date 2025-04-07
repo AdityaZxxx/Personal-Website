@@ -51,8 +51,10 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  const slugs = await getAllProjectSlugs();
-  return slugs;
+  const projects = await getAllProjectSlugs();
+  return projects.map((project: any) => ({
+    slug: typeof project === "string" ? project : project.slug.current,
+  }));
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
