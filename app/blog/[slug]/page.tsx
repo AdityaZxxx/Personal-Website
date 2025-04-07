@@ -55,7 +55,7 @@ export async function generateStaticParams() {
   const posts = await getAllPostSlugs();
 
   return posts.map((post: any) => ({
-    slug: post,
+    slug: typeof post === "string" ? post : post.slug.current,
   }));
 }
 
