@@ -9,7 +9,11 @@ interface ProjectListProps {
 
 export async function ProjectList({ searchParams }: ProjectListProps) {
   // Extract category from searchParams here
-  const category = searchParams?.category;
+  // const category = searchParams?.category;
+  const category =
+    typeof searchParams?.category === "string"
+      ? searchParams.category
+      : undefined;
 
   const projects = await getAllProjects(category);
 
