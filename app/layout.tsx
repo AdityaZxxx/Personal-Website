@@ -35,6 +35,7 @@ export default function RootLayout({
               <Analytics />
             </div>
             <Footer />
+            <Toaster />
           </div>
         </ThemeProvider>
       </body>
@@ -42,4 +43,5 @@ export default function RootLayout({
   );
 }
 
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";

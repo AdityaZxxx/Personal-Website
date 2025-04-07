@@ -1,7 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,30 +17,26 @@ interface CategoryFilterProps {
     title: string;
     slug: string;
   }>;
-  searchParams: {
-    category?: string;
-  };
+  activeCategory?: string;
 }
 
 export function CategoryFilter({
   categories,
-  searchParams,
+  activeCategory,
 }: CategoryFilterProps) {
   const router = useRouter();
   const pathname = usePathname();
-
-  // Extract activeCategory from searchParams
-  const activeCategory = searchParams?.category;
+  const searchParams = useSearchParams();
 
   const handleCategoryChange = (categorySlug?: string) => {
-    // Create a new URLSearchParams object
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(searchParams);
 
     if (categorySlug) {
       params.set("category", categorySlug);
+    } else {
+      params.delete("category");
     }
 
-    // Navigate to the new URL
     router.push(`${pathname}?${params.toString()}`);
   };
 

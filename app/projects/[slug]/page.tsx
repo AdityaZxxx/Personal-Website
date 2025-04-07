@@ -1,72 +1,72 @@
-import { ArrowLeft, Calendar, ExternalLink, Github } from "lucide-react"
-import type { Metadata } from "next"
-import Image from "next/image"
-import Link from "next/link"
-import { notFound } from "next/navigation"
+import { ArrowLeft, Calendar, ExternalLink, Github } from "lucide-react";
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-import { PortableText } from "@/components/portable-text"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { urlForImage } from "@/lib/sanity/image"
-import { getAllProjectSlugs, getProjectBySlug } from "@/lib/sanity/queries"
-import { formatDate } from "@/lib/utils"
+import { PortableText } from "@/components/portable-text";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { urlForImage } from "@/lib/sanity/image";
+import { getAllProjectSlugs, getProjectBySlug } from "@/lib/sanity/queries";
+import { formatDate } from "@/lib/utils";
 
 interface ProjectPageProps {
   params: {
-    slug: string
-  }
+    slug: string;
+  };
 }
 
-export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
-  // Fix: Access slug directly from params
-  const slug = params.slug
-  console.log("generateMetadata - Project slug:", slug)
+export async function generateMetadata({
+  params,
+}: ProjectPageProps): Promise<Metadata> {
+  const slug = params.slug;
 
   if (!slug) {
     return {
-      title: "Project Not Found | Your Name",
-    }
+      title: "Project Not Found | Aditya",
+    };
   }
 
-  const project = await getProjectBySlug(slug)
+  const project = await getProjectBySlug(slug);
 
   if (!project) {
     return {
-      title: "Project Not Found | Your Name",
-    }
+      title: "Project Not Found | Aditya",
+    };
   }
 
   return {
-    title: `${project.title} | Your Name`,
+    title: `${project.title} | Aditya`,
     description: project.excerpt,
-    openGraph: project.mainImage
+    openGraph: project?.mainImage
       ? {
-          images: [urlForImage(project.mainImage).width(1200).height(630).url()],
+          images: [
+            urlForImage(project.mainImage)?.width(1200)?.height(630)?.url() ??
+              "",
+          ],
         }
       : undefined,
-  }
+  };
 }
 
 export async function generateStaticParams() {
-  const slugs = await getAllProjectSlugs()
-  console.log("generateStaticParams - Project slugs:", slugs)
-  return slugs
+  const slugs = await getAllProjectSlugs();
+  return slugs;
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   // Fix: Access slug directly from params
-  const slug = params.slug
-  console.log("ProjectPage - Slug:", slug)
+  const slug = params.slug;
 
   if (!slug) {
-    notFound()
+    notFound();
   }
 
-  const project = await getProjectBySlug(slug)
-  console.log("ProjectPage - Project data:", project)
+  const project = await getProjectBySlug(slug);
 
   if (!project) {
-    notFound()
+    notFound();
   }
 
   return (
@@ -83,19 +83,26 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <div className="space-y-2">
             {project.categories && project.categories.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                {project.categories.map((category) => (
-                  <Link key={category._id} href={`/projects?category=${category.slug}`}>
+                {project.categories.map((category: any) => (
+                  <Link
+                    key={category._id}
+                    href={`/projects?category=${category.slug}`}
+                  >
                     <Badge variant="secondary">{category.title}</Badge>
                   </Link>
                 ))}
               </div>
             )}
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">{project.title}</h1>
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+              {project.title}
+            </h1>
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               {project.completedAt && (
                 <div className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
-                  <time dateTime={project.completedAt}>{formatDate(project.completedAt)}</time>
+                  <time dateTime={project.completedAt}>
+                    {formatDate(project.completedAt)}
+                  </time>
                 </div>
               )}
             </div>
@@ -104,7 +111,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           {project.mainImage && (
             <div className="relative aspect-video overflow-hidden rounded-lg">
               <Image
-                src={urlForImage(project.mainImage).url() || "/placeholder.svg"}
+                src={
+                  urlForImage(project.mainImage)?.url() || "/placeholder.svg"
+                }
                 alt={project.title}
                 fill
                 className="object-cover"
@@ -115,7 +124,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
           <div className="flex flex-wrap gap-2">
             {project.technologies &&
-              project.technologies.map((tech) => (
+              project.technologies.map((tech: any) => (
                 <Badge key={tech} variant="outline">
                   {tech}
                 </Badge>
@@ -124,7 +133,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
           <div className="flex flex-wrap gap-4">
             {project.demoUrl && (
-              <Link href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+              <Link
+                href={project.demoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Button>
                   <ExternalLink className="mr-2 h-4 w-4" />
                   Live Demo
@@ -132,7 +145,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               </Link>
             )}
             {project.repoUrl && (
-              <Link href={project.repoUrl} target="_blank" rel="noopener noreferrer">
+              <Link
+                href={project.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Button variant="outline">
                   <Github className="mr-2 h-4 w-4" />
                   Source Code
@@ -149,10 +166,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold">Project Gallery</h2>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                {project.images.map((image, index) => (
-                  <div key={index} className="relative aspect-video overflow-hidden rounded-lg">
+                {project.images.map((image: any, index: any) => (
+                  <div
+                    key={index}
+                    className="relative aspect-video overflow-hidden rounded-lg"
+                  >
                     <Image
-                      src={urlForImage(image).url() || "/placeholder.svg"}
+                      src={urlForImage(image)?.url() || "/placeholder.svg"}
                       alt={`${project.title} screenshot ${index + 1}`}
                       fill
                       className="object-cover"
@@ -165,6 +185,5 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </div>
       </div>
     </main>
-  )
+  );
 }
-

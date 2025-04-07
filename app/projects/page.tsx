@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Projects | Your Name",
+  title: "Projects | Aditya",
   description: "Explore my portfolio of web development and design projects.",
 };
 
@@ -20,6 +20,7 @@ export default async function ProjectsPage({
   searchParams,
 }: ProjectsPageProps) {
   // Fix: Don't try to access searchParams directly
+  const { category } = searchParams;
   const categories = await getAllProjectCategories();
 
   return (
@@ -33,7 +34,7 @@ export default async function ProjectsPage({
         </p>
       </div>
 
-      <CategoryFilter categories={categories} searchParams={searchParams} />
+      <CategoryFilter categories={categories} activeCategory={category} />
 
       <div className="mt-8">
         <Suspense fallback={<ProjectListSkeleton />}>

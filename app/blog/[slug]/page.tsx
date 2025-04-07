@@ -23,11 +23,10 @@ export async function generateMetadata({
 }: PostPageProps): Promise<Metadata> {
   // Fix: Access slug directly from params
   const slug = params.slug;
-  console.log("generateMetadata - Slug:", slug);
 
   if (!slug) {
     return {
-      title: "Post Not Found | Your Name",
+      title: "Post Not Found | Aditya",
     };
   }
 
@@ -35,16 +34,18 @@ export async function generateMetadata({
 
   if (!post) {
     return {
-      title: "Post Not Found | Your Name",
+      title: "Post Not Found | Aditya",
     };
   }
 
   return {
-    title: `${post.title} | Your Name`,
+    title: `${post.title} | Aditya`,
     description: post.excerpt,
-    openGraph: post.mainImage
+    openGraph: post?.mainImage
       ? {
-          images: [urlForImage(post.mainImage).width(1200).height(630).url()],
+          images: [
+            urlForImage(post.mainImage)?.width(1200)?.height(630)?.url() ?? "",
+          ],
         }
       : undefined,
   };
@@ -52,21 +53,18 @@ export async function generateMetadata({
 
 export async function generateStaticParams() {
   const slugs = await getAllPostSlugs();
-  console.log("generateStaticParams - Post slugs:", slugs);
   return slugs;
 }
 
 export default async function PostPage({ params }: PostPageProps) {
   // Fix: Access slug directly from params
   const slug = params.slug;
-  console.log("PostPage - Slug:", slug);
 
   if (!slug) {
     notFound();
   }
 
   const post = await getPostBySlug(slug);
-  console.log("PostPage - Post data:", post);
 
   if (!post) {
     notFound();
@@ -86,7 +84,7 @@ export default async function PostPage({ params }: PostPageProps) {
           <div className="space-y-2">
             {post.categories && post.categories.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                {post.categories.map((category) => (
+                {post.categories.map((category: any) => (
                   <Link
                     key={category._id}
                     href={`/blog?category=${category.slug}`}
@@ -118,7 +116,7 @@ export default async function PostPage({ params }: PostPageProps) {
           {post.mainImage && (
             <div className="relative aspect-video overflow-hidden rounded-lg">
               <Image
-                src={urlForImage(post.mainImage).url() || "/placeholder.svg"}
+                src={urlForImage(post.mainImage)?.url() || "/placeholder.svg"}
                 alt={post.title}
                 fill
                 className="object-cover"

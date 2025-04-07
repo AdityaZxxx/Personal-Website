@@ -10,10 +10,8 @@ interface PostListProps {
 export async function PostList({ searchParams }: PostListProps) {
   // Extract category from searchParams here
   const category = searchParams?.category;
-  console.log("PostList - Category:", category);
 
   const posts = await getAllPosts(category);
-  console.log("PostList - Posts:", posts);
 
   if (!posts || posts.length === 0) {
     return (

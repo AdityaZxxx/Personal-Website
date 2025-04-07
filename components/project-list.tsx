@@ -10,10 +10,8 @@ interface ProjectListProps {
 export async function ProjectList({ searchParams }: ProjectListProps) {
   // Extract category from searchParams here
   const category = searchParams?.category;
-  console.log("ProjectList - Category:", category);
 
   const projects = await getAllProjects(category);
-  console.log("ProjectList - Projects:", projects);
 
   if (!projects || projects.length === 0) {
     return (

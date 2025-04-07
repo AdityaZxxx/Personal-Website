@@ -1,6 +1,5 @@
 "use client";
 
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -19,7 +18,7 @@ interface GalleryItemProps {
   item: {
     _id: string;
     title: string;
-    slug: string;
+    slug: { current: string };
     description?: string;
     mediaType: "image" | "video";
     image?: any;
@@ -29,7 +28,7 @@ interface GalleryItemProps {
     categories?: Array<{
       _id: string;
       title: string;
-      slug: string;
+      slug: { current: string };
     }>;
   };
 }
@@ -92,7 +91,7 @@ export function GalleryItem({ item }: GalleryItemProps) {
       </div>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-auto">
           <DialogHeader>
             <DialogTitle>{item.title}</DialogTitle>
             {item.description && (
@@ -100,40 +99,33 @@ export function GalleryItem({ item }: GalleryItemProps) {
             )}
           </DialogHeader>
 
-          <div className="mt-4">
+          <div className="mt-4 flex justify-center">
             {item.mediaType === "image" && item.image && (
-              <AspectRatio
-                ratio={16 / 9}
-                className="overflow-hidden rounded-md"
-              >
+              <div className="relative max-h-[70vh] w-auto">
                 <Image
-                  src={
-                    urlForImage(item.image)?.width(1200).height(675).url() ||
-                    "/placeholder.svg"
-                  }
+                  src={urlForImage(item.image)?.url() || "/placeholder.svg"}
                   alt={item.title}
-                  fill
-                  className="object-contain"
+                  width={1200}
+                  height={800}
+                  className="object-contain max-h-[70vh] w-auto h-auto"
+                  style={{ maxWidth: "100%", height: "auto" }}
                 />
-              </AspectRatio>
+              </div>
             )}
 
             {item.mediaType === "video" && item.video && (
-              <AspectRatio
-                ratio={16 / 9}
-                className="overflow-hidden rounded-md"
-              >
+              <div className="w-full max-w-full">
                 <video
                   src={item.video}
                   controls
-                  className="h-full w-full"
+                  className="max-h-[70vh] w-auto mx-auto"
                   poster={
                     item.videoThumbnail
                       ? urlForImage(item.videoThumbnail)?.url()
                       : undefined
                   }
                 />
-              </AspectRatio>
+              </div>
             )}
           </div>
 
