@@ -36,6 +36,7 @@ export default function RootLayout({
             </div>
             <Footer />
             <Toaster />
+            <AIChatWidget />
           </div>
         </ThemeProvider>
       </body>
@@ -43,5 +44,6 @@ export default function RootLayout({
   );
 }
 
+import { AIChatWidget } from "@/components/ai-chat-widget";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";

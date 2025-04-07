@@ -294,7 +294,7 @@ export default async function Home() {
               </p>
             </div>
             <div className="w-full max-w-sm space-y-2">
-              <Link href="mailto:your.email@example.com">
+              <Link href="mailto:adityaofficial714@gmail.com">
                 <Button className="w-full">Contact Me</Button>
               </Link>
             </div>

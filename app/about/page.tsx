@@ -1,23 +1,30 @@
-
-import AnimatedSection from "@/components/animated-section"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
-import type { Metadata } from "next"
-import Image from "next/image"
+import AnimatedSection from "@/components/animated-section";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import type { Metadata } from "next";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "About Me | Aditya",
   description: "Learn more about my background, skills, and experience.",
-}
+};
 
 export default function AboutPage() {
   // Tech stack data
   const techStack = {
-    frontend: ["React", "Next.js", "TypeScript", "JavaScript", "Tailwind CSS", "CSS/SCSS", "HTML5"],
+    frontend: [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "JavaScript",
+      "Tailwind CSS",
+      "CSS/SCSS",
+      "HTML5",
+    ],
     backend: ["Node.js", "Express", "Python", "Django", "GraphQL", "REST API"],
     database: ["MongoDB", "PostgreSQL", "MySQL", "Firebase"],
     tools: ["Git", "GitHub", "VS Code", "Docker", "Figma", "Vercel", "AWS"],
-  }
+  };
 
   // Soft skills data
   const softSkills = [
@@ -30,7 +37,7 @@ export default function AboutPage() {
     "Creativity",
     "Leadership",
     "Attention to Detail",
-  ]
+  ];
 
   // Testimonials data
   const testimonials = [
@@ -55,26 +62,29 @@ export default function AboutPage() {
       quote:
         "A true professional who understands both the technical and design aspects of web development. A pleasure to collaborate with.",
     },
-  ]
+  ];
 
   // Contributors/mentors data
   const contributors = [
     {
       name: "Dr. Robert Chen",
       role: "Former Professor",
-      contribution: "Introduced me to software development and encouraged me to pursue it professionally.",
+      contribution:
+        "Introduced me to software development and encouraged me to pursue it professionally.",
     },
     {
       name: "Sarah Williams",
       role: "First Tech Lead",
-      contribution: "Mentored me during my early career and taught me best practices in web development.",
+      contribution:
+        "Mentored me during my early career and taught me best practices in web development.",
     },
     {
       name: "Michael Brown",
       role: "Open Source Maintainer",
-      contribution: "Guided me through my first open source contributions and helped me grow as a developer.",
+      contribution:
+        "Guided me through my first open source contributions and helped me grow as a developer.",
     },
-  ]
+  ];
 
   return (
     <main className="container px-4 py-12 md:px-6 md:py-24">
@@ -82,11 +92,20 @@ export default function AboutPage() {
       <AnimatedSection className="mb-16">
         <div className="flex flex-col items-center text-center">
           <div className="relative w-32 h-32 mb-6 overflow-hidden rounded-full">
-            <Image src="/placeholder.svg?height=128&width=128" alt="Aditya" fill className="object-cover" priority />
+            <Image
+              src="/profile.jpg"
+              alt="Aditya"
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl mb-4">About Me</h1>
+          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl mb-4">
+            About Me
+          </h1>
           <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed">
-            Full-stack developer passionate about creating beautiful, functional, and user-friendly web applications.
+            Full-stack developer passionate about creating beautiful,
+            functional, and user-friendly web applications.
           </p>
         </div>
       </AnimatedSection>
@@ -98,22 +117,30 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold tracking-tighter">My Story</h2>
             <div className="space-y-4 text-muted-foreground">
               <p>
-                I began my journey in web development over 5 years ago, starting with HTML and CSS before diving deeper
-                into JavaScript and modern frameworks.
+                I began my journey in web development over 5 years ago, starting
+                with HTML and CSS before diving deeper into JavaScript and
+                modern frameworks.
               </p>
               <p>
-                With a background in computer science and a passion for creating intuitive user experiences, I've worked
-                on a variety of projects ranging from e-commerce platforms to data visualization tools.
+                With a background in computer science and a passion for creating
+                intuitive user experiences, I've worked on a variety of projects
+                ranging from e-commerce platforms to data visualization tools.
               </p>
               <p>
-                I'm constantly learning and exploring new technologies to stay at the forefront of web development. My
-                goal is to build applications that are not only functional but also accessible, performant, and
-                enjoyable to use.
+                I'm constantly learning and exploring new technologies to stay
+                at the forefront of web development. My goal is to build
+                applications that are not only functional but also accessible,
+                performant, and enjoyable to use.
               </p>
             </div>
           </div>
           <div className="relative aspect-square overflow-hidden rounded-lg">
-            <Image src="/placeholder.svg?height=400&width=400" alt="Working on code" fill className="object-cover" />
+            <Image
+              src="/placeholder.svg?height=400&width=400"
+              alt="Working on code"
+              fill
+              className="object-cover"
+            />
           </div>
         </div>
       </AnimatedSection>
@@ -142,8 +169,8 @@ export default function AboutPage() {
               </div>
               <h3 className="text-xl font-bold mb-2">Web Development</h3>
               <p className="text-muted-foreground">
-                Building responsive, accessible, and performant web applications using modern frameworks and best
-                practices.
+                Building responsive, accessible, and performant web applications
+                using modern frameworks and best practices.
               </p>
             </CardContent>
           </Card>
@@ -170,8 +197,8 @@ export default function AboutPage() {
               </div>
               <h3 className="text-xl font-bold mb-2">UI/UX Design</h3>
               <p className="text-muted-foreground">
-                Creating intuitive and visually appealing user interfaces with a focus on user experience and
-                accessibility.
+                Creating intuitive and visually appealing user interfaces with a
+                focus on user experience and accessibility.
               </p>
             </CardContent>
           </Card>
@@ -200,7 +227,8 @@ export default function AboutPage() {
               </div>
               <h3 className="text-xl font-bold mb-2">Full-Stack Development</h3>
               <p className="text-muted-foreground">
-                Developing end-to-end solutions with robust backend systems and seamless frontend experiences.
+                Developing end-to-end solutions with robust backend systems and
+                seamless frontend experiences.
               </p>
             </CardContent>
           </Card>
@@ -264,10 +292,15 @@ export default function AboutPage() {
 
       {/* Soft Skills Section */}
       <AnimatedSection className="mb-16" delay={400}>
-        <h2 className="text-3xl font-bold tracking-tighter mb-8">Soft Skills</h2>
+        <h2 className="text-3xl font-bold tracking-tighter mb-8">
+          Soft Skills
+        </h2>
         <div className="grid gap-4 md:grid-cols-3">
           {softSkills.map((skill, index) => (
-            <div key={index} className="flex items-center p-4 border rounded-lg">
+            <div
+              key={index}
+              className="flex items-center p-4 border rounded-lg"
+            >
               <div className="mr-4 rounded-full bg-primary/10 p-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -292,7 +325,9 @@ export default function AboutPage() {
 
       {/* Testimonials Section */}
       <AnimatedSection className="mb-16" delay={500}>
-        <h2 className="text-3xl font-bold tracking-tighter mb-8">What People Say</h2>
+        <h2 className="text-3xl font-bold tracking-tighter mb-8">
+          What People Say
+        </h2>
         <div className="grid gap-6 md:grid-cols-3">
           {testimonials.map((testimonial, index) => (
             <Card key={index} className="overflow-hidden">
@@ -308,10 +343,14 @@ export default function AboutPage() {
                   </div>
                   <div>
                     <h3 className="font-bold">{testimonial.name}</h3>
-                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {testimonial.role}
+                    </p>
                   </div>
                 </div>
-                <p className="italic text-muted-foreground">"{testimonial.quote}"</p>
+                <p className="italic text-muted-foreground">
+                  "{testimonial.quote}"
+                </p>
               </CardContent>
             </Card>
           ))}
@@ -320,7 +359,9 @@ export default function AboutPage() {
 
       {/* Contributors Section */}
       <AnimatedSection delay={600}>
-        <h2 className="text-3xl font-bold tracking-tighter mb-8">People Who Shaped My Journey</h2>
+        <h2 className="text-3xl font-bold tracking-tighter mb-8">
+          People Who Shaped My Journey
+        </h2>
         <div className="space-y-6">
           {contributors.map((contributor, index) => (
             <Card key={index} className="overflow-hidden">
@@ -328,9 +369,13 @@ export default function AboutPage() {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                   <div className="mb-4 md:mb-0">
                     <h3 className="font-bold">{contributor.name}</h3>
-                    <p className="text-sm text-muted-foreground">{contributor.role}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {contributor.role}
+                    </p>
                   </div>
-                  <p className="text-muted-foreground max-w-md">{contributor.contribution}</p>
+                  <p className="text-muted-foreground max-w-md">
+                    {contributor.contribution}
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -338,6 +383,5 @@ export default function AboutPage() {
         </div>
       </AnimatedSection>
     </main>
-  )
+  );
 }
-
