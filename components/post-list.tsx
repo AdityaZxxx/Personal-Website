@@ -9,7 +9,11 @@ interface PostListProps {
 
 export async function PostList({ searchParams }: PostListProps) {
   // Extract category from searchParams here
-  const category = searchParams?.category;
+  // const category = searchParams?.category;
+  const category =
+    typeof searchParams?.category === "string"
+      ? searchParams.category
+      : undefined;
 
   const posts = await getAllPosts(category);
 

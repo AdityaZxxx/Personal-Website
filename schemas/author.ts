@@ -41,6 +41,33 @@ export default defineType({
         },
       ],
     }),
+    defineField({
+      name: "socialLinks",
+      title: "Social Links",
+      type: "object",
+      fields: [
+        {
+          name: "twitter",
+          title: "Twitter URL",
+          type: "url",
+        },
+        {
+          name: "github",
+          title: "GitHub URL",
+          type: "url",
+        },
+        {
+          name: "linkedin",
+          title: "LinkedIn URL",
+          type: "url",
+        },
+        {
+          name: "website",
+          title: "Website URL",
+          type: "url",
+        },
+      ],
+    }),
   ],
   preview: {
     select: {

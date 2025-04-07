@@ -4,12 +4,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { AuthorProfile } from "@/components/author-profile";
+import { FeaturedPosts } from "@/components/featured-posts";
+import { GiscusComments } from "@/components/giscus-comments";
 import { PortableText } from "@/components/portable-text";
 import { ShareButtons } from "@/components/share-buttons";
+import { TagList } from "@/components/tag-list";
+import { TrakteerSupport } from "@/components/trakteer-support";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { urlForImage } from "@/lib/sanity/image";
-import { getAllPostSlugs, getPostBySlug } from "@/lib/sanity/queries";
+import {
+  getAllPostSlugs,
+  getFeaturedPosts,
+  getPostBySlug,
+} from "@/lib/sanity/queries";
 import { formatDate } from "@/lib/utils";
 
 interface PostPageProps {
@@ -21,16 +30,7 @@ interface PostPageProps {
 export async function generateMetadata({
   params,
 }: PostPageProps): Promise<Metadata> {
-  // Fix: Access slug directly from params
-  const slug = params.slug;
-
-  if (!slug) {
-    return {
-      title: "Post Not Found | Aditya",
-    };
-  }
-
-  const post = await getPostBySlug(slug);
+  const post = await getPostBySlug(params.slug);
 
   if (!post) {
     return {
@@ -52,19 +52,21 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  const slugs = await getAllPostSlugs();
-  return slugs;
+  const posts = await getAllPostSlugs();
+
+  return posts.map((post: any) => ({
+    slug: post,
+  }));
 }
 
 export default async function PostPage({ params }: PostPageProps) {
-  // Fix: Access slug directly from params
-  const slug = params.slug;
+  const post = await getPostBySlug(params.slug);
+  const featuredPosts = await getFeaturedPosts(4);
 
-  if (!slug) {
-    notFound();
-  }
-
-  const post = await getPostBySlug(slug);
+  // Filter out the current post from featured posts
+  const filteredFeaturedPosts = featuredPosts.filter(
+    (featuredPost: any) => featuredPost.slug.current !== params.slug
+  );
 
   if (!post) {
     notFound();
@@ -72,7 +74,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
   return (
     <main className="container px-4 py-12 md:px-6 md:py-24">
-      <div className="mx-auto max-w-3xl">
+      <div className="mx-auto max-w-7xl">
         <Link href="/blog">
           <Button variant="ghost" className="mb-8 pl-0">
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -80,57 +82,80 @@ export default async function PostPage({ params }: PostPageProps) {
           </Button>
         </Link>
 
-        <div className="space-y-6">
-          <div className="space-y-2">
-            {post.categories && post.categories.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {post.categories.map((category: any) => (
-                  <Link
-                    key={category._id}
-                    href={`/blog?category=${category.slug}`}
-                  >
-                    <Badge variant="secondary">{category.title}</Badge>
-                  </Link>
-                ))}
-              </div>
-            )}
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              {post.title}
-            </h1>
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                <time dateTime={post.publishedAt}>
-                  {formatDate(post.publishedAt)}
-                </time>
-              </div>
-              {post.estimatedReadingTime && (
-                <div className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
-                  <span>{post.estimatedReadingTime} min read</span>
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_300px]">
+          <div className="space-y-6">
+            <div className="space-y-2">
+              {post.categories && post.categories.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {post.categories.map((category: any) => (
+                    <Link
+                      key={category._id}
+                      href={`/blog?category=${category.slug.current}`}
+                    >
+                      <Badge variant="secondary">{category.title}</Badge>
+                    </Link>
+                  ))}
                 </div>
               )}
+              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                {post.title}
+              </h1>
+              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <Calendar className="h-4 w-4" />
+                  <time dateTime={post.publishedAt}>
+                    {formatDate(post.publishedAt)}
+                  </time>
+                </div>
+                {post.estimatedReadingTime && (
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    <span>{post.estimatedReadingTime} min read</span>
+                  </div>
+                )}
+              </div>
             </div>
+
+            {post.mainImage && (
+              <div className="relative aspect-video overflow-hidden rounded-lg">
+                <Image
+                  src={urlForImage(post.mainImage)?.url() || "/placeholder.svg"}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            )}
+
+            {post.tags && <TagList tags={post.tags} className="mt-4" />}
+
+            <div className="prose prose-gray dark:prose-invert max-w-none">
+              <PortableText value={post.body} />
+            </div>
+
+            <div className="border-t pt-6">
+              <ShareButtons title={post.title} />
+            </div>
+
+            <GiscusComments slug={params.slug} />
           </div>
 
-          {post.mainImage && (
-            <div className="relative aspect-video overflow-hidden rounded-lg">
-              <Image
-                src={urlForImage(post.mainImage)?.url() || "/placeholder.svg"}
-                alt={post.title}
-                fill
-                className="object-cover"
-                priority
-              />
+          <div className="space-y-8">
+            <div className="lg:sticky lg:top-24">
+              {post.author && (
+                <div className="border-t pt-6">
+                  <h2 className="text-xl font-bold mb-4">About the Author</h2>
+                  <AuthorProfile author={post.author} />
+                </div>
+              )}
+              {filteredFeaturedPosts.length > 0 && (
+                <div className="mt-8 mb-8">
+                  <FeaturedPosts posts={filteredFeaturedPosts} />
+                </div>
+              )}
+              <TrakteerSupport username="adxxya30" />
             </div>
-          )}
-
-          <div className="prose prose-gray dark:prose-invert max-w-none">
-            <PortableText value={post.body} />
-          </div>
-
-          <div className="border-t pt-6">
-            <ShareButtons title={post.title} />
           </div>
         </div>
       </div>

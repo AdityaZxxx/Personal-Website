@@ -15,7 +15,10 @@ interface CategoryFilterProps {
   categories: Array<{
     _id: string;
     title: string;
-    slug: string;
+    slug: {
+      _type: string;
+      current: string;
+    };
   }>;
   activeCategory?: string;
 }
@@ -41,8 +44,8 @@ export function CategoryFilter({
   };
 
   const activeCategoryTitle =
-    categories.find((category) => category.slug === activeCategory)?.title ||
-    "All Categories";
+    categories.find((category) => category.slug.current === activeCategory)
+      ?.title || "All Categories";
 
   return (
     <div className="flex justify-center">
@@ -61,11 +64,11 @@ export function CategoryFilter({
           {categories.map((category) => (
             <DropdownMenuItem
               key={category._id}
-              onClick={() => handleCategoryChange(category.slug)}
+              onClick={() => handleCategoryChange(category.slug.current)}
               className="flex justify-between"
             >
               {category.title}
-              {activeCategory === category.slug && (
+              {activeCategory === category.slug.current && (
                 <Check className="h-4 w-4" />
               )}
             </DropdownMenuItem>
