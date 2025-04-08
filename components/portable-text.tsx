@@ -1,6 +1,5 @@
-import { urlForImage } from "@/lib/sanity/image";
+import { BlurImage } from "@/components/blur-image";
 import { PortableText as SanityPortableText } from "@portabletext/react";
-import Image from "next/image";
 import Link from "next/link";
 
 const components = {
@@ -10,24 +9,14 @@ const components = {
         return null;
       }
 
-      function getImageUrl(image: any): string {
-        try {
-          return (
-            urlForImage(image)?.width(600).height(340).url() ??
-            "/placeholder.svg"
-          );
-        } catch {
-          return "/placeholder.svg";
-        }
-      }
-
       return (
         <div className="my-6 relative aspect-video">
-          <Image
-            src={getImageUrl(value)}
+          <BlurImage
+            image={value}
             alt={value.alt || ""}
             fill
             className="object-cover rounded-md"
+            sizes="(max-width: 768px) 100vw, 800px"
           />
           {value.caption && (
             <div className="text-center text-sm text-muted-foreground mt-2">

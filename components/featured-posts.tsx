@@ -1,9 +1,8 @@
+import { BlurImage } from "@/components/blur-image";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { urlForImage } from "@/lib/sanity/image";
 import { formatDate } from "@/lib/utils";
 import { Calendar } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 interface FeaturedPostsProps {
@@ -38,16 +37,12 @@ export function FeaturedPosts({
               <CardContent className="p-4 flex gap-3">
                 {post.mainImage && (
                   <div className="relative h-16 w-16 flex-shrink-0 rounded-md overflow-hidden">
-                    <Image
-                      src={
-                        urlForImage(post.mainImage)
-                          ?.width(64)
-                          .height(64)
-                          .url() || "/placeholder.svg"
-                      }
+                    <BlurImage
+                      image={post.mainImage}
                       alt={post.title}
                       fill
                       className="object-cover"
+                      sizes="64px"
                     />
                   </div>
                 )}

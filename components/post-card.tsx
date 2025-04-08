@@ -3,8 +3,8 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { urlForImage } from "@/lib/sanity/image";
 import { formatDate } from "@/lib/utils";
 import { Calendar } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
+import { BlurImage } from "./blur-image";
 
 interface PostCardProps {
   post: {
@@ -38,14 +38,15 @@ export function PostCard({ post }: PostCardProps) {
   }
   return (
     <Link href={`/blog/${post.slug.current}`}>
-      <Card className="overflow-hidden transition-all hover:shadow-md">
+      <Card className="overflow-hidden transition-all hover:shadow-md h-full flex flex-col">
         <div className="relative aspect-video overflow-hidden">
           {post.mainImage ? (
-            <Image
-              src={getImageUrl(post.mainImage)}
+            <BlurImage
+              image={post.mainImage}
               alt={post.title}
               fill
-              className="object-cover transition-transform hover:scale-105"
+              className="transition-transform hover:scale-105"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-muted">
@@ -53,7 +54,7 @@ export function PostCard({ post }: PostCardProps) {
             </div>
           )}
         </div>
-        <CardContent className="p-4">
+        <CardContent className="p-4 flex-grow">
           {post.categories && post.categories.length > 0 && (
             <div className="mb-2">
               <Badge variant="secondary">{post.categories[0].title}</Badge>

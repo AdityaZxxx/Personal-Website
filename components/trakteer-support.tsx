@@ -21,18 +21,18 @@ interface TrakteerSupportProps {
 
 export function TrakteerSupport({
   username,
-  text = "If you enjoy my content, consider supporting me on Trakteer!",
+  text = "If you enjoy my content, Trakteer me so we can get closer!",
   className,
 }: TrakteerSupportProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <Card
-      className={`overflow-hidden border-orange-100 dark:border-orange-900 ${className}`}
+      className={`overflow-hidden border-purple-100 dark:border-purple-700 ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CardHeader className="pb-2 bg-gradient-to-r from-orange-500 to-red-500 text-white">
+      <CardHeader className="pb-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
         <CardTitle className="flex items-center gap-2">
           <Gift className={`h-5 w-5 ${isHovered ? "animate-bounce" : ""}`} />
           Support My Work
@@ -49,7 +49,7 @@ export function TrakteerSupport({
             >
               <path
                 d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM381.9 161.3l-22.93 137.6c-1.71 10.28-10.52 17.66-20.93 17.66c-1.188 0-2.405-.1094-3.622-.3438l-70.52-11.75l-37.99 38c-4.281 4.281-9.968 6.406-15.64 6.406c-4.062 0-8.156-1.094-11.78-3.25c-8.594-5.156-13.59-14.34-13.59-24.22V290.6l-50.28-8.375c-10.69-1.781-18.13-11.77-16.41-22.39c1.719-10.67 11.63-18.09 22.39-16.41l55.34 9.219l122.3-77.86c9.5-5.906 21.53-4.531 29.53 3.469c7.969 7.969 9.344 20 3.438 29.5l-65.73 103.1l70.66 11.75c10.69 1.781 17.88 11.77 16.16 22.39H381.9z"
-                fill="#FF5C63"
+                fill="#c026d3"
               />
             </svg>
           </div>
@@ -62,7 +62,7 @@ export function TrakteerSupport({
           rel="noopener noreferrer"
           className="w-full"
         >
-          <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white">
+          <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white">
             Trakteer Me
           </Button>
         </Link>

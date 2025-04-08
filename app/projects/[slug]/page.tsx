@@ -17,18 +17,17 @@ interface ProjectPageProps {
   };
 }
 
-export async function generateMetadata({
-  params,
-}: ProjectPageProps): Promise<Metadata> {
-  const slug = params.slug;
+export async function generateMetadata(
+  props: ProjectPageProps
+): Promise<Metadata> {
+  const params = await props.params;
+  const project = await getProjectBySlug(params?.slug);
 
-  if (!slug) {
+  if (!project) {
     return {
       title: "Project Not Found | Aditya",
     };
   }
-
-  const project = await getProjectBySlug(slug);
 
   if (!project) {
     return {
@@ -57,9 +56,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function ProjectPage({ params }: ProjectPageProps) {
-  // Fix: Access slug directly from params
-  const slug = params.slug;
+export default async function ProjectPage(props: ProjectPageProps) {
+  const params = await props.params;
+  const slug = params?.slug;
 
   if (!slug) {
     notFound();

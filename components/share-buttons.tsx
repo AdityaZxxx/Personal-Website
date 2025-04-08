@@ -55,7 +55,7 @@ export function ShareButtons({ title }: ShareButtonsProps) {
       await navigator.clipboard.writeText(url);
       setCopied(true);
       toast({
-        title: "Link copied",
+        title: "✅ Link copied",
         description: "The link has been copied to your clipboard.",
       });
 
@@ -65,7 +65,7 @@ export function ShareButtons({ title }: ShareButtonsProps) {
       }, 2000);
     } catch (err) {
       toast({
-        title: "Failed to copy",
+        title: "❎ Failed to copy",
         description: "Could not copy the link to your clipboard.",
         variant: "destructive",
       });

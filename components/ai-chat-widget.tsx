@@ -25,7 +25,7 @@ export function AIChatWidget() {
     {
       role: "assistant",
       content:
-        "Hi there! I'm PersonalAI. Ask me anything about the website owner or how I can help you!",
+        "Hi there! I'm Archi. Ask me anything about the website owner or how I can help you!",
     },
   ]);
   const [input, setInput] = useState("");
@@ -112,7 +112,7 @@ export function AIChatWidget() {
           <CardHeader className="p-3 border-b flex flex-row items-center justify-between bg-primary text-primary-foreground">
             <div className="flex items-center">
               <Bot className="h-5 w-5 mr-2" />
-              <h3 className="font-medium text-sm">PersonalAI Assistant</h3>
+              <h3 className="font-medium text-sm">Archi Assistant</h3>
             </div>
             <div className="flex items-center gap-1">
               <Button
@@ -198,7 +198,7 @@ export function AIChatWidget() {
                   <div ref={messagesEndRef} />
                 </div>
               </CardContent>
-              <CardFooter className="p-3 border-t">
+              <CardFooter className="p-0 my-2 mx-0 border-t">
                 <form
                   className="flex w-full gap-2"
                   onSubmit={(e) => {

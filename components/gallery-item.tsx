@@ -1,5 +1,7 @@
 "use client";
 
+import { BlurImage } from "@/components/blur-image";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -11,7 +13,6 @@ import {
 import { urlForImage } from "@/lib/sanity/image";
 import { formatDate } from "@/lib/utils";
 import { Play } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
 
 interface GalleryItemProps {
@@ -36,14 +37,8 @@ interface GalleryItemProps {
 export function GalleryItem({ item }: GalleryItemProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const thumbnailSrc =
-    item.mediaType === "image"
-      ? item.image
-        ? urlForImage(item.image)?.width(600).height(600).url()
-        : null
-      : item.videoThumbnail
-      ? urlForImage(item.videoThumbnail)?.width(600).height(600).url()
-      : null;
+  const thumbnailImage =
+    item.mediaType === "image" ? item.image : item.videoThumbnail;
 
   return (
     <>
@@ -51,12 +46,13 @@ export function GalleryItem({ item }: GalleryItemProps) {
         className="group relative aspect-square overflow-hidden rounded-lg cursor-pointer"
         onClick={() => setIsOpen(true)}
       >
-        {thumbnailSrc ? (
-          <Image
-            src={thumbnailSrc || "/placeholder.svg"}
+        {thumbnailImage ? (
+          <BlurImage
+            image={thumbnailImage}
             alt={item.title}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-muted">
@@ -91,7 +87,7 @@ export function GalleryItem({ item }: GalleryItemProps) {
       </div>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-5xl max-h-[90vh] overflow-auto">
+        <DialogContent className="max-w-4xl">
           <DialogHeader>
             <DialogTitle>{item.title}</DialogTitle>
             {item.description && (
@@ -99,33 +95,39 @@ export function GalleryItem({ item }: GalleryItemProps) {
             )}
           </DialogHeader>
 
-          <div className="mt-4 flex justify-center">
+          <div className="mt-4">
             {item.mediaType === "image" && item.image && (
-              <div className="relative max-h-[70vh] w-auto">
-                <Image
-                  src={urlForImage(item.image)?.url() || "/placeholder.svg"}
+              <AspectRatio
+                ratio={16 / 9}
+                className="overflow-hidden rounded-md"
+              >
+                <BlurImage
+                  image={item.image}
                   alt={item.title}
-                  width={1200}
-                  height={800}
-                  className="object-contain max-h-[70vh] w-auto h-auto"
-                  style={{ maxWidth: "100%", height: "auto" }}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 1200px"
+                  priority
                 />
-              </div>
+              </AspectRatio>
             )}
 
             {item.mediaType === "video" && item.video && (
-              <div className="w-full max-w-full">
+              <AspectRatio
+                ratio={16 / 9}
+                className="overflow-hidden rounded-md"
+              >
                 <video
                   src={item.video}
                   controls
-                  className="max-h-[70vh] w-auto mx-auto"
+                  className="h-full w-full"
                   poster={
                     item.videoThumbnail
                       ? urlForImage(item.videoThumbnail)?.url()
                       : undefined
                   }
                 />
-              </div>
+              </AspectRatio>
             )}
           </div>
 

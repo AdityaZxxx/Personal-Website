@@ -1,5 +1,5 @@
 import { CategoryFilter } from "@/components/category-filter";
-import { PostList } from "@/components/post-list";
+import { PostListServer } from "@/components/post-list-server";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getAllCategories } from "@/lib/sanity/queries";
 import type { Metadata } from "next";
@@ -16,9 +16,14 @@ interface BlogPageProps {
   };
 }
 
-export default async function BlogPage({ searchParams }: BlogPageProps) {
-  // Extract the category from searchParams
-  const { category } = await searchParams;
+export default async function BlogPage(props: BlogPageProps) {
+  const searchParams = await props.searchParams;
+
+  const category =
+    typeof searchParams?.category === "string"
+      ? searchParams.category
+      : undefined;
+
   const categories = await getAllCategories();
 
   return (
@@ -36,8 +41,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
       <div className="mt-8">
         <Suspense fallback={<PostListSkeleton />}>
-          {/* Pass the entire searchParams object to PostList */}
-          <PostList searchParams={searchParams} />
+          <PostListServer category={category} />
         </Suspense>
       </div>
     </main>

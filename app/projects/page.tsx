@@ -16,11 +16,14 @@ interface ProjectsPageProps {
   };
 }
 
-export default async function ProjectsPage({
-  searchParams,
-}: ProjectsPageProps) {
-  // Fix: Don't try to access searchParams directly
-  const { category } = searchParams;
+export default async function ProjectsPage(props: ProjectsPageProps) {
+  const searchParams = await props.searchParams;
+
+  const category =
+    typeof searchParams?.category === "string"
+      ? searchParams.category
+      : undefined;
+
   const categories = await getAllProjectCategories();
 
   return (

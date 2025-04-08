@@ -1,8 +1,7 @@
+import { BlurImage } from "@/components/blur-image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { urlForImage } from "@/lib/sanity/image";
 import { Github, Globe, Linkedin, Twitter } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 interface AuthorProfileProps {
@@ -31,14 +30,12 @@ export function AuthorProfile({ author }: AuthorProfileProps) {
         <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-start">
           {author.image && (
             <div className="relative h-20 w-20 rounded-full overflow-hidden flex-shrink-0">
-              <Image
-                src={
-                  urlForImage(author.image)?.width(80).height(80).url() ||
-                  "/placeholder.svg"
-                }
+              <BlurImage
+                image={author.image}
                 alt={author.name}
                 fill
                 className="object-cover"
+                sizes="80px"
               />
             </div>
           )}
