@@ -7,10 +7,6 @@ import post from "./post";
 import project from "./project";
 import projectCategory from "./projectCategory";
 
-// For debugging
-console.log("Gallery Item Schema:", galleryItem);
-console.log("Gallery Category Schema:", galleryCategory);
-
 export const schemaTypes = [
   post,
   author,

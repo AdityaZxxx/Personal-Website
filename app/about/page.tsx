@@ -117,20 +117,21 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold tracking-tighter">My Story</h2>
             <div className="space-y-4 text-muted-foreground">
               <p>
-                I began my journey in web development over 5 years ago, starting
-                with HTML and CSS before diving deeper into JavaScript and
-                modern frameworks.
+                Having no formal IT background, I learned to code from the
+                internet and the help of AI. Starting from HTML, JavaScript,
+                until finally falling in love with the React & Next.js
+                ecosystem.
               </p>
               <p>
-                With a background in computer science and a passion for creating
-                intuitive user experiences, I've worked on a variety of projects
-                ranging from e-commerce platforms to data visualization tools.
+                Now I am actively creating small projects, experimenting with
+                AI, and exploring the digital world. I believe that learning
+                doesn't have to be linear — as long as you are consistent and
+                curious, you can do it.
               </p>
               <p>
-                I'm constantly learning and exploring new technologies to stay
-                at the forefront of web development. My goal is to build
-                applications that are not only functional but also accessible,
-                performant, and enjoyable to use.
+                Most of the time, I write code with Copilot or ChatGPT. But
+                that's not a weakness — it's how I develop my skills and deliver
+                things quickly.
               </p>
             </div>
           </div>

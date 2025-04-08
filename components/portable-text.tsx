@@ -1,5 +1,7 @@
-import { BlurImage } from "@/components/blur-image";
+import { CodeBlock } from "@/components/code-block";
+import { urlForImage } from "@/lib/sanity/image";
 import { PortableText as SanityPortableText } from "@portabletext/react";
+import Image from "next/image";
 import Link from "next/link";
 
 const components = {
@@ -11,12 +13,11 @@ const components = {
 
       return (
         <div className="my-6 relative aspect-video">
-          <BlurImage
-            image={value}
+          <Image
+            src={urlForImage(value)?.url() || "/placeholder.svg"}
             alt={value.alt || ""}
             fill
             className="object-cover rounded-md"
-            sizes="(max-width: 768px) 100vw, 800px"
           />
           {value.caption && (
             <div className="text-center text-sm text-muted-foreground mt-2">
@@ -28,9 +29,11 @@ const components = {
     },
     code: ({ value }: any) => {
       return (
-        <pre className="bg-muted p-4 rounded-md overflow-x-auto my-6">
-          <code>{value.code}</code>
-        </pre>
+        <CodeBlock
+          language={value.language || "text"}
+          value={value.code}
+          filename={value._key && value.filename ? value.filename : undefined}
+        />
       );
     },
   },

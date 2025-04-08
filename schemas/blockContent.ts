@@ -1,4 +1,4 @@
-import { defineArrayMember, defineType } from "sanity"
+import { defineArrayMember, defineType } from "sanity";
 
 export default defineType({
   title: "Block Content",
@@ -59,6 +59,13 @@ export default defineType({
         },
       ],
     }),
+    defineArrayMember({
+      type: "code",
+      title: "Code Block",
+      options: {
+        withFilename: true,
+        language: "javascript",
+      },
+    }),
   ],
-})
-
+});
