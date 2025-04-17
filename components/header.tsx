@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, X } from "lucide-react";
+import { Folder, HomeIcon, Image, Menu, Notebook, User, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -38,7 +38,7 @@ export function Header() {
           <Link href="/" className="font-bold text-xl">
             Aditya
           </Link>
-          <nav className="hidden md:flex gap-6">
+          <nav className="hidden md:flex gap-6 absolute left-1/2 -translate-x-1/2">
             <NavItems />
           </nav>
         </div>
@@ -67,7 +67,7 @@ export function Header() {
       >
         <div className="relative z-20 grid gap-6 rounded-md p-4">
           <nav className="grid grid-flow-row auto-rows-max text-center text-lg">
-            <NavItems />
+            <NavItems icon={true} />
           </nav>
         </div>
       </div>
@@ -75,15 +75,15 @@ export function Header() {
   );
 }
 
-function NavItems() {
+function NavItems({ icon = false }: { icon?: boolean }) {
   const pathname = usePathname();
 
   const navItems = [
-    { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
-    { href: "/projects", label: "Projects" },
-    { href: "/blog", label: "Blog" },
-    { href: "/gallery", label: "Gallery" },
+    { href: "/", label: "Home", icon: <HomeIcon size={16} /> },
+    { href: "/about", label: "About", icon: <User size={16} /> },
+    { href: "/projects", label: "Projects", icon: <Folder size={16} /> },
+    { href: "/blog", label: "Blog", icon: <Notebook size={16} /> },
+    { href: "/gallery", label: "Gallery", icon: <Image size={16} /> },
   ];
 
   return (
@@ -98,10 +98,14 @@ function NavItems() {
             key={item.href}
             href={item.href}
             className={cn(
-              "transition-colors hover:text-foreground/80",
-              isActive ? "text-foreground font-medium" : "text-foreground/60"
+              "transition-colors flex hover:text-foreground/80 text-center items-center gap-2 rounded-lg px-3 py-1",
+              isActive && icon ? "bg-muted text-foreground font-semibold" : "",
+              isActive && !icon
+                ? "text-foreground font-medium"
+                : "text-foreground/60"
             )}
           >
+            {icon && item.icon}
             {item.label}
           </Link>
         );

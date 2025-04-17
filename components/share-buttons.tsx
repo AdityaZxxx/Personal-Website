@@ -81,6 +81,7 @@ export function ShareButtons({ title }: ShareButtonsProps) {
             key={link.name}
             variant="outline"
             size="icon"
+            rel="noopener noreferrer"
             onClick={() => window.open(link.getUrl(), "_blank")}
           >
             <link.icon className="h-4 w-4" />
@@ -92,6 +93,7 @@ export function ShareButtons({ title }: ShareButtonsProps) {
           size="icon"
           onClick={copyToClipboard}
           className="relative"
+          rel="noopener noreferrer"
         >
           {copied ? (
             <Check className="h-4 w-4 text-green-500" />

@@ -60,6 +60,7 @@
     "motion": "^12.6.3",
     "next": "15.2.4",
     "next-sanity": "latest",
+    "next-sitemap": "^4.2.3",
     "next-themes": "latest",
     "prismjs": "^1.30.0",
     "react": "^19",

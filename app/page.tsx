@@ -8,9 +8,9 @@ import { PostCard } from "@/components/post-card";
 import { ProjectCard } from "@/components/project-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ColourfulText } from "@/components/ui/colorful-text";
 import { getFeaturedProjects, getLatestPosts } from "@/lib/sanity/queries";
 import { ProjectType } from "@/types/ProjectType";
+import { SparklesCore } from "../components/sparkles";
 
 export default async function Home() {
   const featuredProjects = await getFeaturedProjects();
@@ -18,6 +18,18 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen flex-col">
+      {/* Ambient background with moving particles */}
+      <div className="h-full w-full absolute inset-0 z-0">
+        <SparklesCore
+          id="tsparticlesfullpage"
+          background="transparent"
+          minSize={0.6}
+          maxSize={1.4}
+          particleDensity={100}
+          className="w-full h-full"
+          particleColor="#FFFFFF"
+        />
+      </div>
       {/* Hero Section */}
       <AnimatedSection>
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
@@ -26,7 +38,11 @@ export default async function Home() {
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Hi, I&apos;m <ColourfulText text="Aditya Rahmad" />
+                    Hi, I&apos;m{" "}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">
+                      {" "}
+                      Aditya Rahmad
+                    </span>
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">
                     Full-stack developer specializing in modern web
