@@ -66,7 +66,7 @@ export function Header() {
         )}
       >
         <div className="relative z-20 grid gap-6 rounded-md p-4">
-          <nav className="grid grid-flow-row auto-rows-max text-center text-lg">
+          <nav className="grid grid-flow-row auto-rows-max text-center text-xl">
             <NavItems icon={true} />
           </nav>
         </div>

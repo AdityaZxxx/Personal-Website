@@ -17,9 +17,9 @@ export default async function Home() {
   const latestPosts = await getLatestPosts(3);
 
   return (
-    <main className="flex min-h-screen flex-col">
+    <main className="flex min-h-screen overflow-x-hidden flex-col">
       {/* Ambient background with moving particles */}
-      <div className="h-full w-full absolute inset-0 z-0">
+      <div className="w-full absolute inset-0 z-0 overflow-hidden">
         <SparklesCore
           id="tsparticlesfullpage"
           background="transparent"
@@ -113,7 +113,7 @@ export default async function Home() {
 
       {/* About Section */}
       <AnimatedSection delay={100}>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted/40">
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-muted/40">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -269,7 +269,7 @@ export default async function Home() {
 
       <AnimatedSection delay={100}>
         {/* Latest Blog Posts Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted/40">
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-muted/40">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -297,7 +297,7 @@ export default async function Home() {
       </AnimatedSection>
 
       {/* Contact Section */}
-      <section className="w-full py-12 md:py-24 lg:py-32">
+      <section className="w-full py-12 md:py-24 lg:py-32 z-10">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">

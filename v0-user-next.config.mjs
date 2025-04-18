@@ -14,6 +14,13 @@ const nextConfig = {
       },
     ],
   },
+  // Add webpack configuration for Sanity Studio files
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push("@sanity/server");
+    }
+    return config;
+  },
 };
 
 export default nextConfig;

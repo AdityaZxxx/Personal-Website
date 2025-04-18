@@ -38,7 +38,7 @@ export function PostCard({ post }: PostCardProps) {
   }
   return (
     <Link href={`/blog/${post.slug.current}`}>
-      <Card className="overflow-hidden transition-all hover:shadow-md h-full flex flex-col">
+      <Card className="overflow-hidden transition-all hover:shadow-md dark:hover:shadow-purple-900 h-full flex flex-col border-2">
         <div className="relative aspect-video overflow-hidden">
           {post.mainImage ? (
             <BlurImage
@@ -54,15 +54,19 @@ export function PostCard({ post }: PostCardProps) {
             </div>
           )}
         </div>
-        <CardContent className="p-4 flex-grow">
-          {post.categories && post.categories.length > 0 && (
-            <div className="mb-2">
-              <Badge variant="secondary">{post.categories[0].title}</Badge>
-            </div>
-          )}
-          <h3 className="font-bold line-clamp-1">{post.title}</h3>
+        <CardContent className="p-4 flex flex-wrap gap-2">
+          {post.categories?.slice(0, 5).map((category) => (
+            <Badge
+              key={category.title}
+              variant="secondary"
+              className=" bg-slate-200 dark:bg-slate-600"
+            >
+              {category.title}
+            </Badge>
+          ))}
+          <h3 className="font-bold line-clamp-1 text-start">{post.title}</h3>
           {post.excerpt && (
-            <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
+            <p className="mt-2 text-sm text-start text-muted-foreground line-clamp-2">
               {post.excerpt}
             </p>
           )}

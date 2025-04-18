@@ -43,7 +43,7 @@ export function GalleryItem({ item }: GalleryItemProps) {
   return (
     <>
       <div
-        className="group relative aspect-square overflow-hidden rounded-lg cursor-pointer"
+        className="group relative aspect-square overflow-hidden rounded-lg cursor-pointer border-[1px] border-purple-400 hover:shadow-md dark:hover:shadow-purple-900 dark:border-gray-800"
         onClick={() => setIsOpen(true)}
       >
         {thumbnailImage ? (
