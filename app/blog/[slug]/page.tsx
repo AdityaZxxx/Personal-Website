@@ -43,72 +43,17 @@ export async function generateMetadata(
     };
   }
 
-  const metadata: Metadata = {
+  return {
     title: `${post.title} | Aditya`,
     description: post.excerpt,
-    keywords: post.tags?.join(", ") || "",
-    applicationName: "Aditya's Blog",
-    creator: post.author?.name || "Aditya",
-    publisher: "Aditya",
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
-    alternates: {
-      canonical: `https://adxxya30.vercel.app/blog/${params.slug}`,
-    },
-
-    openGraph: {
-      title: `${post.title} | Aditya`,
-      description: post.excerpt,
-      url: `https://adxxya30.vercel.app/blog/${params.slug}`,
-      siteName: "Aditya's Blog",
-      locale: "en_US",
-      type: "article",
-      publishedTime: post.publishedAt,
-      modifiedTime: post._updatedAt || post.publishedAt,
-      images: post.mainImage
-        ? [
-            {
-              url:
-                urlForImage(post.mainImage)
-                  ?.width(1200)
-                  ?.height(630)
-                  ?.fit("crop")
-                  ?.url() ?? "",
-              width: 1200,
-              height: 630,
-              alt: post.title,
-            },
-          ]
-        : [],
-      ...(post.author?.name && { authors: [post.author.name] }),
-      ...(post.tags && { tags: post.tags }),
-    },
+    openGraph: post?.mainImage
+      ? {
+          images: [
+            urlForImage(post.mainImage)?.width(1200)?.height(630)?.url() ?? "",
+          ],
+        }
+      : undefined,
   };
-
-  // Add OpenGraph image if exists
-  if (post.mainImage) {
-    metadata.openGraph!.images = [
-      {
-        url: post.mainImage.url,
-        width: 1200,
-        height: 630,
-        alt: post.title,
-      },
-    ];
-
-    // Add additional image formats for better compatibility
-    metadata.twitter!.images = metadata.openGraph!.images;
-  }
-
-  return metadata;
 }
 
 export async function generateStaticParams() {
