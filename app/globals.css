@@ -145,29 +145,3 @@
 .animate-gradient {
   animation: gradient 5s ease infinite;
 }
-
-/* Custom scrollbar for the sidebar */
-@layer utilities {
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-}
-
-/* Scroll indicator animation */
-.scroll-indicator {
-  animation: scrollIndicator 2s infinite ease-in-out;
-}
-
-@keyframes scrollIndicator {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(calc(100% - 2rem));
-  }
-}

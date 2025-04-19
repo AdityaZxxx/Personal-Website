@@ -1,9 +1,9 @@
-import { BlurImage } from "@/components/blur-image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Github, Globe, Mail } from "lucide-react";
+import { Globe, Mail } from "lucide-react";
 import Link from "next/link";
-import { FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
+import { FaGithub, FaInstagram, FaYoutube } from "react-icons/fa";
+import { BlurImage } from "./blur-image";
 import { CustomLogo } from "./custom-logo";
 
 interface AuthorProfileProps {
@@ -19,20 +19,17 @@ interface AuthorProfileProps {
       github?: string;
       instagram?: string;
       website?: string;
-      linkedin?: string;
-      youtube?: string;
       email?: string;
     };
   };
-  className?: string;
 }
 
-export function AuthorProfile({ author, className }: AuthorProfileProps) {
+export function AuthorProfile({ author }: AuthorProfileProps) {
   if (!author) return null;
 
   const socialIcons = [
     { key: "x", icon: <CustomLogo className="h-4 w-4" />, label: "X" },
-    { key: "github", icon: <Github className="h-4 w-4" />, label: "GitHub" },
+    { key: "github", icon: <FaGithub className="h-4 w-4" />, label: "GitHub" },
     {
       key: "instagram",
       icon: <FaInstagram className="h-4 w-4" />,
@@ -40,22 +37,14 @@ export function AuthorProfile({ author, className }: AuthorProfileProps) {
     },
     { key: "website", icon: <Globe className="h-4 w-4" />, label: "Website" },
     {
-      key: "linkedin",
-      icon: <FaLinkedin className="h-4 w-4" />,
-      label: "LinkedIn",
-    },
-    {
       key: "youtube",
       icon: <FaYoutube className="h-4 w-4" />,
       label: "YouTube",
     },
     { key: "email", icon: <Mail className="h-4 w-4" />, label: "Email" },
   ];
-
   return (
-    <Card
-      className={`overflow-hidden hover:shadow-md transition-shadow ${className}`}
-    >
+    <Card className="overflow-hidden">
       <CardContent className="p-6">
         <div className="flex flex-col gap-6 items-center ">
           {author.image && (
@@ -75,14 +64,6 @@ export function AuthorProfile({ author, className }: AuthorProfileProps) {
               <h3 className="text-xl font-bold tracking-tight">
                 {author.name}
               </h3>
-              {/* {author.slug?.current && (
-                <Link
-                  href={`/authors/${author.slug.current}`}
-                  className="text-sm text-primary hover:underline"
-                >
-                  View all posts
-                </Link>
-              )} */}
             </div>
 
             {author.bio && (
