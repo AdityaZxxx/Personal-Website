@@ -137,7 +137,12 @@ export default async function PostPage(props: PostPageProps) {
             {post.mainImage && (
               <figure className="relative aspect-video overflow-hidden rounded-xl border shadow-sm">
                 <BlurImage
-                  image={post.mainImage}
+                  image={
+                    urlForImage(post.mainImage)
+                      ?.auto("format")
+                      .fit("crop")
+                      .url() || "/placeholder.svg"
+                  }
                   alt={post.title}
                   fill
                   className="object-cover"

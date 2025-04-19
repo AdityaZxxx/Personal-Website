@@ -66,6 +66,7 @@ export default async function Home() {
                 <div className="flex gap-4 mt-4">
                   <Link
                     href="https://github.com/AdityaZxxx"
+                    aria-label="GitHub"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -76,6 +77,7 @@ export default async function Home() {
                   </Link>
                   <Link
                     href="https://x.com/adxxya30"
+                    aria-label="X"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -86,6 +88,7 @@ export default async function Home() {
                   </Link>
                   <Link
                     href="https://instagram.com/adxxya30"
+                    aria-label="Instagram"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -99,11 +102,11 @@ export default async function Home() {
               <div className="flex items-center justify-center">
                 <div className="relative aspect-square w-full max-w-[400px] overflow-hidden rounded-full border-4 border-primary/20 dark:border-primary/30">
                   <Image
-                    src={"/profile.jpg"}
+                    src={"/profile.webp"}
                     alt="Profile"
                     width={400}
                     height={400}
-                    className="object-cover "
+                    className="object-cover"
                     priority
                   />
                 </div>

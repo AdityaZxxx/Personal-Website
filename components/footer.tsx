@@ -27,7 +27,7 @@ export function Footer() {
                 Aditya
               </span>
             </div>
-            <p className="text-gray-400 text-sm sm:text-base pl-3 border-l-4 border-purple-500/20 hover:border-purple-500/50 transition-colors duration-300 py-1 px-3">
+            <p className="text-gray-600 text-sm sm:text-base pl-3 border-l-4 border-purple-500/20 hover:border-purple-500/50 transition-colors duration-300 py-1 px-3">
               Creative portfolio showcasing my projects and blog.
             </p>
           </div>
@@ -82,6 +82,7 @@ export function Footer() {
               <li>
                 <Link
                   href="https://github.com/AdityaZxxx"
+                  aria-label="GitHub"
                   target="_blank"
                   className="text-muted-foreground text-center md:text-right hover:text-foreground transition-colors text-sm sm:text-base"
                 >
@@ -91,6 +92,7 @@ export function Footer() {
               <li>
                 <Link
                   href="https://x.com/adxxya30"
+                  aria-label="X"
                   target="_blank"
                   className="text-muted-foreground text-center md:text-right hover:text-foreground transition-colors text-sm sm:text-base"
                 >
@@ -100,6 +102,7 @@ export function Footer() {
               <li>
                 <Link
                   href="https://instagram.com/adxxya30"
+                  aria-label="Instagram"
                   target="_blank"
                   className="text-muted-foreground text-center md:text-right hover:text-foreground transition-colors text-sm sm:text-base"
                 >
@@ -109,6 +112,7 @@ export function Footer() {
               <li>
                 <Link
                   href="mailto:adityaofficial714@gmail.com"
+                  aria-label="Email"
                   className="text-muted-foreground text-center md:text-right hover:text-foreground transition-colors text-sm sm:text-base"
                 >
                   Email
@@ -148,7 +152,7 @@ export function Footer() {
 
         {/* Copyright and Social Icons */}
         <div className="flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-gray-400 text-sm sm:text-base text-center sm:text-left">
+          <p className="text-gray-600 text-sm sm:text-base text-center sm:text-left">
             © {new Date().getFullYear()} Aditya. All rights reserved.
           </p>
           <div className="flex gap-4 mt-4 sm:mt-0">

@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Globe, Mail } from "lucide-react";
 import Link from "next/link";
 import { FaGithub, FaInstagram, FaYoutube } from "react-icons/fa";
+import { urlForImage } from "../lib/sanity/image";
 import { BlurImage } from "./blur-image";
 import { CustomLogo } from "./custom-logo";
 
@@ -50,7 +51,10 @@ export function AuthorProfile({ author }: AuthorProfileProps) {
           {author.image && (
             <div className="flex h-24 w-24  rounded-full overflow-hidden flex-shrink-0 border-4 border-primary/20 dark:border-primary/30 group">
               <BlurImage
-                image={author.image}
+                image={
+                  urlForImage(author.image)?.auto("format").fit("crop").url() ||
+                  "/placeholder.svg"
+                }
                 alt={author.name}
                 fill
                 className="object-cover transition-transform duration-300 group-hover:scale-105"

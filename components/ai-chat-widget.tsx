@@ -101,7 +101,7 @@ export function AIChatWidget() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div role="log" aria-live="polite" className="fixed bottom-4 right-4 z-50">
       {isOpen && (
         <Card
           className={cn(
@@ -116,6 +116,7 @@ export function AIChatWidget() {
             </div>
             <div className="flex items-center gap-1">
               <Button
+                aria-label={isMinimized ? "Expand chat" : "Minimize chat"}
                 variant="ghost"
                 size="icon"
                 className="h-7 w-7 text-primary-foreground hover:bg-primary/80"
@@ -128,6 +129,7 @@ export function AIChatWidget() {
                 )}
               </Button>
               <Button
+                aria-label="Close chat"
                 variant="ghost"
                 size="icon"
                 className="h-7 w-7 text-primary-foreground hover:bg-primary/80"
@@ -230,6 +232,7 @@ export function AIChatWidget() {
 
       {!isOpen && (
         <Button
+          aria-label="Open Archi Assistant"
           onClick={toggleChat}
           className="rounded-full h-12 w-12 shadow-lg"
         >

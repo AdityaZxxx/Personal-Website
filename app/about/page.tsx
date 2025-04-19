@@ -93,7 +93,7 @@
 //         <div className="flex flex-col items-center text-center">
 //           <div className="relative w-32 h-32 mb-6 overflow-hidden rounded-full">
 //             <Image
-//               src="/profile.jpg"
+//               src="/profile.webp"
 //               alt="Aditya"
 //               fill
 //               className="object-cover"
@@ -512,7 +512,7 @@ export default function AboutPage() {
         <div className="flex flex-col items-center text-center min-h-screen max-h-screen">
           <div className="relative w-40 h-40 mb-8 overflow-hidden rounded-full border-4 border-primary/20 dark:border-primary/30">
             <Image
-              src="/profile.jpg"
+              src="/profile.webp"
               alt="Aditya"
               fill
               className="object-cover"
@@ -562,14 +562,12 @@ export default function AboutPage() {
           </div>
           <div className="relative h-64 w-full md:h-80 lg:h-96">
             {" "}
-            {/* atur tinggi sesuai kebutuhan */}
             <Image
-              src="/im-coding.png"
+              src="/im-coding.webp"
               alt="Working on code"
               fill
               className="object-cover rounded-lg border-4 border-primary/20 dark:border-primary/30"
               priority
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
         </div>
