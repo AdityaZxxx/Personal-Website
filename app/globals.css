@@ -133,3 +133,15 @@
 .prose code {
   @apply bg-muted px-1 py-0.5 rounded;
 }
+
+@keyframes gradient {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+.animate-gradient {
+  animation: gradient 5s ease infinite;
+}

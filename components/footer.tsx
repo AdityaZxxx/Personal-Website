@@ -7,10 +7,11 @@ export function Footer() {
   return (
     <footer
       className="w-full z-10 
-  backdrop-blur-md bg-gray-100/80 dark:bg-muted/60
-  border-t border-gray-200/50 dark:border-gray-700/50
-  shadow-xl dark:shadow-gray-900/30
-  py-10 px-4 md:px-6"
+    backdrop-blur-md bg-gray-100/80 dark:bg-muted/60
+    border-t border-gray-200/50 dark:border-gray-700/50
+    shadow-xl dark:shadow-gray-900/30
+    h-screen md:h-auto min-h-[400px] pb-5 py-10 md:pt-10 sm:pt-8 px-4 md:px-6
+    flex flex-col"
     >
       <div className="section-container mx-auto px-4 sm:px-6 pt-5 pb-2">
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
@@ -89,11 +90,11 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="https://twitter.com/adxxya30"
+                  href="https://x.com/adxxya30"
                   target="_blank"
                   className="text-muted-foreground text-center md:text-right hover:text-foreground transition-colors text-sm sm:text-base"
                 >
-                  Twitter
+                  Twitter / X
                 </Link>
               </li>
               <li>
@@ -159,7 +160,7 @@ export function Footer() {
               <Github className="w-4 h-4 sm:w-5 sm:h-5" />
             </Link>
             <Link
-              href="https://twitter.com/adxxya30"
+              href="https://x.com/adxxya30"
               target="_blank"
               className="text-xs text-muted-foreground text-center md:text-right hover:text-foreground transition-colors"
             >

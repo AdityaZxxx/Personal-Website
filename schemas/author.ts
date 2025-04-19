@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity"
+import { defineField, defineType } from "sanity";
 
 export default defineType({
   name: "author",
@@ -47,8 +47,8 @@ export default defineType({
       type: "object",
       fields: [
         {
-          name: "twitter",
-          title: "Twitter URL",
+          name: "x",
+          title: "X URL",
           type: "url",
         },
         {
@@ -57,8 +57,8 @@ export default defineType({
           type: "url",
         },
         {
-          name: "linkedin",
-          title: "LinkedIn URL",
+          name: "instagram",
+          title: "Instagram URL",
           type: "url",
         },
         {
@@ -75,5 +75,4 @@ export default defineType({
       media: "image",
     },
   },
-})
-
+});

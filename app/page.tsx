@@ -1,4 +1,4 @@
-import { ArrowRight, Github, Linkedin, Twitter } from "lucide-react";
+import { ArrowRight, Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getFeaturedProjects, getLatestPosts } from "@/lib/sanity/queries";
 import { ProjectType } from "@/types/ProjectType";
+import { FaInstagram } from "react-icons/fa";
+import { CustomLogo } from "../components/custom-logo";
 import { SparklesCore } from "../components/sparkles";
 
 export default async function Home() {
@@ -19,7 +21,7 @@ export default async function Home() {
   return (
     <main className="flex min-h-screen overflow-x-hidden flex-col">
       {/* Ambient background with moving particles */}
-      <div className="w-full absolute inset-0 z-0 overflow-hidden">
+      <div className="w-full absolute inset-0 z-0 overflow-hidden text-black !important dark:text-white !important">
         <SparklesCore
           id="tsparticlesfullpage"
           background="transparent"
@@ -27,7 +29,7 @@ export default async function Home() {
           maxSize={1.4}
           particleDensity={100}
           className="w-full h-full"
-          particleColor="#FFFFFF"
+          particleColor="blue"
         />
       </div>
       {/* Hero Section */}
@@ -73,35 +75,35 @@ export default async function Home() {
                     </Button>
                   </Link>
                   <Link
-                    href="https://twitter.com/adxxya30"
+                    href="https://x.com/adxxya30"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <Button variant="ghost" size="icon">
-                      <Twitter className="h-5 w-5" />
-                      <span className="sr-only">Twitter</span>
+                      <CustomLogo className="h-5 w-5" />
+                      <span className="sr-only">X</span>
                     </Button>
                   </Link>
                   <Link
-                    href="https://linkedin.com"
+                    href="https://instagram.com/adxxya30"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <Button variant="ghost" size="icon">
-                      <Linkedin className="h-5 w-5" />
-                      <span className="sr-only">LinkedIn</span>
+                      <FaInstagram className="h-5 w-5" />
+                      <span className="sr-only">Instagram</span>
                     </Button>
                   </Link>
                 </div>
               </div>
               <div className="flex items-center justify-center">
-                <div className="relative aspect-square w-full max-w-[400px] overflow-hidden rounded-full border">
+                <div className="relative aspect-square w-full max-w-[400px] overflow-hidden rounded-full border-4 border-primary/20 dark:border-primary/30">
                   <Image
                     src={"/profile.jpg"}
                     alt="Profile"
                     width={400}
                     height={400}
-                    className="object-cover"
+                    className="object-cover "
                     priority
                   />
                 </div>

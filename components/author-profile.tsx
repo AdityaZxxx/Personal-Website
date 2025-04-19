@@ -1,8 +1,10 @@
 import { BlurImage } from "@/components/blur-image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Github, Globe, Linkedin, Twitter } from "lucide-react";
+import { Github, Globe } from "lucide-react";
 import Link from "next/link";
+import { FaInstagram } from "react-icons/fa";
+import { CustomLogo } from "./custom-logo";
 
 interface AuthorProfileProps {
   author: {
@@ -13,9 +15,9 @@ interface AuthorProfileProps {
       current: string;
     };
     socialLinks?: {
-      twitter?: string;
+      x?: string;
       github?: string;
-      linkedin?: string;
+      instagram?: string;
       website?: string;
     };
   };
@@ -29,7 +31,7 @@ export function AuthorProfile({ author }: AuthorProfileProps) {
       <CardContent className="p-6">
         <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-start">
           {author.image && (
-            <div className="relative h-20 w-20 rounded-full overflow-hidden flex-shrink-0">
+            <div className="relative h-20 w-20 rounded-full overflow-hidden flex-shrink-0 border-4 border-primary/20 dark:border-primary/30">
               <BlurImage
                 image={author.image}
                 alt={author.name}
@@ -53,15 +55,15 @@ export function AuthorProfile({ author }: AuthorProfileProps) {
               </div>
             )}
             <div className="mt-4 flex gap-2 justify-center sm:justify-start">
-              {author.socialLinks?.twitter && (
+              {author.socialLinks?.x && (
                 <Link
-                  href={author.socialLinks.twitter}
+                  href={author.socialLinks.x}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <Twitter className="h-4 w-4" />
-                    <span className="sr-only">Twitter</span>
+                    <CustomLogo className="h-4 w-4" />
+                    <span className="sr-only">X</span>
                   </Button>
                 </Link>
               )}
@@ -77,15 +79,15 @@ export function AuthorProfile({ author }: AuthorProfileProps) {
                   </Button>
                 </Link>
               )}
-              {author.socialLinks?.linkedin && (
+              {author.socialLinks?.instagram && (
                 <Link
-                  href={author.socialLinks.linkedin}
+                  href={author.socialLinks.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <Linkedin className="h-4 w-4" />
-                    <span className="sr-only">LinkedIn</span>
+                    <FaInstagram className="h-4 w-4" />
+                    <span className="sr-only">Instagram</span>
                   </Button>
                 </Link>
               )}
