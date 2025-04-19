@@ -144,21 +144,21 @@ export function ShareButtons({
         ))}
 
         {/* Fallback copy button */}
-        {(!navigator.share || typeof navigator === "undefined") && (
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={copyToClipboard}
-            className="relative hover:bg-accent/50 transition-colors"
-            aria-label="Copy link"
-          >
-            {copied ? (
-              <Check className="h-4 w-4 text-green-500" />
-            ) : (
-              <Link2 className="h-4 w-4" />
-            )}
-          </Button>
-        )}
+        {/* {(!navigator.share || typeof navigator === "undefined") && ( */}
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={copyToClipboard}
+          className="relative hover:bg-accent/50 transition-colors"
+          aria-label="Copy link"
+        >
+          {copied ? (
+            <Check className="h-4 w-4 text-green-500" />
+          ) : (
+            <Link2 className="h-4 w-4" />
+          )}
+        </Button>
+        {/* )} */}
       </div>
     </div>
   );

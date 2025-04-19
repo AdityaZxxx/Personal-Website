@@ -177,7 +177,7 @@
 //   );
 // }
 
-import { ArrowLeft, Bookmark, Calendar, Clock } from "lucide-react";
+import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -323,16 +323,16 @@ export async function generateMetadata(
   }
 
   // Add article specific metadata
-  metadata.description = {
-    publishedTime: post.publishedAt,
-    modifiedTime: post._updatedAt || post.publishedAt,
-    ...(post.tags && { tags: post.tags }),
-    ...(post.author?.name && {
-      authors: [
-        `https://adxxya30.vercel.app/authors/${post.author.slug.current}`,
-      ],
-    }),
-  };
+  // metadata.description = {
+  //   publishedTime: post.publishedAt,
+  //   modifiedTime: post._updatedAt || post.publishedAt,
+  //   ...(post.tags && { tags: post.tags }),
+  //   ...(post.author?.name && {
+  //     authors: [
+  //       `https://adxxya30.vercel.app/authors/${post.author.slug.current}`,
+  //     ],
+  //   }),
+  // };
 
   return metadata;
 }
@@ -411,10 +411,10 @@ export default async function PostPage(props: PostPageProps) {
                     <span>{post.estimatedReadingTime} min read</span>
                   </div>
                 )}
-                <div className="flex items-center gap-2">
+                {/* <div className="flex items-center gap-2">
                   <Bookmark className="h-4 w-4" />
                   <span>Save for later</span>
-                </div>
+                </div> */}
               </div>
             </header>
 
@@ -429,9 +429,9 @@ export default async function PostPage(props: PostPageProps) {
                   priority
                   sizes="(max-width: 768px) 100vw, 800px"
                 />
-                <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white text-sm">
+                {/* <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white text-sm">
                   {post.mainImage.caption || post.title}
-                </figcaption>
+                </figcaption> */}
               </figure>
             )}
 
@@ -466,7 +466,7 @@ export default async function PostPage(props: PostPageProps) {
             <div className="lg:relative lg:pr-2">
               {/* Author Section */}
               {post.author && (
-                <div className="rounded-lg border bg-card p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5">
+                <div className="rounded-lg border-2 m-2 bg-card p-2 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5">
                   <h2 className="text-xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                     About the Author
                   </h2>
@@ -476,7 +476,7 @@ export default async function PostPage(props: PostPageProps) {
 
               {/* Featured Posts */}
               {filteredFeaturedPosts.length > 0 && (
-                <div className="rounded-lg border bg-card p-6 shadow-sm mt-8 transition-all hover:shadow-md hover:-translate-y-0.5 group">
+                <div className="rounded-lg border m-2 bg-card p-6 shadow-sm mt-8 transition-all hover:shadow-md hover:-translate-y-0.5 group">
                   <h2 className="text-xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                     You might also like
                   </h2>
@@ -490,13 +490,13 @@ export default async function PostPage(props: PostPageProps) {
               {/* Support Section */}
               <TrakteerSupport
                 username="adxxya30"
-                className="mt-8 rounded-lg border bg-card p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
+                className="mt-8 rounded-lg border m-2 bg-card p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
               />
 
               {/* Scroll indicator (only shows when scrolling) */}
-              <div className="hidden lg:block fixed right-4 bottom-8 w-2 h-20 bg-primary/20 rounded-full overflow-hidden">
+              {/* <div className="hidden lg:block fixed right-4 bottom-8 w-2 h-20 bg-primary/20 rounded-full overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-8 bg-primary rounded-full scroll-indicator" />
-              </div>
+              </div> */}
             </div>
           </aside>
         </div>
