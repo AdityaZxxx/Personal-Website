@@ -1,121 +1,111 @@
-"use client"
+"use client";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Github } from "lucide-react"
-import { useEffect, useState } from "react"
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Github } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 interface ContributionDay {
-  date: string
-  count: number
-  level: 0 | 1 | 2 | 3 | 4
+  date: string;
+  count: number;
+  level: 0 | 1 | 2 | 3 | 4;
 }
 
 interface GitHubApiResponse {
-  total: Record<string, number>
-  contributions: ContributionDay[]
+  contributions: ContributionDay[];
 }
 
 interface GitHubContributionGraphProps {
-  username: string
+  username: string;
 }
 
-export function GitHubContributionGraph({ username }: GitHubContributionGraphProps) {
-  const [contributionData, setContributionData] = useState<GitHubApiResponse | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+export function GitHubContributionGraph({
+  username,
+}: GitHubContributionGraphProps) {
+  const [data, setData] = useState<GitHubApiResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const checkDark = () => {
+    const isDark = document.documentElement.classList.contains("dark");
+    setIsDarkMode(isDark);
+  };
 
   useEffect(() => {
-    async function fetchContributions() {
-      try {
-        setLoading(true)
-        const response = await fetch(`https://github-contributions-api.jogruber.de/v4/${username}`)
+    checkDark();
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch GitHub contributions")
-        }
+    const observer = new MutationObserver(() => {
+      checkDark();
+    });
 
-        const data = await response.json()
-        setContributionData(data)
-      } catch (err) {
-        console.error("Error fetching GitHub contributions:", err)
-        setError("Could not load GitHub contributions")
-      } finally {
-        setLoading(false)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!username) return;
+
+    setLoading(true);
+    fetch(`https://github-contributions-api.jogruber.de/v4/${username}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch");
+        return res.json();
+      })
+      .then(setData)
+      .catch(() => setError("Could not load GitHub contributions"))
+      .finally(() => setLoading(false));
+  }, [username]);
+
+  const weeks = useMemo(() => {
+    if (!data?.contributions) return [];
+
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+    const filtered = data.contributions.filter(
+      (c) => new Date(c.date) >= oneYearAgo
+    );
+
+    const sorted = [...filtered].sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+
+    const weeks: ContributionDay[][] = [];
+    let currentWeek: ContributionDay[] = [];
+
+    sorted.forEach((contrib) => {
+      const day = new Date(contrib.date).getDay();
+      if (day === 0 && currentWeek.length) {
+        weeks.push(currentWeek);
+        currentWeek = [];
       }
-    }
+      currentWeek.push(contrib);
+    });
 
-    if (username) {
-      fetchContributions()
-    }
-  }, [username])
+    if (currentWeek.length) weeks.push(currentWeek);
+    return weeks;
+  }, [data]);
 
-  const getLevelColor = (level: number) => {
-    const colors = [
-      "bg-gray-100 dark:bg-gray-800", // Level 0
-      "bg-emerald-100 dark:bg-emerald-900", // Level 1
-      "bg-emerald-300 dark:bg-emerald-700", // Level 2
-      "bg-emerald-500 dark:bg-emerald-500", // Level 3
-      "bg-emerald-700 dark:bg-emerald-300", // Level 4
-    ]
-    return colors[level] || colors[0]
-  }
+  const totalContributions = useMemo(() => {
+    if (!data?.contributions) return 0;
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    return data.contributions
+      .filter((d) => new Date(d.date) >= oneYearAgo)
+      .reduce((sum, day) => sum + day.count, 0);
+  }, [data]);
 
-  // Process contributions into weeks for display
-  const getContributionWeeks = () => {
-    if (!contributionData?.contributions) return []
+  const getColor = (level: number) => {
+    const light = ["#e5e7eb", "#bbf7d0", "#6ee7b7", "#34d399", "#059669"];
+    const dark = ["#1f2937", "#064e3b", "#047857", "#10b981", "#6ee7b7"];
 
-    // Get only the last year of contributions
-    const oneYearAgo = new Date()
-    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
-
-    const lastYearContributions = contributionData.contributions.filter(
-      (contrib) => new Date(contrib.date) >= oneYearAgo,
-    )
-
-    // Sort by date
-    const sortedContributions = [...lastYearContributions].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-    )
-
-    // Group by week
-    const weeks: ContributionDay[][] = []
-    let currentWeek: ContributionDay[] = []
-    const currentDay = 0
-
-    sortedContributions.forEach((contrib) => {
-      const date = new Date(contrib.date)
-      const dayOfWeek = date.getDay()
-
-      // If we're at the start of a new week (Sunday) and we have days in the current week
-      if (dayOfWeek === 0 && currentWeek.length > 0) {
-        weeks.push([...currentWeek])
-        currentWeek = []
-      }
-
-      // Add the current day
-      currentWeek.push(contrib)
-
-      // If we're at the end of the data, push the remaining week
-      if (sortedContributions.indexOf(contrib) === sortedContributions.length - 1) {
-        weeks.push([...currentWeek])
-      }
-    })
-
-    return weeks
-  }
-
-  // Calculate total contributions for the last year
-  const getLastYearTotal = () => {
-    if (!contributionData?.contributions) return 0
-
-    const oneYearAgo = new Date()
-    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
-
-    return contributionData.contributions
-      .filter((contrib) => new Date(contrib.date) >= oneYearAgo)
-      .reduce((total, day) => total + day.count, 0)
-  }
+    return (isDarkMode ? dark : light)[level] || light[0];
+  };
 
   if (error) {
     return (
@@ -123,15 +113,12 @@ export function GitHubContributionGraph({ username }: GitHubContributionGraphPro
         <CardContent className="p-6">
           <div className="flex items-center justify-center gap-2 text-muted-foreground">
             <Github className="h-5 w-5" />
-            <span>Could not load GitHub contributions</span>
+            <span>{error}</span>
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
-
-  const weeks = getContributionWeeks()
-  const lastYearTotal = getLastYearTotal()
 
   return (
     <Card className="overflow-hidden">
@@ -141,34 +128,45 @@ export function GitHubContributionGraph({ username }: GitHubContributionGraphPro
             <Github className="h-5 w-5" />
             <h3 className="font-medium">GitHub Contributions</h3>
           </div>
-          {!loading && contributionData && (
-            <span className="text-sm text-muted-foreground">{lastYearTotal} contributions in the last year</span>
+          {!loading && (
+            <span className="text-sm text-muted-foreground">
+              {totalContributions} contributions in the last year
+            </span>
           )}
         </div>
 
         {loading ? (
-          <div className="space-y-2">
-            <Skeleton className="h-[100px] w-full" />
-          </div>
+          <Skeleton className="h-[120px] w-full" />
         ) : (
           <div className="overflow-x-auto">
-            <div className="flex gap-[3px] min-w-[750px]">
-              {weeks.map((week, weekIndex) => (
-                <div key={weekIndex} className="flex flex-col gap-[3px]">
-                  {week.map((day, dayIndex) => (
-                    <div
-                      key={`${weekIndex}-${dayIndex}`}
-                      className={`w-3 h-3 rounded-sm ${getLevelColor(day.level)}`}
-                      title={`${day.count} contributions on ${day.date}`}
-                    />
-                  ))}
-                </div>
-              ))}
-            </div>
+            <svg
+              width={weeks.length * 14}
+              height={100}
+              className="block"
+              role="img"
+            >
+              {weeks.map((week, weekIndex) =>
+                week.map((day, dayIndex) => (
+                  <rect
+                    key={`${weekIndex}-${dayIndex}`}
+                    x={weekIndex * 14}
+                    y={dayIndex * 14}
+                    width={12}
+                    height={12}
+                    rx={2}
+                    ry={2}
+                    fill={getColor(day.level)}
+                  >
+                    <title>
+                      {day.count} contributions on {day.date}
+                    </title>
+                  </rect>
+                ))
+              )}
+            </svg>
           </div>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }
-

@@ -3,14 +3,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { AuthorProfile } from "@/components/author-profile";
-import { BlurImage } from "@/components/blur-image";
-import { FeaturedPosts } from "@/components/featured-posts";
 import { GiscusComments } from "@/components/giscus-comments";
 import { PortableText } from "@/components/portable-text";
 import { ShareButtons } from "@/components/share-buttons";
 import { TagList } from "@/components/tag-list";
-import { TrakteerSupport } from "@/components/trakteer-support";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +15,10 @@ import {
   getPostBySlug,
 } from "@/lib/sanity/queries";
 import { formatDate } from "@/lib/utils";
+import Image from "next/image";
+import { AuthorProfile } from "../../../components/author-profile";
+import { FeaturedPosts } from "../../../components/featured-posts";
+import { TrakteerSupport } from "../../../components/trakteer-support";
 import { urlForImage } from "../../../lib/sanity/image";
 
 interface PostPageProps {
@@ -136,18 +136,21 @@ export default async function PostPage(props: PostPageProps) {
             {/* Featured Image */}
             {post.mainImage && (
               <figure className="relative aspect-video overflow-hidden rounded-xl border shadow-sm">
-                <BlurImage
+                {/* <BlurImage
                   image={
-                    urlForImage(post.mainImage)
-                      ?.auto("format")
-                      .fit("crop")
-                      .url() || "/placeholder.svg"
+                    urlForImage(post.mainImage)?.url() || "/placeholder.svg"
                   }
                   alt={post.title}
                   fill
                   className="object-cover"
                   priority
-                  sizes="(max-width: 768px) 100vw, 800px"
+                /> */}
+                <Image
+                  src={urlForImage(post.mainImage)?.url() || "/placeholder.svg"}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  priority
                 />
               </figure>
             )}
@@ -177,45 +180,31 @@ export default async function PostPage(props: PostPageProps) {
           </article>
 
           {/* Sidebar */}
-          <aside className="sticky space-y-8 min-h-screen lg:top-24 lg:overflow-y-auto lg:scrollbar-hide">
-            {/* Author Section dengan transition */}
-            <div
-              className={`rounded-lg border-2 mt-2 bg-card p-2 shadow-sm transition-all duration-300 ${
-                post.author ? "opacity-100" : "opacity-0 h-0 overflow-hidden"
-              }`}
-            >
-              {post.author && (
-                <div className="rounded-lg border-2 mt-2 bg-card p-2 shadow-sm transition-all duration-300">
-                  <h2 className="text-xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                    About the Author
-                  </h2>
-                  <AuthorProfile author={post.author} />
-                </div>
-              )}
-            </div>
+          <aside className="sticky top-24 space-y-8 max-h-screen overflow-y-auto scrollbar-hide">
+            {/* Author */}
+            {post.author && (
+              <div className="rounded-lg border mt-2 bg-card p-2 shadow-sm transition-all duration-300">
+                <h2 className="text-xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  About the Author
+                </h2>
+                <AuthorProfile author={post.author} />
+              </div>
+            )}
 
-            {/* Featured Posts dengan transition */}
-            <div
-              className={`rounded-lg border bg-card p-6 shadow-sm transition-all duration-300 ${
-                filteredFeaturedPosts?.length > 0
-                  ? "opacity-100 mt-8"
-                  : "opacity-0 h-0 overflow-hidden"
-              }`}
-            >
-              {filteredFeaturedPosts?.length > 0 && (
-                <div className="rounded-lg border bg-card p-6 shadow-sm transition-all duration-300 mt-8">
-                  <h2 className="text-xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                    You might also like
-                  </h2>
-                  <div className="relative overflow-hidden group">
-                    <div className="absolute -right-6 top-0 h-full w-1 bg-gradient-to-b from-transparent via-primary/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <FeaturedPosts posts={filteredFeaturedPosts} />
-                  </div>
+            {/* Featured Posts */}
+            {filteredFeaturedPosts?.length > 0 && (
+              <div className="rounded-lg border bg-card p-6 shadow-sm transition-all duration-300 mt-8">
+                <h2 className="text-xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  You might also like
+                </h2>
+                <div className="relative overflow-hidden group">
+                  <div className="absolute -right-6 top-0 h-full w-1 bg-gradient-to-b from-transparent via-primary/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <FeaturedPosts posts={filteredFeaturedPosts} />
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            {/* Support Section - Stabil */}
+            {/* Trakteer */}
             <TrakteerSupport
               username="adxxya30"
               className="mt-8 rounded-lg border bg-card p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"

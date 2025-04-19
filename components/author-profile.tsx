@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Globe, Mail } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { FaGithub, FaInstagram, FaYoutube } from "react-icons/fa";
 import { urlForImage } from "../lib/sanity/image";
-import { BlurImage } from "./blur-image";
 import { CustomLogo } from "./custom-logo";
 
 interface AuthorProfileProps {
@@ -49,16 +49,18 @@ export function AuthorProfile({ author }: AuthorProfileProps) {
       <CardContent className="p-6">
         <div className="flex flex-col gap-6 items-center ">
           {author.image && (
-            <div className="flex h-24 w-24  rounded-full overflow-hidden flex-shrink-0 border-4 border-primary/20 dark:border-primary/30 group">
-              <BlurImage
-                image={
+            <div className="w-24 h-24 overflow-hidden rounded-full border-4 border-primary/20 dark:border-primary/30">
+              <Image
+                src={
                   urlForImage(author.image)?.auto("format").fit("crop").url() ||
                   "/placeholder.svg"
                 }
                 alt={author.name}
-                fill
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                width={96}
+                height={96}
+                className="object-cover transition-transform duration-300 hover:scale-105 rounded-full"
                 sizes="96px"
+                priority // optional, only if this image is critical
               />
             </div>
           )}

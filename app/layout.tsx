@@ -7,7 +7,7 @@ import { Inter } from "next/font/google";
 import type React from "react";
 import "./globals.css";
 import "./prism-theme.css";
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
   title: "Aditya | Portfolio & Blog",
