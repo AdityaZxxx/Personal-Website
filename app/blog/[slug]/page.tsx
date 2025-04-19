@@ -63,43 +63,33 @@ export async function generateMetadata(
     alternates: {
       canonical: `https://adxxya30.vercel.app/blog/${params.slug}`,
     },
+
     openGraph: {
       title: `${post.title} | Aditya`,
       description: post.excerpt,
       url: `https://adxxya30.vercel.app/blog/${params.slug}`,
       siteName: "Aditya's Blog",
-      openGraph: post?.mainImage
-        ? {
-            images: [
-              urlForImage(post.mainImage)?.width(1200)?.height(630)?.url() ??
-                "",
-            ],
-          }
-        : undefined,
       locale: "en_US",
       type: "article",
       publishedTime: post.publishedAt,
       modifiedTime: post._updatedAt || post.publishedAt,
+      images: post.mainImage
+        ? [
+            {
+              url:
+                urlForImage(post.mainImage)
+                  ?.width(1200)
+                  ?.height(630)
+                  ?.fit("crop")
+                  ?.url() ?? "",
+              width: 1200,
+              height: 630,
+              alt: post.title,
+            },
+          ]
+        : [],
       ...(post.author?.name && { authors: [post.author.name] }),
       ...(post.tags && { tags: post.tags }),
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${post.title} | Aditya`,
-      description: post.excerpt,
-      creator: post.author?.name
-        ? `@${post.author.name.replace(/\s+/g, "")}`
-        : "@adxxya30",
-      ...(post.mainImage && {
-        images: [
-          {
-            url: post.mainImage.url,
-            width: 1200,
-            height: 630,
-            alt: post.title,
-          },
-        ],
-      }),
     },
   };
 
