@@ -1,12 +1,14 @@
-import { Footer } from "@/components/footer";
+import ConditionalComponents from "@/components/conditional-components";
 import { Header } from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import type React from "react";
+import { Suspense } from "react";
 import "./globals.css";
 import "./prism-theme.css";
+
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
@@ -35,16 +37,14 @@ export default function RootLayout({
               {children}
               <Analytics />
             </div>
-            <Footer />
-            <Toaster />
-            <AIChatWidget />
+
+            {/* Gunakan Suspense untuk komponen klien */}
+            <Suspense>
+              <ConditionalComponents />
+            </Suspense>
           </div>
         </ThemeProvider>
       </body>
     </html>
   );
 }
-
-import { AIChatWidget } from "@/components/ai-chat-widget";
-import { Toaster } from "@/components/ui/toaster";
-import "./globals.css";

@@ -1,6 +1,5 @@
 import { ArrowLeft, Calendar, ExternalLink, Github } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -10,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { urlForImage } from "@/lib/sanity/image";
 import { getAllProjectSlugs, getProjectBySlug } from "@/lib/sanity/queries";
 import { formatDate } from "@/lib/utils";
+import { BlurImage } from "../../../components/blur-image";
 
 interface ProjectPageProps {
   params: {
@@ -111,8 +111,8 @@ export default async function ProjectPage(props: ProjectPageProps) {
 
           {project.mainImage && (
             <div className="relative aspect-video overflow-hidden rounded-lg">
-              <Image
-                src={
+              <BlurImage
+                image={
                   urlForImage(project.mainImage)?.url() || "/placeholder.svg"
                 }
                 alt={project.title}
@@ -172,8 +172,8 @@ export default async function ProjectPage(props: ProjectPageProps) {
                     key={index}
                     className="relative aspect-video overflow-hidden rounded-lg"
                   >
-                    <Image
-                      src={urlForImage(image)?.url() || "/placeholder.svg"}
+                    <BlurImage
+                      image={urlForImage(image)?.url() || "/placeholder.svg"}
                       alt={`${project.title} screenshot ${index + 1}`}
                       fill
                       className="object-cover"
