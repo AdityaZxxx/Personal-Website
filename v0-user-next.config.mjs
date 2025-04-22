@@ -14,6 +14,13 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    turbo: true,
+  },
+  onDemandEntries: {
+    maxInactiveAge: 60 * 1000, // 1 menit
+    pagesBufferLength: 10,
+  },
   // Add webpack configuration for Sanity Studio files
   webpack: (config, { isServer }) => {
     if (isServer) {
