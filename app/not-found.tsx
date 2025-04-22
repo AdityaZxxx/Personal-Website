@@ -8,7 +8,7 @@ import Link from "next/link";
 export default function NotFound() {
   const shouldReduceMotion = useReducedMotion();
 
-  // Animasi dasar yang ramah performa
+  // Basic animation for stability
   const fadeIn = {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
@@ -21,7 +21,7 @@ export default function NotFound() {
     transition: { duration: 0.6, ease: "easeOut" },
   };
 
-  // Nonaktifkan animasi jika pengguna lebih suka reduced motion
+  // Non activated animation if user prefer reduced motion
   const motionProps = shouldReduceMotion ? {} : fadeIn;
 
   return (

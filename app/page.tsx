@@ -3,16 +3,16 @@ import Image from "next/image";
 import Link from "next/link";
 
 import AnimatedSection from "@/components/animated-section";
+import { CustomLogo } from "@/components/custom-logo";
 import { GitHubContributionGraph } from "@/components/github-contribution-graph";
 import { PostCard } from "@/components/post-card";
 import { ProjectCard } from "@/components/project-card";
+import { SparklesCore } from "@/components/sparkles";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getFeaturedProjects, getLatestPosts } from "@/lib/sanity/queries";
 import { ProjectType } from "@/types/ProjectType";
 import { FaInstagram } from "react-icons/fa";
-import { CustomLogo } from "../components/custom-logo";
-import { SparklesCore } from "../components/sparkles";
 
 export default async function Home() {
   const featuredProjects = await getFeaturedProjects();

@@ -10,6 +10,7 @@ import { FeaturedPosts } from "@/components/featured-posts";
 import { GiscusComments } from "@/components/giscus-comments";
 import { PortableText } from "@/components/portable-text";
 import { ReadingProgress } from "@/components/reading-progress";
+import { ScrollToTopButton } from "@/components/scroll-to-top-buttom";
 import { ShareButtons } from "@/components/share-buttons";
 import { TableOfContents } from "@/components/table-of-contents";
 import { TagList } from "@/components/tag-list";
@@ -24,7 +25,6 @@ import {
   getPostBySlug,
 } from "@/lib/sanity/queries";
 import { formatDate } from "@/lib/utils";
-import { ScrollToTopButton } from "../../../components/scroll-to-top-buttom";
 
 interface PostPageProps {
   params: {
@@ -35,7 +35,9 @@ interface PostPageProps {
 export async function generateMetadata({
   params,
 }: PostPageProps): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
+  // Destructure slug dari params
+  const { slug } = params;
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     return {
@@ -86,15 +88,17 @@ async function SidebarContent({
 }
 
 export default async function PostPage({ params }: PostPageProps) {
+  const { slug } = params;
+
   const [post, featuredPosts] = await Promise.all([
-    getPostBySlug(params.slug),
+    getPostBySlug(slug),
     getFeaturedPosts(4),
   ]);
 
   if (!post) notFound();
 
   const filteredFeaturedPosts = featuredPosts.filter(
-    (p: any) => p.slug.current !== params.slug
+    (p: any) => p.slug.current !== slug
   );
 
   return (
@@ -161,10 +165,8 @@ export default async function PostPage({ params }: PostPageProps) {
                     <div className="flex items-center gap-2">
                       <Clock className="h-4 w-4" />
                       <span>{post.estimatedReadingTime} min read</span>
-                      <User className="xl:hidden block h-4 w-4" />
-                      <span className="xl:hidden block">
-                        {post.author.name}
-                      </span>
+                      <User className="h-4 w-4" />
+                      <span>{post.author.name} </span>
                     </div>
                   )}
                 </div>
@@ -196,7 +198,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 />
               </div>
 
-              <GiscusComments slug={params.slug} />
+              <GiscusComments slug={slug} />
 
               {/* Mobile Sidebar Content */}
               <div className="xl:hidden space-y-8 pt-8 border-t mt-8">

@@ -1,5 +1,3 @@
-"use server";
-
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Initialize the Google Generative AI with your API key

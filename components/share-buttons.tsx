@@ -127,7 +127,7 @@ export function ShareButtons({
 
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-medium">Share this post</h3>
+      <h4 className="text-lg font-medium">Share this post</h4>
       <div className="flex flex-wrap gap-2">
         {shareLinks.map((link) => (
           <Button

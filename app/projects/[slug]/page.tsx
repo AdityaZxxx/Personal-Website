@@ -3,13 +3,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { BlurImage } from "@/components/blur-image";
 import { PortableText } from "@/components/portable-text";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { urlForImage } from "@/lib/sanity/image";
 import { getAllProjectSlugs, getProjectBySlug } from "@/lib/sanity/queries";
 import { formatDate } from "@/lib/utils";
-import { BlurImage } from "../../../components/blur-image";
 
 interface ProjectPageProps {
   params: {

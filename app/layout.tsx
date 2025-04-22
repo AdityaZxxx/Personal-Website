@@ -1,13 +1,14 @@
 import ConditionalComponents from "@/components/conditional-components";
 import { Header } from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
+import "@/styles/prism-theme.css";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Fredoka } from "next/font/google";
 import type React from "react";
 import { Suspense } from "react";
 import "./globals.css";
-import "./prism-theme.css";
+import GlobalLoading from "./loading";
 
 const fredoka = Fredoka({
   weight: "500",
@@ -42,8 +43,8 @@ export default function RootLayout({
               <Analytics />
             </div>
 
-            {/* Gunakan Suspense untuk komponen klien */}
-            <Suspense>
+            {/* Use suspense for client components */}
+            <Suspense fallback={<GlobalLoading />}>
               <ConditionalComponents />
             </Suspense>
           </div>

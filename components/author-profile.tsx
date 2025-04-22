@@ -72,9 +72,9 @@ export function AuthorProfile({ author, className }: AuthorProfileProps) {
 
           {/* Author Info */}
           <div className="space-y-3 w-full">
-            <h3 className="text-xl font-bold tracking-tight  bg-clip-text ">
+            <h4 className="text-xl font-bold tracking-tight  bg-clip-text ">
               {author.name}
-            </h3>
+            </h4>
 
             {author.bio && (
               <div className="text-sm text-muted-foreground">
