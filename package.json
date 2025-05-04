@@ -2,6 +2,14 @@
   "name": "aditya-rahmad-portofolio-and-blog",
   "version": "0.1.0",
   "private": true,
+  "author": "Aditya Rahmad",
+  "license": "MIT",
+  "description": "Aditya Rahmad Portofolio and Blog",
+  "homepage": "https://adxxya30.vercel.app/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AdityaZxxx/Personal-Website.git"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -10,7 +18,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
-    "@hookform/resolvers": "^3.9.1",
+    "@hookform/resolvers": "^3.10.0",
     "@portabletext/react": "latest",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.4",
@@ -57,6 +65,7 @@
     "embla-carousel-react": "8.5.1",
     "framer-motion": "^12.7.4",
     "input-otp": "1.4.1",
+    "leaflet": "^1.9.4",
     "lucide-react": "^0.454.0",
     "motion": "^12.6.3",
     "next": "15.2.4",
@@ -68,23 +77,28 @@
     "react-day-picker": "8.10.1",
     "react-dom": "^19",
     "react-github-calendar": "^4.5.6",
-    "react-hook-form": "^7.54.1",
+    "react-hook-form": "^7.55.0",
     "react-icons": "^5.5.0",
+    "react-leaflet": "^5.0.0",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.0",
+    "redis": "^5.0.0",
+    "resend": "^4.5.0",
     "sanity": "latest",
     "sonner": "^1.7.1",
     "styled-components": "latest",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.6",
-    "zod": "^3.24.1"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.17",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "postcss": "^8",
+    "prettier": "^3.5.3",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
   }

@@ -11,12 +11,13 @@ import { SparklesCore } from "@/components/sparkles";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getFeaturedProjects, getLatestPosts } from "@/lib/sanity/queries";
+import { PostType } from "@/types/PostType";
 import { ProjectType } from "@/types/ProjectType";
 import { FaInstagram } from "react-icons/fa";
 
 export default async function Home() {
   const featuredProjects = await getFeaturedProjects();
-  const latestPosts = await getLatestPosts(3);
+  const latestPosts: PostType[] = await getLatestPosts(3);
 
   return (
     <main className="flex min-h-screen overflow-x-hidden flex-col">
@@ -286,7 +287,7 @@ export default async function Home() {
                 </p>
               </div>
               <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {latestPosts.map((post: any) => (
+                {latestPosts.map((post) => (
                   <PostCard key={post._id} post={post} />
                 ))}
               </div>

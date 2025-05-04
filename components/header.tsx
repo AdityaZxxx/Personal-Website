@@ -3,7 +3,16 @@
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Folder, HomeIcon, Image, Menu, Notebook, User, X } from "lucide-react";
+import {
+  Folder,
+  HomeIcon,
+  Image,
+  Mail,
+  Menu,
+  Notebook,
+  User,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -92,6 +101,7 @@ const NavItems = ({ icon = false }: { icon?: boolean }) => {
     { href: "/projects", label: "Projects", icon: <Folder size={18} /> },
     { href: "/blog", label: "Blog", icon: <Notebook size={18} /> },
     { href: "/gallery", label: "Gallery", icon: <Image size={18} /> },
+    { href: "/contact", label: "Contact", icon: <Mail size={18} /> },
   ];
 
   return (

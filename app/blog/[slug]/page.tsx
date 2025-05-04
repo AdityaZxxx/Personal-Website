@@ -198,7 +198,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 />
               </div>
 
-              <GiscusComments slug={slug} />
+              <GiscusComments />
 
               {/* Mobile Sidebar Content */}
               <div className="xl:hidden space-y-8 pt-8 border-t mt-8">

@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getAllCategories } from "@/lib/sanity/queries";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { BlogSearch } from "../../components/blog-search";
 
 export const metadata: Metadata = {
   title: "Blog | Aditya",
@@ -14,16 +15,12 @@ export const metadata: Metadata = {
 interface BlogPageProps {
   searchParams: {
     category?: string;
+    search?: string;
   };
 }
 
 export default async function BlogPage(props: BlogPageProps) {
   const searchParams = await props.searchParams;
-
-  const category =
-    typeof searchParams?.category === "string"
-      ? searchParams.category
-      : undefined;
 
   const categories = await getAllCategories();
 
@@ -53,13 +50,22 @@ export default async function BlogPage(props: BlogPageProps) {
         </div>
       </div>
 
-      <div className="sticky top-0 z-10 py-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-        <CategoryFilter categories={categories} activeCategory={category} />
+      <div className="sticky top-0 z-10 py-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 space-y-4">
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+          <CategoryFilter
+            categories={categories}
+            activeCategory={searchParams.category}
+          />
+          <BlogSearch />
+        </div>
       </div>
 
       <div className="mt-8 max-w-7xl mx-auto">
         <Suspense fallback={<PostListSkeleton />}>
-          <PostListServer category={category} />
+          <PostListServer
+            category={searchParams.category}
+            searchQuery={searchParams.search}
+          />
         </Suspense>
       </div>
     </main>

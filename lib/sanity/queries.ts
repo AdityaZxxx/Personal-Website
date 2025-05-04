@@ -268,27 +268,26 @@
 //   );
 // }
 
-
-import { client } from "./client"
-import { groq } from "next-sanity"
+import { groq } from "next-sanity";
+import { client } from "./client";
 
 // Blog post queries
-export async function getAllPosts(category?: string) {
-  const filter = category ? `&& references(*[_type == "category" && slug.current == "${category}"]._id)` : ""
+// export async function getAllPosts(category?: string) {
+//   const filter = category ? `&& references(*[_type == "category" && slug.current == "${category}"]._id)` : ""
 
-  return client.fetch(
-    groq`*[_type == "post" && publishedAt < now() ${filter}] | order(publishedAt desc) {
-      _id,
-      title,
-      slug,
-      excerpt,
-      mainImage,
-      publishedAt,
-      "categories": categories[]->{ _id, title, slug },
-      "estimatedReadingTime": round(length(pt::text(body)) / 5 / 180)
-    }`,
-  )
-}
+//   return client.fetch(
+//     groq`*[_type == "post" && publishedAt < now() ${filter}] | order(publishedAt desc) {
+//       _id,
+//       title,
+//       slug,
+//       excerpt,
+//       mainImage,
+//       publishedAt,
+//       "categories": categories[]->{ _id, title, slug },
+//       "estimatedReadingTime": round(length(pt::text(body)) / 5 / 180)
+//     }`,
+//   )
+// }
 
 export async function getLatestPosts(limit = 3) {
   return client.fetch(
@@ -301,8 +300,8 @@ export async function getLatestPosts(limit = 3) {
       publishedAt,
       "categories": categories[]->{ _id, title, slug },
       "estimatedReadingTime": round(length(pt::text(body)) / 5 / 180)
-    }`,
-  )
+    }`
+  );
 }
 
 // Update the getPostBySlug function to include author and tags
@@ -328,8 +327,8 @@ export async function getPostBySlug(slug: string) {
       },
       tags
     }`,
-    { slug },
-  )
+    { slug }
+  );
 }
 
 // Add a function to get featured posts
@@ -342,12 +341,14 @@ export async function getFeaturedPosts(limit = 4) {
       mainImage,
       publishedAt,
       "categories": categories[]->{ _id, title, slug { current } }
-    }`,
-  )
+    }`
+  );
 }
 
 export async function getAllPostSlugs() {
-  return client.fetch(groq`*[_type == "post" && defined(slug.current)][].slug.current`)
+  return client.fetch(
+    groq`*[_type == "post" && defined(slug.current)][].slug.current`
+  );
 }
 
 export async function getAllCategories() {
@@ -356,13 +357,15 @@ export async function getAllCategories() {
       _id,
       title,
       slug
-    }`,
-  )
+    }`
+  );
 }
 
 // Project queries
 export async function getAllProjects(category?: string) {
-  const filter = category ? `&& references(*[_type == "projectCategory" && slug.current == "${category}"]._id)` : ""
+  const filter = category
+    ? `&& references(*[_type == "projectCategory" && slug.current == "${category}"]._id)`
+    : "";
 
   return client.fetch(
     groq`*[_type == "project" ${filter}] | order(completedAt desc) {
@@ -373,8 +376,8 @@ export async function getAllProjects(category?: string) {
       mainImage,
       technologies,
       "categories": categories[]->{ _id, title, slug }
-    }`,
-  )
+    }`
+  );
 }
 
 export async function getFeaturedProjects(limit = 3) {
@@ -387,8 +390,8 @@ export async function getFeaturedProjects(limit = 3) {
       mainImage,
       technologies,
       "categories": categories[]->{ _id, title, slug }
-    }`,
-  )
+    }`
+  );
 }
 
 export async function getProjectBySlug(slug: string) {
@@ -407,12 +410,14 @@ export async function getProjectBySlug(slug: string) {
       images,
       "categories": categories[]->{ _id, title, slug }
     }`,
-    { slug },
-  )
+    { slug }
+  );
 }
 
 export async function getAllProjectSlugs() {
-  return client.fetch(groq`*[_type == "project" && defined(slug.current)][].slug.current`)
+  return client.fetch(
+    groq`*[_type == "project" && defined(slug.current)][].slug.current`
+  );
 }
 
 export async function getAllProjectCategories() {
@@ -421,13 +426,15 @@ export async function getAllProjectCategories() {
       _id,
       title,
       slug
-    }`,
-  )
+    }`
+  );
 }
 
 // Gallery queries
 export async function getAllGalleryItems(category?: string) {
-  const filter = category ? `&& references(*[_type == "galleryCategory" && slug.current == "${category}"]._id)` : ""
+  const filter = category
+    ? `&& references(*[_type == "galleryCategory" && slug.current == "${category}"]._id)`
+    : "";
 
   return client.fetch(
     groq`*[_type == "galleryItem" ${filter}] | order(date desc) {
@@ -441,8 +448,8 @@ export async function getAllGalleryItems(category?: string) {
       videoThumbnail,
       date,
       "categories": categories[]->{ _id, title, slug }
-    }`,
-  )
+    }`
+  );
 }
 
 export async function getFeaturedGalleryItems(limit = 6) {
@@ -458,8 +465,8 @@ export async function getFeaturedGalleryItems(limit = 6) {
       videoThumbnail,
       date,
       "categories": categories[]->{ _id, title, slug }
-    }`,
-  )
+    }`
+  );
 }
 
 export async function getGalleryItemBySlug(slug: string) {
@@ -477,8 +484,8 @@ export async function getGalleryItemBySlug(slug: string) {
       tags,
       "categories": categories[]->{ _id, title, slug }
     }`,
-    { slug },
-  )
+    { slug }
+  );
 }
 
 export async function getAllGalleryCategories() {
@@ -488,7 +495,30 @@ export async function getAllGalleryCategories() {
       title,
       slug,
       description
-    }`,
-  )
+    }`
+  );
 }
 
+export async function getAllPosts(category?: string, searchQuery?: string) {
+  let query = `*[_type == "post"`;
+
+  if (category) {
+    query += ` && "${category}" in categories[]->slug.current`;
+  }
+
+  if (searchQuery) {
+    query += ` && (title match "${searchQuery}*" || excerpt match "${searchQuery}*" || body[].children[].text match "${searchQuery}*")`;
+  }
+
+  query += `] | order(publishedAt desc) {
+    _id,
+    title,
+    slug,
+    excerpt,
+    publishedAt,
+    categories[]->{title, slug},
+    mainImage
+  }`;
+
+  return await client.fetch(query);
+}

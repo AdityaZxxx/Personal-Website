@@ -1,41 +1,16 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { urlForImage } from "@/lib/sanity/image";
 import { formatDate } from "@/lib/utils";
 import { Calendar } from "lucide-react";
 import Link from "next/link";
+import { PostType } from "../types/PostType";
 import { BlurImage } from "./blur-image";
 
-interface PostCardProps {
-  post: {
-    _id: string;
-    title: string;
-    slug: {
-      _type: string;
-      current: string;
-    };
-    excerpt?: string;
-    mainImage?: any;
-    publishedAt: string;
-    categories?: Array<{
-      _id: string;
-      title: string;
-      slug: string;
-    }>;
-    estimatedReadingTime?: number;
-  };
-}
+type PostCardProps = {
+  post: PostType;
+};
 
 export function PostCard({ post }: PostCardProps) {
-  function getImageUrl(image: any): string {
-    try {
-      return (
-        urlForImage(image)?.width(600).height(340).url() ?? "/placeholder.svg"
-      );
-    } catch {
-      return "/placeholder.svg";
-    }
-  }
   return (
     <Link href={`/blog/${post.slug.current}`}>
       <Card className="overflow-hidden transition-all hover:shadow-md dark:hover:shadow-purple-900 h-full flex flex-col border-2">

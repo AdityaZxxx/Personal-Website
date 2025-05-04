@@ -1,38 +1,43 @@
 "use client";
 
+import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Check, Copy } from "lucide-react";
 import Prism from "prismjs";
 import { useEffect, useRef, useState } from "react";
 
-// Import markup-templating first (dependency for other languages)
-import "prismjs/components/prism-markup-templating";
+// Import Prism languages in a more organized way
+const PRISM_LANGUAGES = [
+  "prism-markup-templating", // Must be first (dependency for others)
+  "prism-bash",
+  "prism-c",
+  "prism-cpp",
+  "prism-csharp",
+  "prism-css",
+  "prism-dart",
+  "prism-go",
+  "prism-graphql",
+  "prism-java",
+  "prism-javascript",
+  "prism-json",
+  "prism-jsx",
+  "prism-markdown",
+  "prism-php",
+  "prism-python",
+  "prism-ruby",
+  "prism-rust",
+  "prism-scss",
+  "prism-sql",
+  "prism-swift",
+  "prism-tsx",
+  "prism-typescript",
+  "prism-yaml",
+] as const;
 
-// Import Prism languages
-import { toast } from "@/hooks/use-toast";
-import "prismjs/components/prism-bash";
-import "prismjs/components/prism-c";
-import "prismjs/components/prism-cpp";
-import "prismjs/components/prism-csharp";
-import "prismjs/components/prism-css";
-import "prismjs/components/prism-dart";
-import "prismjs/components/prism-go";
-import "prismjs/components/prism-graphql";
-import "prismjs/components/prism-java";
-import "prismjs/components/prism-javascript";
-import "prismjs/components/prism-json";
-import "prismjs/components/prism-jsx";
-import "prismjs/components/prism-markdown";
-import "prismjs/components/prism-php";
-import "prismjs/components/prism-python";
-import "prismjs/components/prism-ruby";
-import "prismjs/components/prism-rust";
-import "prismjs/components/prism-scss";
-import "prismjs/components/prism-sql";
-import "prismjs/components/prism-swift";
-import "prismjs/components/prism-tsx";
-import "prismjs/components/prism-typescript";
-import "prismjs/components/prism-yaml";
+// Dynamically import all Prism languages
+PRISM_LANGUAGES.forEach((lang) => {
+  import(`prismjs/components/${lang}`);
+});
 
 interface CodeBlockProps {
   language: string;
@@ -40,66 +45,67 @@ interface CodeBlockProps {
   filename?: string;
 }
 
+const LANGUAGE_MAP: Record<string, string> = {
+  js: "javascript",
+  jsx: "jsx",
+  ts: "typescript",
+  tsx: "tsx",
+  py: "python",
+  rb: "ruby",
+  sh: "bash",
+  yml: "yaml",
+};
+
 export function CodeBlock({ language, value, filename }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
-  const codeRef = useRef<HTMLElement>(null);
   const [mounted, setMounted] = useState(false);
+  const codeRef = useRef<HTMLElement>(null);
 
-  // Map language aliases to Prism.js supported languages
   const getLanguageClass = (lang: string) => {
     if (!lang) return "text";
-
-    const languageMap: Record<string, string> = {
-      js: "javascript",
-      jsx: "jsx",
-      ts: "typescript",
-      tsx: "tsx",
-      py: "python",
-      rb: "ruby",
-      sh: "bash",
-      yml: "yaml",
-    };
-
-    return languageMap[lang.toLowerCase()] || lang.toLowerCase();
+    return LANGUAGE_MAP[lang.toLowerCase()] || lang.toLowerCase();
   };
 
   const languageClass = getLanguageClass(language);
 
-  // Wait for client-side hydration to complete before highlighting
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Highlight code after component is mounted and DOM is hydrated
   useEffect(() => {
     if (mounted && codeRef.current) {
       Prism.highlightElement(codeRef.current);
     }
   }, [mounted, value, language]);
 
-  if (!mounted) return null;
-
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(value);
       setCopied(true);
-      toast({
-        title: "✅ Code copied",
-        description: "The code has been copied to your clipboard.",
-      });
+      showToast(
+        "✅ Code copied",
+        "The code has been copied to your clipboard."
+      );
 
-      // Reset the copied state after 2 seconds
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      toast({
-        title: "❎ Failed to copy",
-        description: "Could not copy the code to your clipboard.",
-        variant: "destructive",
-      });
+      showToast(
+        "❎ Failed to copy",
+        "Could not copy the code to your clipboard.",
+        "destructive"
+      );
     }
   };
+
+  const showToast = (
+    title: string,
+    description: string,
+    variant?: "destructive"
+  ) => {
+    toast({ title, description, variant });
+  };
+
+  if (!mounted) return null;
 
   return (
     <div className="relative my-6 rounded-lg overflow-hidden bg-muted">

@@ -1,5 +1,6 @@
 import { GalleryItem } from "@/components/gallery-item";
 import { getAllGalleryItems } from "@/lib/sanity/queries";
+import { GalleryNotFound } from "./custom-not-found";
 
 interface GalleryGridProps {
   category?: string;
@@ -9,11 +10,7 @@ export async function GalleryGrid({ category }: GalleryGridProps) {
   const items = await getAllGalleryItems(category);
 
   if (items.length === 0) {
-    return (
-      <div className="text-center py-10">
-        <p className="text-muted-foreground">No gallery items found.</p>
-      </div>
-    );
+    return <GalleryNotFound message="No gallery items found." />;
   }
 
   return (

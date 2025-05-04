@@ -17,36 +17,41 @@ interface ProjectPageProps {
   };
 }
 
-export async function generateMetadata(
-  props: ProjectPageProps
-): Promise<Metadata> {
-  const params = await props.params;
-  const project = await getProjectBySlug(params?.slug);
+// Constants for reusable strings
+const APP_NAME = "Aditya";
+const NOT_FOUND_TITLE = "Project Not Found";
 
-  if (!project) {
+export async function generateMetadata({
+  params,
+}: ProjectPageProps): Promise<Metadata> {
+  if (!params?.slug) {
     return {
-      title: "Project Not Found | Aditya",
+      title: `${NOT_FOUND_TITLE} | ${APP_NAME}`,
     };
   }
 
+  const project = await getProjectBySlug(params.slug);
+
   if (!project) {
     return {
-      title: "Project Not Found | Aditya",
+      title: `${NOT_FOUND_TITLE} | ${APP_NAME}`,
     };
   }
 
-  return {
-    title: `${project.title} | Aditya`,
+  const metadata: Metadata = {
+    title: `${project.title} | ${APP_NAME}`,
     description: project.excerpt,
-    openGraph: project?.mainImage
-      ? {
-          images: [
-            urlForImage(project.mainImage)?.width(1200)?.height(630)?.url() ??
-              "",
-          ],
-        }
-      : undefined,
   };
+
+  if (project?.mainImage) {
+    metadata.openGraph = {
+      images: [
+        urlForImage(project.mainImage)?.width(1200)?.height(630)?.url() ?? "",
+      ],
+    };
+  }
+
+  return metadata;
 }
 
 export async function generateStaticParams() {
@@ -56,19 +61,74 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function ProjectPage(props: ProjectPageProps) {
-  const params = await props.params;
-  const slug = params?.slug;
+const ProjectLinkButton = ({
+  href,
+  icon: Icon,
+  children,
+  variant = "default",
+}: {
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  children: React.ReactNode;
+  variant?: "default" | "outline";
+}) => (
+  <Link href={href} target="_blank" rel="noopener noreferrer">
+    <Button variant={variant}>
+      <Icon className="mr-2 h-4 w-4" />
+      {children}
+    </Button>
+  </Link>
+);
 
-  if (!slug) {
+const ProjectGallery = ({
+  images,
+  title,
+}: {
+  images: any[];
+  title: string;
+}) => (
+  <div className="space-y-4">
+    <h2 className="text-2xl font-bold">Project Gallery</h2>
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      {images.map((image, index) => (
+        <div
+          key={`${image._key || index}`}
+          className="relative aspect-video overflow-hidden rounded-lg"
+        >
+          <BlurImage
+            image={urlForImage(image)?.url() || "/placeholder.svg"}
+            alt={`${title} screenshot ${index + 1}`}
+            fill
+            className="object-cover"
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+export default async function ProjectPage({ params }: ProjectPageProps) {
+  if (!params?.slug) {
     notFound();
   }
 
-  const project = await getProjectBySlug(slug);
+  const project = await getProjectBySlug(params.slug);
 
   if (!project) {
     notFound();
   }
+
+  const {
+    title,
+    categories,
+    completedAt,
+    mainImage,
+    technologies,
+    demoUrl,
+    repoUrl,
+    description,
+    images,
+  } = project;
 
   return (
     <main className="container px-4 py-12 md:px-6 md:py-24">
@@ -82,9 +142,9 @@ export default async function ProjectPage(props: ProjectPageProps) {
 
         <div className="space-y-6">
           <div className="space-y-2">
-            {project.categories && project.categories.length > 0 && (
+            {categories?.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                {project.categories.map((category: any) => (
+                {categories.map((category: any) => (
                   <Link
                     key={category._id}
                     href={`/projects?category=${category.slug}`}
@@ -95,27 +155,21 @@ export default async function ProjectPage(props: ProjectPageProps) {
               </div>
             )}
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              {project.title}
+              {title}
             </h1>
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-              {project.completedAt && (
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" />
-                  <time dateTime={project.completedAt}>
-                    {formatDate(project.completedAt)}
-                  </time>
-                </div>
-              )}
-            </div>
+            {completedAt && (
+              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                <Calendar className="h-4 w-4" />
+                <time dateTime={completedAt}>{formatDate(completedAt)}</time>
+              </div>
+            )}
           </div>
 
-          {project.mainImage && (
+          {mainImage && (
             <div className="relative aspect-video overflow-hidden rounded-lg">
               <BlurImage
-                image={
-                  urlForImage(project.mainImage)?.url() || "/placeholder.svg"
-                }
-                alt={project.title}
+                image={urlForImage(mainImage)?.url() || "/placeholder.svg"}
+                alt={title}
                 fill
                 className="object-cover"
                 priority
@@ -123,65 +177,35 @@ export default async function ProjectPage(props: ProjectPageProps) {
             </div>
           )}
 
-          <div className="flex flex-wrap gap-2">
-            {project.technologies &&
-              project.technologies.map((tech: any) => (
+          {technologies?.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {technologies.map((tech: any) => (
                 <Badge key={tech} variant="outline">
                   {tech}
                 </Badge>
               ))}
-          </div>
+            </div>
+          )}
 
           <div className="flex flex-wrap gap-4">
-            {project.demoUrl && (
-              <Link
-                href={project.demoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button>
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  Live Demo
-                </Button>
-              </Link>
+            {demoUrl && (
+              <ProjectLinkButton href={demoUrl} icon={ExternalLink}>
+                Live Demo
+              </ProjectLinkButton>
             )}
-            {project.repoUrl && (
-              <Link
-                href={project.repoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button variant="outline">
-                  <Github className="mr-2 h-4 w-4" />
-                  Source Code
-                </Button>
-              </Link>
+            {repoUrl && (
+              <ProjectLinkButton href={repoUrl} icon={Github} variant="outline">
+                Source Code
+              </ProjectLinkButton>
             )}
           </div>
 
           <div className="prose prose-gray dark:prose-invert max-w-none">
-            <PortableText value={project.description} />
+            <PortableText value={description} />
           </div>
 
-          {project.images && project.images.length > 0 && (
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold">Project Gallery</h2>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                {project.images.map((image: any, index: any) => (
-                  <div
-                    key={index}
-                    className="relative aspect-video overflow-hidden rounded-lg"
-                  >
-                    <BlurImage
-                      image={urlForImage(image)?.url() || "/placeholder.svg"}
-                      alt={`${project.title} screenshot ${index + 1}`}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+          {images?.length > 0 && (
+            <ProjectGallery images={images} title={title} />
           )}
         </div>
       </div>

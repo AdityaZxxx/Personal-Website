@@ -14,6 +14,7 @@ const footerLinks = {
     { href: "/projects", label: "Projects" },
     { href: "/blog", label: "Blog" },
     { href: "/gallery", label: "Gallery" },
+    { href: "/contact", label: "Contact" },
   ],
   connect: [
     {

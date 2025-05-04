@@ -25,9 +25,10 @@ interface GalleryItemProps {
       slug: { current: string };
     }>;
   };
+  notFoundMessage?: string;
 }
 
-export function GalleryItem({ item }: GalleryItemProps) {
+export function GalleryItem({ item, notFoundMessage }: GalleryItemProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
