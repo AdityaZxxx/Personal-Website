@@ -1,10 +1,11 @@
-// components/open-map.tsx
 "use client";
 
+import "leaflet/dist/leaflet.css"; // ✨ Tambahkan ini untuk styling Leaflet
 import { MapPin } from "lucide-react";
 import dynamic from "next/dynamic";
 
-// Dynamically import the map component to avoid SSR
+import "leaflet/dist/leaflet.css";
+
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
@@ -31,13 +32,17 @@ export function OpenMap({ latitude, longitude, className = "" }: OpenMapProps) {
   return (
     <div
       className={`relative rounded-xl overflow-hidden shadow-sm border bg-muted ${className}`}
+      style={{ height: "300px" }} // ✅ Fix height untuk Leaflet
     >
       <MapContainer
         center={[latitude, longitude]}
         zoom={15}
         scrollWheelZoom={false}
         className="w-full h-full"
-        style={{ aspectRatio: "4/3" }}
+        zoomControl={true}
+        dragging={true}
+        doubleClickZoom={true}
+        style={{ height: "100%", width: "100%" }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

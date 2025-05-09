@@ -10,7 +10,7 @@ export function BlogSearch() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("search") || "");
-  const debouncedQuery = useDebounce(query, 3000);
+  const debouncedQuery = useDebounce(query, 1000);
 
   useEffect(() => {
     if (debouncedQuery) {

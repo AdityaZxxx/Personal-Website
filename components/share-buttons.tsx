@@ -5,7 +5,13 @@ import { toast } from "@/hooks/use-toast";
 import { Check, Facebook, Link2, Linkedin, Mail } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { FaPinterest, FaReddit, FaTelegram, FaWhatsapp } from "react-icons/fa";
+import {
+  FaInstagram,
+  FaPinterest,
+  FaReddit,
+  FaTelegram,
+  FaWhatsapp,
+} from "react-icons/fa";
 import { CustomLogo } from "./custom-logo";
 
 interface ShareButtonsProps {
@@ -59,6 +65,18 @@ export function ShareButtons({
           description ? `\n\n${description}` : ""
         }\n\n${url}`;
         return `https://wa.me/?text=${encodeURIComponent(text)}`;
+      },
+    },
+    {
+      name: "Instagram",
+      icon: FaInstagram,
+      getUrl: () => {
+        const text = `${title}${
+          description ? `\n\n${description}` : ""
+        }\n\n${url}`;
+        return `https://www.instagram.com/sharer/sharer.php?text=${encodeURIComponent(
+          text
+        )}`;
       },
     },
     {
@@ -143,8 +161,6 @@ export function ShareButtons({
           </Button>
         ))}
 
-        {/* Fallback copy button */}
-        {/* {(!navigator.share || typeof navigator === "undefined") && ( */}
         <Button
           variant="outline"
           size="icon"

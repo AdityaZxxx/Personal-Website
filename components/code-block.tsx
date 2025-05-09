@@ -87,7 +87,7 @@ export function CodeBlock({ language, value, filename }: CodeBlockProps) {
         "The code has been copied to your clipboard."
       );
 
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), 1000);
     } catch (err) {
       showToast(
         "❎ Failed to copy",

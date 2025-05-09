@@ -11,26 +11,23 @@ import { urlForImage } from "@/lib/sanity/image";
 import { getAllProjectSlugs, getProjectBySlug } from "@/lib/sanity/queries";
 import { formatDate } from "@/lib/utils";
 
-interface ProjectPageProps {
-  params: {
-    slug: string;
-  };
-}
-
 // Constants for reusable strings
 const APP_NAME = "Aditya";
 const NOT_FOUND_TITLE = "Project Not Found";
 
 export async function generateMetadata({
   params,
-}: ProjectPageProps): Promise<Metadata> {
-  if (!params?.slug) {
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  if (!slug) {
     return {
       title: `${NOT_FOUND_TITLE} | ${APP_NAME}`,
     };
   }
 
-  const project = await getProjectBySlug(params.slug);
+  const project = await getProjectBySlug(slug);
 
   if (!project) {
     return {
@@ -107,12 +104,20 @@ const ProjectGallery = ({
   </div>
 );
 
-export default async function ProjectPage({ params }: ProjectPageProps) {
-  if (!params?.slug) {
+export default async function PostPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const { slug } = await params;
+
+  if (!slug) {
     notFound();
   }
 
-  const project = await getProjectBySlug(params.slug);
+  const project = await getProjectBySlug(slug);
 
   if (!project) {
     notFound();

@@ -15,7 +15,6 @@ import { ShareButtons } from "@/components/share-buttons";
 import { TableOfContents } from "@/components/table-of-contents";
 import { TagList } from "@/components/tag-list";
 import { TrakteerSupport } from "@/components/trakteer-support";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { urlForImage } from "@/lib/sanity/image";
@@ -25,18 +24,15 @@ import {
   getPostBySlug,
 } from "@/lib/sanity/queries";
 import { formatDate } from "@/lib/utils";
-
-interface PostPageProps {
-  params: {
-    slug: string;
-  };
-}
+import { Badge } from "../../../components/ui/badge";
 
 export async function generateMetadata({
   params,
-}: PostPageProps): Promise<Metadata> {
-  // Destructure slug dari params
-  const { slug } = params;
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+
   const post = await getPostBySlug(slug);
 
   if (!post) {
@@ -87,8 +83,14 @@ async function SidebarContent({
   );
 }
 
-export default async function PostPage({ params }: PostPageProps) {
-  const { slug } = params;
+export default async function PostPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const { slug } = await params;
 
   const [post, featuredPosts] = await Promise.all([
     getPostBySlug(slug),
@@ -98,8 +100,24 @@ export default async function PostPage({ params }: PostPageProps) {
   if (!post) notFound();
 
   const filteredFeaturedPosts = featuredPosts.filter(
-    (p: any) => p.slug.current !== slug
+    (p: any) => p.slug !== slug
   );
+  const categoryColors = [
+    "bg-red-100 text-red-700",
+    "bg-green-100 text-green-700",
+    "bg-blue-100 text-blue-700",
+    "bg-yellow-100 text-yellow-700",
+    "bg-purple-100 text-purple-700",
+    "bg-pink-100 text-pink-700",
+    "bg-orange-100 text-orange-700",
+  ];
+
+  function getColorClass(slug: string) {
+    const index =
+      slug.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) %
+      categoryColors.length;
+    return categoryColors[index];
+  }
 
   return (
     <>
@@ -132,6 +150,9 @@ export default async function PostPage({ params }: PostPageProps) {
             {/* Main Content */}
             <article className="space-y-8">
               <header className="space-y-4">
+                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+                  {post.title}
+                </h1>
                 {post.categories?.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {post.categories.map((category: any) => (
@@ -141,7 +162,7 @@ export default async function PostPage({ params }: PostPageProps) {
                       >
                         <Badge
                           variant="secondary"
-                          className="hover:bg-primary/10 hover:text-primary transition-colors"
+                          className={`transition-colors hover:opacity-90 ${getColorClass(category.slug.current)}`}
                         >
                           {category.title}
                         </Badge>
@@ -149,10 +170,6 @@ export default async function PostPage({ params }: PostPageProps) {
                     ))}
                   </div>
                 )}
-
-                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-                  {post.title}
-                </h1>
 
                 <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">

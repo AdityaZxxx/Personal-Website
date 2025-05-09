@@ -17,7 +17,7 @@ import { FaInstagram } from "react-icons/fa";
 
 export default async function Home() {
   const featuredProjects = await getFeaturedProjects();
-  const latestPosts: PostType[] = await getLatestPosts(3);
+  const latestPosts: PostType[] = await getLatestPosts(6);
 
   return (
     <main className="flex min-h-screen overflow-x-hidden flex-col">
@@ -316,7 +316,7 @@ export default async function Home() {
               </p>
             </div>
             <div className="w-full max-w-sm space-y-2">
-              <Link href="mailto:adityaofficial714@gmail.com">
+              <Link href="/contact">
                 <Button className="w-full">Contact Me</Button>
               </Link>
             </div>

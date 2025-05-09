@@ -411,16 +411,8 @@ export default function ContactPage() {
             </div>
 
             {/* Map */}
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
-            >
-              <OpenMap
-                latitude={-6.2094}
-                longitude={106.7996}
-                className="mt-8"
-              />
-            </motion.div>
+
+            <OpenMap latitude={-6.2094} longitude={106.7996} />
           </motion.div>
         </motion.div>
       </div>
