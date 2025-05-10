@@ -145,3 +145,16 @@
 .animate-gradient {
   animation: gradient 5s ease infinite;
 }
+
+/* In your global CSS */
+.text-gradient {
+  color: white; /* Fallback */
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .text-gradient {
+    color: transparent;
+  }
+}
