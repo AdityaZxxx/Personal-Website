@@ -81,7 +81,7 @@ export default async function Home() {
                 I help founders turn ideas
               </div>
               <div className="relative group mt-2">
-                <span className="relative z-10 text-white">seamless </span>
+                <span className="relative z-10 text-white">into seamless </span>
                 <span className="italic font-serif text-gradient bg-clip-text text-transparent bg-gradient-to-b from-gray-300 to-white">
                   digital experiences
                 </span>
