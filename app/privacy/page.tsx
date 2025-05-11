@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Aditya",
+  title: "Privacy Policy",
   description:
     "Learn how we collect, use, and protect your personal information",
 };

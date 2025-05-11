@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Projects | Aditya",
+  title: "Projects",
   description: "Explore my portfolio of web development and design projects.",
 };
 

@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | Aditya",
+  title: "Terms of Service",
   description:
     "Learn about the terms and conditions governing your use of our services",
 };

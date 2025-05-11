@@ -1,13 +1,13 @@
 "use client";
 
+import { BlurImage } from "@/components/blur-image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
+import { PostType } from "@/types/PostType";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 import Link from "next/link";
-import { PostType } from "../../types/PostType";
-import { BlurImage } from "../blur-image";
 
 export function PostCard({ post }: { post: PostType }) {
   return (

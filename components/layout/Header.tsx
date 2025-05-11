@@ -2,65 +2,67 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { AnimatePresence, motion } from "framer-motion"; // Tambahkan framer-motion untuk animasi
 import {
   Folder,
   HomeIcon,
-  Image,
+  ImageIcon,
   Mail,
   Menu,
   Notebook,
   User,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { ThemeToggle } from "../theme/ThemeToggle";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  // Memoized close menu function
   const closeMenu = useCallback(() => setIsMenuOpen(false), []);
 
-  // Close mobile menu when route changes
   useEffect(() => {
     closeMenu();
   }, [pathname, closeMenu]);
 
-  // Prevent scrolling when mobile menu is open
   useEffect(() => {
     document.body.classList.toggle("overflow-hidden", isMenuOpen);
     return () => document.body.classList.remove("overflow-hidden");
   }, [isMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-shadow duration-300">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-6 md:gap-10">
           <Link
             href="/"
-            className="font-bold text-xl sm:text-2xl bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent hover:from-blue-600 hover:to-purple-700 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
-            aria-label="Home"
-            prefetch
+            className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
-            Aditya
+            <Image
+              src="/logo.jpg"
+              className="rounded-full shadow"
+              alt="logo"
+              width={36}
+              height={36}
+              priority // Tambahkan priority untuk logo agar lebih cepat diload
+            />
           </Link>
-
           <nav className="hidden md:flex gap-6 absolute left-1/2 -translate-x-1/2">
             <NavItems />
           </nav>
         </div>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle />
+          {/* <ThemeToggle /> */}
           <Button
             variant="ghost"
             size="icon"
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-label={isMenuOpen ? "Tutup menu" : "Buka menu"}
           >
             {isMenuOpen ? (
               <X className="h-5 w-5" />
@@ -71,24 +73,34 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div
-          className={cn(
-            "fixed inset-0 top-16 z-50 grid h-[calc(100vh-4rem)] grid-flow-row auto-rows-max overflow-auto p-6 pb-32 shadow-md animate-in slide-in-from-top-80 md:hidden bg-background"
-          )}
-          onClick={closeMenu} // Close when clicking outside
-        >
-          <div
-            className="relative z-20 grid gap-6 rounded-md p-4 bg-background"
-            onClick={(e) => e.stopPropagation()} // Prevent event bubbling
+      {/* Mobile menu dengan animasi */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            className={cn(
+              "fixed inset-0 top-16 z-50 grid h-[calc(100vh-4rem)] grid-flow-row auto-rows-max overflow-y-auto p-6 pb-32 shadow-md bg-background"
+            )}
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.2 }}
+            onClick={closeMenu}
           >
-            <nav className="grid grid-flow-row auto-rows-max text-center text-xl">
-              <NavItems icon />
-            </nav>
-          </div>
-        </div>
-      )}
+            <motion.div
+              className="relative z-20 grid gap-4 rounded-md p-4 bg-card text-card-foreground shadow-sm"
+              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.15 }}
+            >
+              <nav className="grid grid-flow-row auto-rows-max gap-2 text-lg">
+                <NavItems icon />
+              </nav>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
@@ -98,9 +110,9 @@ const NavItems = ({ icon = false }: { icon?: boolean }) => {
   const navItems = [
     { href: "/", label: "Home", icon: <HomeIcon size={18} /> },
     { href: "/about", label: "About", icon: <User size={18} /> },
-    { href: "/projects", label: "Projects", icon: <Folder size={18} /> },
+    { href: "/projects", label: "Project", icon: <Folder size={18} /> },
     { href: "/blog", label: "Blog", icon: <Notebook size={18} /> },
-    { href: "/gallery", label: "Gallery", icon: <Image size={18} /> },
+    { href: "/gallery", label: "Gallery", icon: <ImageIcon size={18} /> },
     { href: "/contact", label: "Contact", icon: <Mail size={18} /> },
   ];
 
@@ -117,24 +129,24 @@ const NavItems = ({ icon = false }: { icon?: boolean }) => {
             href={item.href}
             prefetch
             className={cn(
-              "transition-colors flex items-center justify-center hover:text-foreground/80 rounded-lg px-3 py-2",
+              "transition-colors flex items-center justify-center hover:text-foreground/80 rounded-md px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               isActive
-                ? "bg-accent text-foreground font-medium"
+                ? "bg-primary text-primary-foreground font-semibold rounded-full"
                 : "text-foreground/70",
-              icon ? "gap-3 text-lg" : "gap-0 text-base"
+              icon ? "gap-2 text-base" : "gap-0 text-sm md:text-base" // Ukuran teks lebih kecil di mobile
             )}
             aria-current={isActive ? "page" : undefined}
           >
             {icon && (
               <span
                 className={cn(
-                  isActive ? "text-primary" : "text-muted-foreground"
+                  isActive ? "text-primary-foreground" : "text-muted-foreground"
                 )}
               >
                 {item.icon}
               </span>
             )}
-            {item.label}
+            <span>{item.label}</span>
           </Link>
         );
       })}

@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Gallery | Aditya",
+  title: "Gallery",
   description: "Explore my collection of photos and videos.",
 };
 

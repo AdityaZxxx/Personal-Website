@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Github, Mail } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { FaInstagram } from "react-icons/fa";
 import { CustomLogo } from "../custom-logo";
@@ -61,15 +62,13 @@ export function Footer() {
           {/* Brand Section */}
           <div className="sm:col-span-2 md:col-span-1 space-y-4">
             <div className="flex items-center gap-3">
-              <div
-                className={cn(
-                  "h-10 w-10 flex items-center justify-center rounded-lg",
-                  "bg-gradient-to-br from-blue-500 to-purple-600",
-                  "shadow-md hover:shadow-lg transition-shadow"
-                )}
-              >
-                <span className="text-white font-bold text-lg">A</span>
-              </div>
+              <Image
+                src="/logo.jpg"
+                alt="Logo"
+                width={40}
+                height={40}
+                className="w-10 h-10 rounded-full"
+              />
               <span
                 className={cn(
                   "font-bold text-xl sm:text-2xl",

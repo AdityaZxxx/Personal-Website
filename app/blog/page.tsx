@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Blog | Aditya",
+  title: "Blog",
   description:
     "Read my thoughts on web development, design, and technology. I also write about random things such as current trends, politics and the economy",
 };

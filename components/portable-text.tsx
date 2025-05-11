@@ -1,5 +1,8 @@
+"use client";
+
 import { CodeBlock } from "@/components/code-block";
 import { urlForImage } from "@/lib/sanity/image";
+import { cn } from "@/lib/utils";
 import { PortableText as SanityPortableText } from "@portabletext/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,30 +15,47 @@ const components = {
       }
 
       return (
-        <div className="my-6 relative aspect-video">
-          <Image
-            src={urlForImage(value)?.url() || "/placeholder.svg"}
-            alt={value.alt || ""}
-            fill
-            className="object-cover rounded-md"
-          />
+        <figure className="my-8 group">
+          <div className="relative aspect-video overflow-hidden rounded-lg shadow-md border border-gray-200 dark:border-gray-800">
+            <Image
+              src={urlForImage(value)?.url() || "/placeholder.svg"}
+              alt={value.alt || ""}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+            />
+          </div>
           {value.caption && (
-            <div className="text-center text-sm text-muted-foreground mt-2">
+            <figcaption className="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 font-sans">
               {value.caption}
-            </div>
+            </figcaption>
           )}
-        </div>
+        </figure>
       );
     },
     code: ({ value }: any) => {
       return (
-        <CodeBlock
-          language={value.language || "text"}
-          value={value.code}
-          filename={value._key && value.filename ? value.filename : undefined}
-        />
+        <div className="my-6">
+          <CodeBlock
+            language={value.language || "text"}
+            value={value.code}
+            filename={value._key && value.filename ? value.filename : undefined}
+          />
+        </div>
       );
     },
+    // blockquote: ({ value }: any) => {
+    //   return (
+    //     <Blockquote className="my-6 border-l-4 border-gray-300 dark:border-gray-600 pl-6 italic font-sans text-gray-700 dark:text-gray-300">
+    //       {value.text}
+    //       {value.attribution && (
+    //         <footer className="not-italic mt-2 text-sm text-gray-500 dark:text-gray-400">
+    //           — {value.attribution}
+    //         </footer>
+    //       )}
+    //     </Blockquote>
+    //   );
+    // },
   },
   marks: {
     link: ({ children, value }: any) => {
@@ -49,15 +69,74 @@ const components = {
           href={value.href}
           rel={rel}
           target={target}
-          className="text-primary underline underline-offset-4 hover:text-primary/80"
+          className="text-blue-600 dark:text-blue-400 hover:underline hover:text-blue-500/80 underline-offset-4 font-medium"
         >
           {children}
         </Link>
       );
     },
+    strong: ({ children }: any) => {
+      return <strong className="font-semibold">{children}</strong>;
+    },
+    em: ({ children }: any) => {
+      return <em className="italic">{children}</em>;
+    },
+  },
+  block: {
+    normal: ({ children }: any) => {
+      return <p className="mb-4 font-sans leading-relaxed">{children}</p>;
+    },
+    h1: ({ children }: any) => {
+      return (
+        <h1 className="text-4xl font-bold font-sans mt-8 mb-6">{children}</h1>
+      );
+    },
+    h2: ({ children }: any) => {
+      return (
+        <h2 className="text-3xl font-bold font-sans mt-8 mb-4">{children}</h2>
+      );
+    },
+    h3: ({ children }: any) => {
+      return (
+        <h3 className="text-2xl font-bold font-sans mt-6 mb-3">{children}</h3>
+      );
+    },
+    h4: ({ children }: any) => {
+      return (
+        <h4 className="text-xl font-bold font-sans mt-5 mb-2">{children}</h4>
+      );
+    },
+  },
+  list: {
+    bullet: ({ children }: any) => {
+      return <ul className="list-disc pl-6 mb-4 font-sans">{children}</ul>;
+    },
+    number: ({ children }: any) => {
+      return <ol className="list-decimal pl-6 mb-4 font-sans">{children}</ol>;
+    },
+  },
+  listItem: {
+    bullet: ({ children }: any) => {
+      return <li className="mb-2">{children}</li>;
+    },
+    number: ({ children }: any) => {
+      return <li className="mb-2">{children}</li>;
+    },
   },
 };
 
-export function PortableText({ value }: { value: any }) {
-  return <SanityPortableText value={value} components={components} />;
+export function PortableText({
+  value,
+  className,
+}: {
+  value: any;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn("prose dark:prose-invert max-w-none font-sans", className)}
+    >
+      <SanityPortableText value={value} components={components} />
+    </div>
+  );
 }

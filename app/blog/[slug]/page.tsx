@@ -10,6 +10,8 @@ import { GiscusComments } from "@/components/blogPost/GiscusComments";
 import { ReadingProgress } from "@/components/blogPost/ReadingProgress";
 import { ScrollToTopButton } from "@/components/blogPost/ScrollToTopButton";
 import { ShareButtons } from "@/components/blogPost/ShareButtons";
+import { TableOfContents } from "@/components/blogPost/TableOfContents";
+import { TagList } from "@/components/blogPost/TagList";
 import { BlurImage } from "@/components/blur-image";
 import { PortableText } from "@/components/portable-text";
 import { TrakteerSupport } from "@/components/trakteer-support";
@@ -23,8 +25,6 @@ import {
   getPostBySlug,
 } from "@/lib/sanity/queries";
 import { formatDate } from "@/lib/utils";
-import { TableOfContents } from "../../../components/blogPost/TableOfContents";
-import { TagList } from "../../../components/blogPost/TagList";
 
 export async function generateMetadata({
   params,
@@ -37,7 +37,7 @@ export async function generateMetadata({
 
   if (!post) {
     return {
-      title: "Post Not Found | Aditya",
+      title: "Post Not Found",
       robots: { index: false, follow: true },
     };
   }
@@ -45,7 +45,7 @@ export async function generateMetadata({
   const imageUrl = urlForImage(post.mainImage)?.width(1200).height(630).url();
 
   return {
-    title: `${post.title} | Aditya`,
+    title: `${post.title}`,
     description: post.excerpt,
     openGraph: {
       type: "article",
@@ -162,7 +162,7 @@ export default async function PostPage({
                       >
                         <Badge
                           variant="secondary"
-                          className={`transition-colors hover:opacity-90 ${getColorClass(category.slug.current)}`}
+                          className={`transition-colors ${getColorClass(category.slug.current)}`}
                         >
                           {category.title}
                         </Badge>

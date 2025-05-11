@@ -16,7 +16,7 @@ import { BlogPostsSection } from "../components/blogPost/PostCard";
 import { Badge } from "../components/ui/badge";
 
 export const metadata = {
-  title: "Home | Aditya",
+  title: "Home",
   description: "Welcome to my personal website",
 };
 export default async function Home() {

@@ -46,7 +46,7 @@ import {
 } from "react-icons/si";
 
 export const metadata: Metadata = {
-  title: "About Me | Aditya",
+  title: "About Me",
   description: "Learn more about my background, skills, and experience.",
 };
 
