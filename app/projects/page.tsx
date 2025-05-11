@@ -1,5 +1,5 @@
 import { CategoryFilter } from "@/components/category-filter";
-import { ProjectList } from "@/components/project-list";
+import { ProjectList } from "@/components/project/ProjectList";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getAllProjectCategories } from "@/lib/sanity/queries";
 import type { Metadata } from "next";

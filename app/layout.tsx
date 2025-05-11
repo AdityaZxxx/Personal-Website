@@ -1,6 +1,6 @@
 import ConditionalComponents from "@/components/conditional-components";
-import { Header } from "@/components/header";
-import { ThemeProvider } from "@/components/theme-provider";
+import { Header } from "@/components/layout/Header";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import "@/styles/prism-theme.css";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata, Viewport } from "next";
@@ -136,7 +136,7 @@ export default function RootLayout({
       <body className={fredoka.className}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >

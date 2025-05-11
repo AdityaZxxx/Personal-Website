@@ -1,10 +1,10 @@
+import { BlogSearch } from "@/components/blog-search";
+import { PostListServer } from "@/components/blogPost/PostListServer";
 import { CategoryFilter } from "@/components/category-filter";
-import { PostListServer } from "@/components/post-list-server";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getAllCategories } from "@/lib/sanity/queries";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { BlogSearch } from "../../components/blog-search";
 
 export const metadata: Metadata = {
   title: "Blog | Aditya",

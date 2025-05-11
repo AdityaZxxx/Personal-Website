@@ -1,4 +1,4 @@
-import { ProjectCard } from "@/components/project-card";
+import { ProjectCard } from "@/components/project/ProjectCard";
 import { getAllProjects } from "@/lib/sanity/queries";
 
 interface ProjectListProps {

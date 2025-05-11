@@ -106,8 +106,8 @@ export function BlurImage({
                 aspectRatio: ratio
                   ? ratio.toString()
                   : props.width && props.height
-                  ? `${props.width}/${props.height}`
-                  : "16/9",
+                    ? `${props.width}/${props.height}`
+                    : "16/9",
               }
             : {}
         }

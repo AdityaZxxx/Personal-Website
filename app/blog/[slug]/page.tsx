@@ -5,16 +5,15 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import { AuthorProfile } from "@/components/author-profile";
+import { FeaturedPosts } from "@/components/blogPost/FeaturedPosts";
+import { GiscusComments } from "@/components/blogPost/GiscusComments";
+import { ReadingProgress } from "@/components/blogPost/ReadingProgress";
+import { ScrollToTopButton } from "@/components/blogPost/ScrollToTopButton";
+import { ShareButtons } from "@/components/blogPost/ShareButtons";
 import { BlurImage } from "@/components/blur-image";
-import { FeaturedPosts } from "@/components/featured-posts";
-import { GiscusComments } from "@/components/giscus-comments";
 import { PortableText } from "@/components/portable-text";
-import { ReadingProgress } from "@/components/reading-progress";
-import { ScrollToTopButton } from "@/components/scroll-to-top-buttom";
-import { ShareButtons } from "@/components/share-buttons";
-import { TableOfContents } from "@/components/table-of-contents";
-import { TagList } from "@/components/tag-list";
 import { TrakteerSupport } from "@/components/trakteer-support";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { urlForImage } from "@/lib/sanity/image";
@@ -24,7 +23,8 @@ import {
   getPostBySlug,
 } from "@/lib/sanity/queries";
 import { formatDate } from "@/lib/utils";
-import { Badge } from "../../../components/ui/badge";
+import { TableOfContents } from "../../../components/blogPost/TableOfContents";
+import { TagList } from "../../../components/blogPost/TagList";
 
 export async function generateMetadata({
   params,

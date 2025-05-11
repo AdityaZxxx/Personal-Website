@@ -1,4 +1,5 @@
 "use client";
+import { CustomLogo } from "@/components/custom-logo";
 import { OpenMap } from "@/components/open-map";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +17,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CustomLogo } from "../../components/custom-logo";
 
 const ContactFormSchema = z.object({
   name: z

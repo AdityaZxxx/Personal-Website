@@ -1,19 +1,19 @@
 import Link from "next/link";
 
+import AnimatedSection from "@/components/animated-section";
+import { EmailCopyBox } from "@/components/email-copy";
+import { GitHubContributionGraph } from "@/components/gitgraph/GithubContributionGraph";
+import { FeaturedProjectsSection } from "@/components/project/ProjectCard";
+import { SparklesCore } from "@/components/sparkles";
+import { Button } from "@/components/ui/button";
 import { getFeaturedProjects, getLatestPosts } from "@/lib/sanity/queries";
 import { PostType } from "@/types/PostType";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Mail, MessageSquare } from "lucide-react";
+import * as motion from "motion/react-client";
 import Image from "next/image";
-import AnimatedSection from "../components/animated-section";
-import { EmailCopyBox } from "../components/email-copy";
-import { GitHubContributionGraph } from "../components/github-contribution-graph";
-import { PostCard } from "../components/post-card";
-import { ProjectCard } from "../components/project-card";
-import { SparklesCore } from "../components/sparkles";
+import { AboutSection } from "../components/about/AboutMotion";
+import { BlogPostsSection } from "../components/blogPost/PostCard";
 import { Badge } from "../components/ui/badge";
-import { Button } from "../components/ui/button";
-import { Card, CardContent } from "../components/ui/card";
-import { ProjectType } from "../types/ProjectType";
 
 export const metadata = {
   title: "Home | Aditya",
@@ -58,18 +58,14 @@ export default async function Home() {
         <div className="z-10 flex flex-col items-center justify-center text-center w-full max-w-4xl mx-auto">
           <Badge
             variant="outline"
-            className="relative mb-5 md:mb-6 border-white/30 text-white/90 backdrop-blur-sm px-4 py-1.5 animate-float hover:animate-pulse overflow-hidden group"
+            className="relative mb-5 md:mb-6 border-white/30 text-white/90 backdrop-blur-sm px-4 py-0 overflow-hidden group inline-flex h-8 rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 transition-all duration-500"
             aria-label="Call to action"
           >
-            <span className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-full scale-95 opacity-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-700 -z-10"></span>
-            <span className="relative z-10 flex items-center gap-2">
-              <span className="text-blue-300 group-hover:text-blue-200 transition-colors duration-300 text-lg">
-                🚀
-              </span>
-              <span className="text-sm md:text-base">Let's grow together!</span>
-            </span>
-            <span className="absolute -right-1 -top-1 h-2.5 w-2.5">
-              <span className="absolute h-full w-full rounded-full bg-blue-400 opacity-0 group-hover:opacity-70 group-hover:animate-ping-slow transition-opacity"></span>
+            <span className=" absolute  inset-[-1000%]  animate-[spin_3s_linear_infinite]  bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+
+            {/* Content */}
+            <span className=" relative z-10 inline-flex cursor-pointer  items-center  justify-center  rounded-full  bg-slate-950/90 px-6 py-[6px] text-sm  font-medium  text-white  backdrop-blur-md hover:bg-slate-950 transition-colors duration-300  ">
+              🚀 Let's grow together
             </span>
           </Badge>
 
@@ -130,48 +126,10 @@ export default async function Home() {
           <div className="mt-10 md:mt-12 flex flex-col sm:flex-row items-center gap-4">
             <Link
               href="mailto:hello@adityarahmad.com"
-              passHref
-              legacyBehavior
-              aria-label="Contact Aditya via email"
+              className=" group relative inline-flex items-center gap-2 overflow-hidden rounded-full border-2 border-white/20 bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-2 text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/30 hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-white/50"
             >
-              <a className="group relative inline-flex items-center justify-between overflow-hidden rounded-full border border-white/10 bg-gradient-to-br from-blue-600/30 via-purple-600/30 to-pink-600/30 px-6 py-2.5 text-base font-medium backdrop-blur-xs transition-all hover:opacity-100 hover:from-blue-500/50 hover:to-purple-500/50 shadow-lg hover:shadow-xl hover:shadow-blue-500/20">
-                <span className="z-10 text-white transition-colors duration-300 group-hover:text-white/90 px-2">
-                  Let's Connect
-                </span>
-                <span className="absolute inset-0 translate-x-[45%] scale-0 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-0 transition-all duration-500 ease-in-out group-hover:translate-x-0 group-hover:scale-110 group-hover:opacity-100"></span>
-                <span className="z-10 flex items-center justify-center overflow-hidden rounded-full bg-white p-2 transition-all duration-300 group-hover:bg-transparent group-hover:rotate-180">
-                  <svg
-                    className="lucide lucide-arrow-right text-black transition-all duration-300 group-hover:translate-x-5 group-hover:opacity-0"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 12h14"></path>
-                    <path d="m12 5 7 7-7 7"></path>
-                  </svg>
-                  <svg
-                    className="lucide lucide-mail absolute -translate-x-5 text-black opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-                  </svg>
-                </span>
-              </a>
+              <span className="font-medium">Let's Connect</span>
+              <Mail className=" h-5 w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-white" />
             </Link>
             <EmailCopyBox />
           </div>
@@ -179,204 +137,155 @@ export default async function Home() {
       </section>
 
       <AnimatedSection delay={100}>
-        <section className="w-full py-20 md:py-32 bg-black/80 backdrop-blur-lg">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  About Me
-                </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  I&apos;m a passionate developer with over 5 years of
-                  experience in building web applications. I specialize in
-                  React, Next.js, and modern JavaScript frameworks. My goal is
-                  to create fast, accessible, and user-friendly digital
-                  experiences.
-                </p>
-              </div>
-              <div className="w-full max-w-full space-y-4">
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                  <Card>
-                    <CardContent className="flex flex-col items-center justify-center p-6">
-                      <div className="mb-4 rounded-full bg-primary/10 p-3">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="h-6 w-6 text-primary"
-                        >
-                          <path d="M12 19c-2.3 0-6.4-.2-8.1-.6-.7-.2-1.2-.7-1.4-1.4-.3-1.1-.5-3.4-.5-5s.2-3.9.5-5c.2-.7.7-1.2 1.4-1.4C5.6 5.2 9.7 5 12 5s6.4.2 8.1.6c.7.2 1.2.7 1.4 1.4.3 1.1.5 3.4.5 5s-.2 3.9-.5 5c-.2.7-.7 1.2-1.4 1.4-1.7.4-5.8.6-8.1.6 0 0 0 0 0 0z"></path>
-                          <polygon points="10 15 15 12 10 9"></polygon>
-                        </svg>
-                      </div>
-                      <h3 className="text-xl font-bold">
-                        Frontend Development
-                      </h3>
-                      <p className="text-sm text-muted-foreground text-center mt-2">
-                        Creating responsive and interactive user interfaces with
-                        React, Next.js, and modern CSS.
-                      </p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="flex flex-col items-center justify-center p-6">
-                      <div className="mb-4 rounded-full bg-primary/10 p-3">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="h-6 w-6 text-primary"
-                        >
-                          <path d="M3 3v18h18"></path>
-                          <path d="m19 9-5 5-4-4-3 3"></path>
-                        </svg>
-                      </div>
-                      <h3 className="text-xl font-bold">Backend Development</h3>
-                      <p className="text-sm text-muted-foreground text-center mt-2">
-                        Building robust APIs and server-side applications with
-                        Node.js, Express, and databases.
-                      </p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="flex flex-col items-center justify-center p-6">
-                      <div className="mb-4 rounded-full bg-primary/10 p-3">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="h-6 w-6 text-primary"
-                        >
-                          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
-                          <path d="m9 12 2 2 4-4"></path>
-                        </svg>
-                      </div>
-                      <h3 className="text-xl font-bold">
-                        Security & Performance
-                      </h3>
-                      <p className="text-sm text-muted-foreground text-center mt-2">
-                        Optimizing applications for speed and implementing best
-                        security practices.
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <AboutSection />
       </AnimatedSection>
 
       <AnimatedSection delay={100}>
-        <section className="w-full py-12 md:py-16">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-8">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                My GitHub Activity
+        <section className="relative py-16 md:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-green-900/10 to-transparent opacity-20"></div>
+            <div className="absolute top-0 left-1/4 w-32 h-32 bg-green-500/10 rounded-full filter blur-3xl"></div>
+            <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-500/10 rounded-full filter blur-3xl"></div>
+          </div>
+
+          <div className="relative max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="mb-12 text-center"
+            >
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-600 mb-4">
+                My Coding Activity
               </h2>
-              <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                A snapshot of my coding activity over the past year
+              <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto">
+                I believe in consistent progress. Here's my GitHub contribution
+                graph showing my daily coding activity over the past year.
               </p>
-            </div>
-            <div className="w-full">
-              <GitHubContributionGraph username="AdityaZxxx" />
-            </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="flex justify-center mb-12"
+            >
+              <GitHubContributionGraph
+                username="AdityaZxxx"
+                className="w-full max-w-4xl hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)] transition-all duration-500"
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <Link
+                href="https://github.com/AdityaZxxx"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 group"
+              >
+                View Full GitHub Profile
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </motion.div>
           </div>
         </section>
       </AnimatedSection>
 
       <AnimatedSection>
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  Featured Projects
-                </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Check out some of my recent work
-                </p>
-              </div>
-              <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {featuredProjects.map((project: ProjectType) => (
-                  <ProjectCard key={project._id} project={project} />
-                ))}
-              </div>
-              <Link href="/projects">
-                <Button variant="outline" className="mt-4">
-                  View All Projects
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
+        <FeaturedProjectsSection featuredProjects={featuredProjects} />
       </AnimatedSection>
 
       <AnimatedSection delay={100}>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-muted/40">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  Latest Blog Posts
-                </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Thoughts, ideas, and insights on web development and design
-                </p>
-              </div>
-              <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {latestPosts.map((post) => (
-                  <PostCard key={post._id} post={post} />
-                ))}
-              </div>
-              <Link href="/blog">
-                <Button variant="outline" className="mt-4">
-                  Read All Posts
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
+        <BlogPostsSection latestPosts={latestPosts} />
       </AnimatedSection>
 
-      <section className="w-full py-12 md:py-24 lg:py-32 z-10">
+      <section className="relative w-full py-16 md:py-24 lg:py-32 z-10 overflow-hidden">
+        {/* Background elements */}
+        <div className="absolute inset-0 overflow-hidden -z-10">
+          <div className="absolute top-1/2 left-1/2 w-full max-w-2xl h-64 -translate-x-1/2 -translate-y-1/2 bg-blue-500/10 dark:bg-blue-400/5 rounded-full blur-[100px]"></div>
+        </div>
+
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                Get In Touch
-              </h2>
-              <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Have a project in mind or just want to say hello? Feel free to
-                reach out!
-              </p>
-            </div>
-            <div className="w-full max-w-sm space-y-2">
-              <Link href="/contact">
-                <Button className="w-full">Contact Me</Button>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center justify-center text-center"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center rounded-full border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 px-4 py-1.5 text-sm font-medium text-blue-600 dark:text-blue-300 mb-4"
+            >
+              <MessageSquare className="h-4 w-4 mr-2" />
+              Let's Collaborate
+            </motion.div>
+
+            <motion.h2
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 mb-4"
+            >
+              Get In Touch
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              viewport={{ once: true }}
+              className="max-w-[700px] text-lg text-gray-600 dark:text-slate-400 mb-8"
+            >
+              Have a project in mind or just want to say hello? I'd love to hear
+              from you. Whether you need a website, have questions, or just want
+              to connect, feel free to reach out!
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              viewport={{ once: true }}
+              className="flex flex-col sm:flex-row gap-4 w-full max-w-md"
+            >
+              <Link href="/contact" className="w-full">
+                <Button
+                  size="lg"
+                  className="w-full group rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-lg transition-all hover:shadow-blue-500/30"
+                >
+                  Contact Form
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
               </Link>
-            </div>
-          </div>
+
+              <Link
+                href="mailto:adityaofficial714@gmail.com"
+                className="w-full"
+              >
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full group rounded-xl border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-900/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-300"
+                >
+                  <Mail className="h-4 w-4 mr-2" />
+                  Email Me
+                </Button>
+              </Link>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
     </main>

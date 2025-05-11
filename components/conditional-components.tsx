@@ -1,7 +1,7 @@
 "use client";
 
 import { AIChatWidget } from "@/components/ai-chat-widget";
-import { Footer } from "@/components/footer";
+import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import { usePathname } from "next/navigation";
 

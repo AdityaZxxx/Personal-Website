@@ -12,7 +12,7 @@ import {
   FaTelegram,
   FaWhatsapp,
 } from "react-icons/fa";
-import { CustomLogo } from "./custom-logo";
+import { CustomLogo } from "../custom-logo";
 
 interface ShareButtonsProps {
   title: string;

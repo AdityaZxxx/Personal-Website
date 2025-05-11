@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Github, Mail } from "lucide-react";
 import Link from "next/link";
 import { FaInstagram } from "react-icons/fa";
-import { CustomLogo } from "./custom-logo";
+import { CustomLogo } from "../custom-logo";
 
 const currentYear = new Date().getFullYear();
 

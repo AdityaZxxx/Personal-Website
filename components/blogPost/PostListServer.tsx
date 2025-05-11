@@ -1,4 +1,4 @@
-import { PostList } from "@/components/post-list";
+import { PostList } from "@/components/blogPost/PostList";
 import { getAllPosts } from "@/lib/sanity/queries";
 
 interface PostListServerProps {
