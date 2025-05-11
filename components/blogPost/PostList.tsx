@@ -1,7 +1,6 @@
-// components/post-list.tsx
-import { PostCard } from "@/components/post-card";
-import { PostType } from "../types/PostType";
-import { PostNotFound } from "./custom-not-found";
+import { PostType } from "../../types/PostType";
+import { PostNotFound } from "../custom-not-found";
+import { PostCard } from "./PostCard";
 
 interface PostListProps {
   posts: PostType[];
