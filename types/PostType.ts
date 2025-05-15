@@ -13,6 +13,7 @@ export type PostType = {
       _type: "reference";
     };
   };
+  author: string;
   publishedAt: string; // ISO string, bisa kamu parse ke Date kalau perlu
   categories: {
     _id: string;

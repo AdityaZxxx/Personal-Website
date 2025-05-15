@@ -134,6 +134,7 @@ export default async function Home() {
             <EmailCopyBox />
           </div>
         </div>
+        {/* <AboutHero /> */}
       </section>
 
       <AnimatedSection delay={100}>

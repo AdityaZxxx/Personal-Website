@@ -1,5 +1,3 @@
-"use client";
-
 import { cn } from "@/lib/utils";
 import { Github, Mail } from "lucide-react";
 import Image from "next/image";
@@ -12,7 +10,7 @@ const currentYear = new Date().getFullYear();
 const footerLinks = {
   quickLinks: [
     { href: "/about", label: "About" },
-    { href: "/projects", label: "Projects" },
+    { href: "/projects", label: "Project" },
     { href: "/blog", label: "Blog" },
     { href: "/gallery", label: "Gallery" },
     { href: "/contact", label: "Contact" },

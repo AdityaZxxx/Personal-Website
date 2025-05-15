@@ -1,92 +1,59 @@
 "use client";
 
-import { BlurImage } from "@/components/blur-image";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { formatDate } from "@/lib/utils";
 import { PostType } from "@/types/PostType";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, Clock } from "lucide-react";
+import { ArrowRight, Calendar } from "lucide-react";
 import Link from "next/link";
+import { formatDate } from "../../lib/utils";
+import { BlurImage } from "../blur-image";
+import { Badge } from "../ui/badge";
+import { Card, CardContent, CardHeader } from "../ui/card";
 
 export function PostCard({ post }: { post: PostType }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      viewport={{ once: true }}
-      whileHover={{ y: -5 }}
-      className="group relative h-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-900 dark:bg-gradient-to-b dark:from-slate-900/50 dark:to-slate-900/20 shadow-lg dark:shadow-none transition-all duration-300 hover:shadow-xl dark:hover:shadow-[0_0_30px_-15px_rgba(124,58,237,0.3)]"
-    >
-      <Link
-        href={`/blog/${post.slug.current}`}
-        className="flex flex-col h-full"
-      >
-        <div className="relative aspect-video overflow-hidden">
-          {post.mainImage ? (
-            <>
-              <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/5 dark:from-black/30 z-10" />
-              <BlurImage
-                image={post.mainImage}
-                alt={post.title}
-                fill
-                className="transition-transform duration-500 group-hover:scale-105"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-            </>
-          ) : (
-            <div className="flex h-full w-full items-center justify-center bg-muted">
-              <span className="text-muted-foreground">No image</span>
-            </div>
-          )}
-        </div>
-
-        <div className="p-6 flex-grow">
-          <div className="flex flex-wrap gap-2 mb-3">
-            {post.categories?.slice(0, 3).map((category) => (
-              <Badge
-                key={category.title}
-                variant="outline"
-                className="rounded-full border-purple-200 dark:border-purple-900 bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs font-medium"
-              >
-                {category.title}
-              </Badge>
-            ))}
-            {post.categories && post.categories.length > 3 && (
-              <Badge variant="outline" className="rounded-full text-xs">
-                +{post.categories.length - 3}
-              </Badge>
-            )}
-          </div>
-
-          <h3 className="font-bold text-lg text-gray-900 dark:text-white line-clamp-2 mb-2">
-            {post.title}
-          </h3>
-
-          {post.excerpt && (
-            <p className="text-sm text-gray-600 dark:text-slate-400 line-clamp-3">
-              {post.excerpt}
-            </p>
-          )}
-        </div>
-
-        <div className="px-6 pb-6 pt-0 flex items-center justify-between text-sm text-gray-500 dark:text-slate-500">
-          <div className="flex items-center">
-            <Calendar className="mr-1.5 h-4 w-4" />
-            <time dateTime={post.publishedAt}>
-              {formatDate(post.publishedAt)}
-            </time>
-          </div>
-          {post.estimatedReadingTime && (
-            <div className="flex items-center">
-              <Clock className="mr-1.5 h-4 w-4" />
-              {post.estimatedReadingTime} min read
-            </div>
-          )}
-        </div>
-      </Link>
-    </motion.div>
+    <div className="space-y-4">
+      <div className="space-y-4">
+        <Link key={post._id} href={`/blog/${post.slug.current}`}>
+          <Card className="overflow-hidden hover:shadow-md transition-shadow">
+            <CardHeader>
+              <h3 className="font-bold text-lg">{post.title}</h3>
+            </CardHeader>
+            <CardContent className="p-4 flex gap-3">
+              {post.mainImage && (
+                <div className="relative h-32 w-32 flex-shrink-0 rounded-md overflow-hidden">
+                  <BlurImage
+                    image={post.mainImage}
+                    alt={post.title}
+                    fill
+                    className="object-cover"
+                    sizes="64px"
+                  />
+                </div>
+              )}
+              <div className="flex-1 min-w-0">
+                <h4 className="font-medium text-sm line-clamp-2">
+                  {post.excerpt}
+                </h4>
+                <div className="flex items-center mt-1 text-xs text-muted-foreground">
+                  <Calendar className="h-3 w-3 mr-1" />
+                  <time dateTime={post.publishedAt}>
+                    {formatDate(post.publishedAt)}
+                  </time>
+                </div>
+                {post.categories && post.categories.length > 0 && (
+                  <div className="mt-2">
+                    <Badge variant="secondary" className="text-xs">
+                      {post.categories[0].title}
+                    </Badge>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
+    </div>
   );
 }
 

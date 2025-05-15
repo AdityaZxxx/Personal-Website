@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion"; // Tambahkan framer-motion untuk animasi
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Folder,
   HomeIcon,
@@ -47,7 +47,7 @@ export function Header() {
               alt="logo"
               width={36}
               height={36}
-              priority // Tambahkan priority untuk logo agar lebih cepat diload
+              priority
             />
           </Link>
           <nav className="hidden md:flex gap-6 absolute left-1/2 -translate-x-1/2">
@@ -62,7 +62,7 @@ export function Header() {
             size="icon"
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label={isMenuOpen ? "Tutup menu" : "Buka menu"}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
             {isMenuOpen ? (
               <X className="h-5 w-5" />
@@ -73,7 +73,7 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile menu dengan animasi */}
+      {/* Mobile menu */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -133,7 +133,7 @@ const NavItems = ({ icon = false }: { icon?: boolean }) => {
               isActive
                 ? "bg-primary text-primary-foreground font-semibold rounded-full"
                 : "text-foreground/70",
-              icon ? "gap-2 text-base" : "gap-0 text-sm md:text-base" // Ukuran teks lebih kecil di mobile
+              icon ? "gap-2 text-base" : "gap-0 text-sm md:text-base"
             )}
             aria-current={isActive ? "page" : undefined}
           >
