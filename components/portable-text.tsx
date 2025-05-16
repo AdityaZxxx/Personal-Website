@@ -1,11 +1,14 @@
 "use client";
 
-import { CodeBlock } from "@/components/code-block";
 import { urlForImage } from "@/lib/sanity/image";
 import { cn } from "@/lib/utils";
 import { PortableText as SanityPortableText } from "@portabletext/react";
+import { Geist } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
+import { CodeBlock } from "./code-block";
+
+const geist = Geist({ subsets: ["latin"] });
 
 const components = {
   types: {
@@ -26,7 +29,7 @@ const components = {
             />
           </div>
           {value.caption && (
-            <figcaption className="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 font-sans">
+            <figcaption className="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 font-normal">
               {value.caption}
             </figcaption>
           )}
@@ -35,18 +38,19 @@ const components = {
     },
     code: ({ value }: any) => {
       return (
-        <div className="my-6">
+        <div>
           <CodeBlock
-            language={value.language || "text"}
+            key={value.id}
             value={value.code}
-            filename={value._key && value.filename ? value.filename : undefined}
+            filename={value.filename}
+            language={value.language}
           />
         </div>
       );
     },
     // blockquote: ({ value }: any) => {
     //   return (
-    //     <Blockquote className="my-6 border-l-4 border-gray-300 dark:border-gray-600 pl-6 italic font-sans text-gray-700 dark:text-gray-300">
+    //     <Blockquote className="my-6 border-l-4 border-gray-300 dark:border-gray-600 pl-6 italic font-normal text-gray-700 dark:text-gray-300">
     //       {value.text}
     //       {value.attribution && (
     //         <footer className="not-italic mt-2 text-sm text-gray-500 dark:text-gray-400">
@@ -84,35 +88,27 @@ const components = {
   },
   block: {
     normal: ({ children }: any) => {
-      return <p className="mb-4 font-sans leading-relaxed">{children}</p>;
+      return <p className="mb-4 font-normal leading-relaxed">{children}</p>;
     },
     h1: ({ children }: any) => {
-      return (
-        <h1 className="text-4xl font-bold font-sans mt-8 mb-6">{children}</h1>
-      );
+      return <h1 className="text-4xl font-normal mt-8 mb-6">{children}</h1>;
     },
     h2: ({ children }: any) => {
-      return (
-        <h2 className="text-3xl font-bold font-sans mt-8 mb-4">{children}</h2>
-      );
+      return <h2 className="text-3xl font-normal mt-8 mb-4">{children}</h2>;
     },
     h3: ({ children }: any) => {
-      return (
-        <h3 className="text-2xl font-bold font-sans mt-6 mb-3">{children}</h3>
-      );
+      return <h3 className="text-2xl font-normal mt-6 mb-3">{children}</h3>;
     },
     h4: ({ children }: any) => {
-      return (
-        <h4 className="text-xl font-bold font-sans mt-5 mb-2">{children}</h4>
-      );
+      return <h4 className="text-xl font-normal mt-5 mb-2">{children}</h4>;
     },
   },
   list: {
     bullet: ({ children }: any) => {
-      return <ul className="list-disc pl-6 mb-4 font-sans">{children}</ul>;
+      return <ul className="list-disc mb-4 font-normal">{children}</ul>;
     },
     number: ({ children }: any) => {
-      return <ol className="list-decimal pl-6 mb-4 font-sans">{children}</ol>;
+      return <ol className="list-decimal mb-4 font-normal">{children}</ol>;
     },
   },
   listItem: {
@@ -134,7 +130,10 @@ export function PortableText({
 }) {
   return (
     <div
-      className={cn("prose dark:prose-invert max-w-none font-sans", className)}
+      className={cn(
+        `${geist} prose dark:prose-invert max-w-none font-normal`,
+        className
+      )}
     >
       <SanityPortableText value={value} components={components} />
     </div>

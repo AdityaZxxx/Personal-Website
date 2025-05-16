@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, ChevronDown, Clock, User } from "lucide-react";
+import { Calendar, ChevronDown, Clock, User } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -10,13 +10,11 @@ import { GiscusComments } from "@/components/blogPost/GiscusComments";
 import { ReadingProgress } from "@/components/blogPost/ReadingProgress";
 import { ScrollToTopButton } from "@/components/blogPost/ScrollToTopButton";
 import { ShareButtons } from "@/components/blogPost/ShareButtons";
-import { TableOfContents } from "@/components/blogPost/TableOfContents";
 import { TagList } from "@/components/blogPost/TagList";
 import { BlurImage } from "@/components/blur-image";
 import { PortableText } from "@/components/portable-text";
 import { TrakteerSupport } from "@/components/trakteer-support";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { urlForImage } from "@/lib/sanity/image";
 import {
@@ -25,6 +23,18 @@ import {
   getPostBySlug,
 } from "@/lib/sanity/queries";
 import { formatDate } from "@/lib/utils";
+import { Geist } from "next/font/google";
+import { TableOfContents } from "../../../components/blogPost/TableOfContents";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "../../../components/ui/breadcrumb";
+
+const geist = Geist({ subsets: ["latin"] });
 
 export async function generateMetadata({
   params,
@@ -125,12 +135,27 @@ export default async function PostPage({
       <main className="container px-4 py-8 md:px-6 md:py-16">
         <div className="mx-auto max-w-4xl xl:max-w-7xl">
           <div className="mb-8">
-            <Link href="/blog">
-              <Button variant="ghost" className="group pl-0">
-                <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
-                Back to Blog
-              </Button>
-            </Link>
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                </BreadcrumbItem>
+
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/blog">Blog</BreadcrumbLink>
+                </BreadcrumbItem>
+
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>
+                    {post.title.length > 20
+                      ? post.title.slice(0, 20) + "..."
+                      : post.title}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
 
           {/* Mobile Table of Contents - Sticky Header */}
@@ -150,7 +175,9 @@ export default async function PostPage({
             {/* Main Content */}
             <article className="space-y-8">
               <header className="space-y-4">
-                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+                <h1
+                  className={`${geist.className} text-4xl font-semibold tracking-tight sm:text-5xl`}
+                >
                   {post.title}
                 </h1>
                 {post.categories?.length > 0 && (
@@ -190,11 +217,12 @@ export default async function PostPage({
               </header>
 
               {post.mainImage && (
-                <figure className="relative aspect-video overflow-hidden rounded-xl border shadow-sm dark:shadow-none">
+                <figure className="relative w-full overflow-hidden rounded-xl border shadow-sm dark:shadow-none">
                   <BlurImage
                     image={post.mainImage}
                     alt={post.title}
-                    fill
+                    width={1024}
+                    height={1024}
                     className="object-cover"
                     priority
                   />
@@ -202,7 +230,7 @@ export default async function PostPage({
               )}
 
               <div className="prose prose-gray dark:prose-invert max-w-none prose-headings:font-medium prose-a:text-primary hover:prose-a:text-primary/80 prose-img:rounded-lg prose-img:shadow-sm">
-                <PortableText value={post.body} />
+                <PortableText className={geist.className} value={post.body} />
               </div>
 
               {post.tags && <TagList tags={post.tags} className="pt-6" />}

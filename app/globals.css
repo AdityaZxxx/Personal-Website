@@ -189,3 +189,41 @@
     transform: rotate(360deg);
   }
 }
+
+/* Styling tambahan untuk word wrap dan line numbers */
+pre[class*="language-"].line-numbers {
+  position: relative;
+  padding-left: 3.8em; /* Sesuaikan jika perlu */
+  counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+  position: relative;
+  white-space: pre-wrap; /* Untuk word wrap */
+  word-wrap: break-word; /* Untuk word wrap yang lebih agresif jika perlu */
+}
+
+.line-numbers .line-numbers-rows {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  font-size: 100%;
+  left: -3.8em; /* Sesuaikan dengan padding-left di atas */
+  width: 3em; /* Sesuaikan jika perlu */
+  letter-spacing: -1px;
+  border-right: 1px solid #999; /* Opsional: garis pemisah */
+  user-select: none;
+}
+
+.line-numbers-rows > span {
+  display: block;
+  counter-increment: linenumber;
+}
+
+.line-numbers-rows > span:before {
+  content: counter(linenumber);
+  color: #999; /* Warna nomor baris */
+  display: block;
+  padding-right: 0.8em;
+  text-align: right;
+}

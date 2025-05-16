@@ -22,16 +22,28 @@ export function TableOfContents() {
       article.querySelectorAll("h2, h3")
     ) as HTMLElement[];
 
-    const mappedHeadings = headingElements.map((heading) => {
-      if (!heading.id) {
-        heading.id =
-          heading.textContent
-            ?.toLowerCase()
-            .replace(/\s+/g, "-")
-            .replace(/[^\w-]/g, "") || "";
+    const idSet = new Set<string>();
+    const mappedHeadings = headingElements.map((heading, index) => {
+      let baseId =
+        heading.id ||
+        heading.textContent
+          ?.toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^\w-]/g, "") ||
+        `heading-${index}`;
+
+      // Handle duplicate ids
+      let uniqueId = baseId;
+      let counter = 1;
+      while (idSet.has(uniqueId)) {
+        uniqueId = `${baseId}-${counter++}`;
       }
+
+      idSet.add(uniqueId);
+      heading.id = uniqueId; // apply back to DOM
+
       return {
-        id: heading.id,
+        id: uniqueId,
         text: heading.textContent || "",
         level: parseInt(heading.tagName.substring(1)),
       };
