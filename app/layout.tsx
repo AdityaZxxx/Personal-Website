@@ -1,12 +1,12 @@
 import ConditionalComponents from "@/components/conditional-components";
 import { Header } from "@/components/layout/Header";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
-import "@/styles/shiki-theme.css";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata, Viewport } from "next";
 import { Fredoka } from "next/font/google";
 import type React from "react";
 import { Suspense } from "react";
+import "../styles/shiki-theme.css";
 import "./globals.css";
 import GlobalLoading from "./loading";
 
@@ -99,31 +99,31 @@ export const metadata: Metadata = {
       "en-US": "/en-US",
     },
   },
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-    ],
-    apple: [{ url: "/apple-touch-icon.png" }],
-    other: [
-      {
-        rel: "mask-icon",
-        url: "/safari-pinned-tab.svg",
-        color: "#5bbad5",
-      },
-    ],
-  },
-  manifest: "/site.webmanifest",
-  appleWebApp: {
-    capable: true,
-    title: "Aditya Rahmad",
-    statusBarStyle: "black-translucent",
-  },
-  other: {
-    "msapplication-TileColor": "#000000",
-    "msapplication-config": "/browserconfig.xml",
-  },
+  // icons: {
+  //   icon: [
+  //     { url: "/favicon.ico" },
+  //     { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+  //     { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+  //   ],
+  //   apple: [{ url: "/apple-touch-icon.png" }],
+  //   other: [
+  //     {
+  //       rel: "mask-icon",
+  //       url: "/safari-pinned-tab.svg",
+  //       color: "#5bbad5",
+  //     },
+  //   ],
+  // },
+  // manifest: "/site.webmanifest",
+  // appleWebApp: {
+  //   capable: true,
+  //   title: "Aditya Rahmad",
+  //   statusBarStyle: "black-translucent",
+  // },
+  // other: {
+  //   "msapplication-TileColor": "#000000",
+  //   "msapplication-config": "/browserconfig.xml",
+  // },
 };
 
 export default function RootLayout({
