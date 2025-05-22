@@ -39,7 +39,7 @@ const components = {
     code: ({ value }: any) => {
       return (
         <CodeBlock
-          language={value.language || "text"}
+          language={value.language || "javascript"}
           value={value.code}
           filename={value.filename}
         />
