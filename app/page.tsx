@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import AnimatedSection from "@/components/animated-section";
 import { EmailCopyBox } from "@/components/email-copy";
-import { GitHubContributionGraph } from "@/components/gitgraph/GithubContributionGraph";
 import { FeaturedProjectsSection } from "@/components/project/ProjectCard";
 import { SparklesCore } from "@/components/sparkles";
 import { Button } from "@/components/ui/button";
@@ -13,6 +12,7 @@ import * as motion from "motion/react-client";
 import Image from "next/image";
 import { AboutSection } from "../components/about/AboutMotion";
 import { BlogPostsSection } from "../components/blogPost/PostCard";
+import GithubSection from "../components/gitgraph/GithubSection";
 import { Badge } from "../components/ui/badge";
 
 export const metadata = {
@@ -188,62 +188,7 @@ export default async function Home() {
       </AnimatedSection>
 
       <AnimatedSection delay={100}>
-        <section className="relative py-16 md:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-green-900/10 to-transparent opacity-20"></div>
-            <div className="absolute top-0 left-1/4 w-32 h-32 bg-green-500/10 rounded-full filter blur-3xl"></div>
-            <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-500/10 rounded-full filter blur-3xl"></div>
-          </div>
-
-          <div className="relative max-w-7xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="mb-12 text-center"
-            >
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-600 mb-4">
-                My Coding Activity
-              </h2>
-              <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto">
-                I believe in consistent progress. Here's my GitHub contribution
-                graph showing my daily coding activity over the past year.
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="flex justify-center mb-12"
-            >
-              <GitHubContributionGraph
-                username="AdityaZxxx"
-                className="w-full max-w-4xl hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)] transition-all duration-500"
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              viewport={{ once: true }}
-              className="text-center"
-            >
-              <Link
-                href="https://github.com/AdityaZxxx"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 group"
-              >
-                View Full GitHub Profile
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </motion.div>
-          </div>
-        </section>
+        <GithubSection />
       </AnimatedSection>
 
       <AnimatedSection>
