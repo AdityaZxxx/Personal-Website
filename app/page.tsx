@@ -4,8 +4,6 @@ import AnimatedSection from "@/components/animated-section";
 import { EmailCopyBox } from "@/components/email-copy";
 import { FeaturedProjectsSection } from "@/components/project/ProjectCard";
 import { SparklesCore } from "@/components/sparkles";
-import { getFeaturedProjects, getLatestPosts } from "@/lib/sanity/queries";
-import { PostType } from "@/types/PostType";
 import { Mail } from "lucide-react";
 import Image from "next/image";
 import { AboutSection } from "../components/about/AboutMotion";
@@ -18,10 +16,7 @@ export const metadata = {
   title: "Home",
   description: "Welcome to my personal website",
 };
-export default async function Home() {
-  const featuredProjects = await getFeaturedProjects();
-  const latestPosts: PostType[] = await getLatestPosts(6);
-
+export default function Home() {
   return (
     <main className="relative flex flex-col items-center overflow-hidden bg-transparent text-white">
       <section
@@ -191,11 +186,11 @@ export default async function Home() {
       </AnimatedSection>
 
       <AnimatedSection>
-        <FeaturedProjectsSection featuredProjects={featuredProjects} />
+        <FeaturedProjectsSection />
       </AnimatedSection>
 
       <AnimatedSection delay={100}>
-        <BlogPostsSection latestPosts={latestPosts} />
+        <BlogPostsSection />
       </AnimatedSection>
 
       <AnimatedSection delay={100}>

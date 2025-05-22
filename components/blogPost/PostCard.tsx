@@ -1,10 +1,9 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { PostType } from "@/types/PostType";
-import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
+import * as motion from "motion/react-client";
 import Link from "next/link";
+import { getLatestPosts } from "../../lib/sanity/queries";
 import { formatDate } from "../../lib/utils";
 import { BlurImage } from "../blur-image";
 import { Badge } from "../ui/badge";
@@ -57,7 +56,8 @@ export function PostCard({ post }: { post: PostType }) {
   );
 }
 
-export function BlogPostsSection({ latestPosts }: { latestPosts: PostType[] }) {
+export async function BlogPostsSection() {
+  const latestPosts: PostType[] = await getLatestPosts(6);
   return (
     <section className="relative w-full py-16 md:py-24 lg:py-32 bg-gray-50 dark:bg-slate-950/50 overflow-hidden">
       {/* Decorative elements */}

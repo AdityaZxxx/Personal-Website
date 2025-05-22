@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, ExternalLink, Github } from "lucide-react";
 import * as motion from "motion/react-client";
 import Link from "next/link";
-import { ProjectType } from "../../types/ProjectType";
+import { getFeaturedProjects } from "../../lib/sanity/queries";
 import { BlurImage } from "../blur-image";
 import { Button } from "../ui/button";
 
@@ -128,11 +128,8 @@ function ProjectCard({ project }: ProjectCardProps) {
   );
 }
 
-export const FeaturedProjectsSection = ({
-  featuredProjects,
-}: {
-  featuredProjects: ProjectType[];
-}) => {
+export const FeaturedProjectsSection = async () => {
+  const featuredProjects = await getFeaturedProjects();
   return (
     <section
       id="projects"
@@ -182,7 +179,7 @@ export const FeaturedProjectsSection = ({
           viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           className="mt-12 grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3"
         >
-          {featuredProjects.map((project) => (
+          {featuredProjects.map((project: any) => (
             <ProjectCard key={project._id} project={project} />
           ))}
         </motion.div>
