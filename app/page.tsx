@@ -25,9 +25,9 @@ export default async function Home() {
 
   return (
     <main className="relative flex flex-col items-center overflow-hidden bg-transparent text-white">
-      {/* Section 1: Hero (unchanged) */}
+     
       <section className="relative w-full min-h-[90vh] flex flex-col items-center justify-start pt-20 md:pt-24 px-4">
-        {/* Background Elements */}
+        
         <div className="absolute inset-0 -z-20">
           <SparklesCore
             id="tsparticlesfullpage"
@@ -54,7 +54,7 @@ export default async function Home() {
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent" />
         </div>
 
-        {/* Enhanced Badge with Glow */}
+        
         <div className="z-10 flex flex-col items-center justify-center text-center w-full max-w-4xl mx-auto">
           <Badge
             variant="outline"
@@ -63,15 +63,15 @@ export default async function Home() {
           >
             <span className=" absolute  inset-[-1000%]  animate-[spin_3s_linear_infinite]  bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
 
-            {/* Content */}
+         
             <span className=" relative z-10 inline-flex cursor-pointer  items-center  justify-center  rounded-full  bg-slate-950/90 px-6 py-[6px] text-sm  font-medium  text-white  backdrop-blur-md hover:bg-slate-950 transition-colors duration-300  ">
               🚀 Let's grow together
             </span>
           </Badge>
 
-          {/* Responsive Heading */}
+        
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight md:leading-tighter">
-            {/* Desktop Layout (2 lines) */}
+           
             <div className="hidden md:block">
               <div className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-400">
                 I help founders turn ideas
@@ -84,7 +84,7 @@ export default async function Home() {
               </div>
             </div>
 
-            {/* Mobile Layout (3 lines) */}
+           
             <div className="md:hidden flex flex-col">
               <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
                 I help founders turn
@@ -96,7 +96,7 @@ export default async function Home() {
             </div>
           </h1>
 
-          {/* Enhanced Profile Section */}
+          
           <div className="mt-8 md:mt-10 flex flex-col sm:flex-row items-center gap-4 group">
             <div className="relative">
               <Image
@@ -122,7 +122,7 @@ export default async function Home() {
             </p>
           </div>
 
-          {/* Enhanced CTA Buttons */}
+        
           <div className="mt-10 md:mt-12 flex flex-col sm:flex-row items-center gap-4">
             <Link
               href="mailto:hello@adityarahmad.com"
