@@ -209,7 +209,6 @@ export default async function Home() {
       </AnimatedSection>
 
       <section className="relative w-full py-16 md:py-24 lg:py-32 z-10 overflow-hidden">
-        {/* Background elements */}
         <div className="absolute inset-0 overflow-hidden -z-10">
           <div className="absolute top-1/2 left-1/2 w-full max-w-2xl h-64 -translate-x-1/2 -translate-y-1/2 bg-blue-500/10 dark:bg-blue-400/5 rounded-full blur-[100px]"></div>
         </div>
