@@ -38,14 +38,11 @@ const components = {
     },
     code: ({ value }: any) => {
       return (
-        <div>
-          <CodeBlock
-            key={value.id}
-            value={value.code}
-            filename={value.filename}
-            language={value.language}
-          />
-        </div>
+        <CodeBlock
+          language={value.language || "text"}
+          value={value.code}
+          filename={value.filename}
+        />
       );
     },
     // blockquote: ({ value }: any) => {

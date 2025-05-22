@@ -1,193 +1,208 @@
 "use client";
 
-import { toast } from "@/hooks/use-toast"; // Asumsikan path ini benar
-import { cn } from "@/lib/utils"; // Asumsikan path ini benar
-import { Check, Copy } from "lucide-react";
-import Prism from "prismjs";
-import { useEffect, useRef, useState } from "react";
-
-// Import Prism languages (sudah baik)
-const PRISM_LANGUAGES = [
-  "prism-markup-templating",
-  "prism-bash",
-  "prism-c",
-  "prism-cpp",
-  "prism-csharp",
-  "prism-css",
-  "prism-dart",
-  "prism-go",
-  "prism-graphql",
-  "prism-java",
-  "prism-javascript",
-  "prism-json",
-  "prism-jsx",
-  "prism-markdown",
-  "prism-php",
-  "prism-python",
-  "prism-ruby",
-  "prism-rust",
-  "prism-scss",
-  "prism-sql",
-  "prism-swift",
-  "prism-tsx",
-  "prism-typescript",
-  "prism-yaml",
-] as const;
-
-PRISM_LANGUAGES.forEach((lang) => {
-  import(`prismjs/components/${lang}`);
-});
-
-// Impor plugin Line Numbers (JS)
-// Pastikan ini diimpor setelah PrismJS core dan sebelum Anda memanggil highlightAll atau highlightElement
-// Dalam kasus dynamic import bahasa, ini seharusnya aman
-import "prismjs/plugins/line-numbers/prism-line-numbers.js";
+import { Check, Copy, FileCode } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getSingletonHighlighter, type Highlighter } from "shiki";
 
 interface CodeBlockProps {
-  language: string; // Penting untuk menentukan bahasa dari data Anda
+  language: string;
   value: string;
   filename?: string;
-  showLineNumbers?: boolean; // Opsi untuk menampilkan/menyembunyikan nomor baris
-  wordWrap?: boolean; // Opsi untuk word wrap
 }
 
-const LANGUAGE_MAP: Record<string, string> = {
-  js: "javascript",
-  jsx: "jsx",
-  ts: "typescript",
-  tsx: "tsx",
-  py: "python",
-  rb: "ruby",
-  sh: "bash",
-  yml: "yaml",
-  html: "markup",
-  xml: "markup",
-  svg: "markup",
-  css: "css",
-  scss: "scss",
-  json: "json",
-  md: "markdown",
-  sql: "sql",
-};
-
-export function CodeBlock({
-  language,
-  value,
-  filename,
-  showLineNumbers = false, // Default ke false
-  wordWrap = false, // Default ke false
-}: CodeBlockProps) {
+export function CodeBlock({ language, value, filename }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const codeRef = useRef<HTMLElement>(null);
+  const [highlightedCode, setHighlightedCode] = useState<string>("");
+  const [highlighter, setHighlighter] = useState<Highlighter | null>(null);
 
-  const getLanguageClass = (lang: string): string => {
-    if (!lang) return "javascript"; // Fallback jika tidak ada bahasa
-    const lowerLang = lang.toLowerCase();
-    return LANGUAGE_MAP[lowerLang] || lowerLang;
-  };
-
-  const languageClass = getLanguageClass(language);
-
+  // Initialize Shiki highlighter
   useEffect(() => {
-    setMounted(true);
+    const initHighlighter = async () => {
+      try {
+        const shikiHighlighter = await getSingletonHighlighter({
+          themes: ["github-dark"],
+          langs: [
+            "javascript",
+            "typescript",
+            "jsx",
+            "tsx",
+            "css",
+            "scss",
+            "html",
+            "json",
+            "python",
+            "java",
+            "c",
+            "cpp",
+            "csharp",
+            "php",
+            "ruby",
+            "go",
+            "rust",
+            "swift",
+            "dart",
+            "bash",
+            "shell",
+            "yaml",
+            "sql",
+            "graphql",
+            "markdown",
+            "xml",
+            "dockerfile",
+            "plaintext",
+          ],
+        });
+        setHighlighter(shikiHighlighter);
+      } catch (error) {
+        console.error("Failed to initialize Shiki highlighter:", error);
+      }
+    };
+
+    initHighlighter();
   }, []);
 
+  // Map language aliases to Shiki supported languages
+  const getLanguageClass = (lang: string) => {
+    if (!lang) return "plaintext";
+
+    const languageMap: Record<string, string> = {
+      js: "javascript",
+      jsx: "jsx",
+      ts: "typescript",
+      tsx: "tsx",
+      py: "python",
+      rb: "ruby",
+      sh: "bash",
+      yml: "yaml",
+      text: "plaintext",
+    };
+
+    return languageMap[lang.toLowerCase()] || lang.toLowerCase();
+  };
+
+  // Get a display name for the language
+  const getLanguageDisplayName = (lang: string) => {
+    const displayNames: Record<string, string> = {
+      javascript: "JavaScript",
+      jsx: "JSX",
+      typescript: "TypeScript",
+      tsx: "TSX",
+      python: "Python",
+      ruby: "Ruby",
+      bash: "Bash",
+      yaml: "YAML",
+      json: "JSON",
+      html: "HTML",
+      css: "CSS",
+      scss: "SCSS",
+      sql: "SQL",
+      graphql: "GraphQL",
+      go: "Go",
+      rust: "Rust",
+      dart: "Dart",
+      php: "PHP",
+      swift: "Swift",
+      csharp: "C#",
+      java: "Java",
+      c: "C",
+      cpp: "C++",
+      markdown: "Markdown",
+      plaintext: "Text",
+    };
+
+    const mappedLang = getLanguageClass(lang);
+    return displayNames[mappedLang] || mappedLang.toUpperCase();
+  };
+
+  // Highlight code when highlighter is ready
   useEffect(() => {
-    if (mounted && codeRef.current) {
-      Prism.highlightElement(codeRef.current);
+    if (highlighter && value) {
+      try {
+        const mappedLanguage = getLanguageClass(language);
+        const highlighted = highlighter.codeToHtml(value, {
+          lang: mappedLanguage,
+          theme: "github-dark",
+        });
+        setHighlightedCode(highlighted);
+      } catch (error) {
+        console.error("Failed to highlight code:", error);
+        // Fallback to plain text
+        setHighlightedCode(
+          `<pre style="background: transparent; padding: 1rem; margin: 0; overflow-x: auto;"><code style="color: #e5e7eb;">${value}</code></pre>`
+        );
+      }
     }
-  }, [mounted, value, language, showLineNumbers]); // Tambahkan showLineNumbers ke dependencies jika logikanya memengaruhi highlighting
+  }, [highlighter, value, language]);
 
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(value);
       setCopied(true);
-      showToast(
-        "✅ Code copied",
-        "The code has been copied to your clipboard."
-      );
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy:", err);
-      showToast(
-        "❎ Failed to copy",
-        "Could not copy the code to your clipboard.",
-        "destructive"
-      );
+      console.error("Failed to copy text: ", err);
     }
   };
 
-  const showToast = (
-    title: string,
-    description: string,
-    variant?: "destructive"
-  ) => {
-    // Pastikan toast diimpor dan dikonfigurasi dengan benar di aplikasi Anda
-    toast({ title, description, variant });
-  };
-
-  if (!mounted) {
-    // Sediakan placeholder atau skeleton loader sederhana jika diinginkan selama SSR/mounting awal
-    // Untuk saat ini, null sudah cukup untuk menghindari hydration mismatch
-    return null;
-  }
-
-  const preClasses = cn(
-    "p-4 overflow-x-auto", // overflow-x-auto tetap berguna jika word-wrap tidak cukup
-    filename ? "pt-2" : "",
-    showLineNumbers ? "line-numbers" : "",
-    { "whitespace-pre-wrap break-words": wordWrap } // Kelas untuk word wrap
-  );
-
-  const codeClasses = cn(
-    `language-${languageClass}`
-    // Anda bisa menambahkan kelas lain di sini jika perlu
-  );
+  // Split code into lines for line numbers
+  const lines = value.split("\n");
 
   return (
-    <div className="relative my-6 rounded-lg overflow-hidden bg-zinc-900 dark:bg-zinc-900 group">
-      {" "}
-      {/* Ganti bg-muted dengan tema gelap, sesuaikan */}
-      {(filename || languageClass !== "text") && (
-        <div className="flex justify-between items-center bg-zinc-800 dark:bg-zinc-800 px-4 py-2 text-sm border-b border-zinc-700 dark:border-zinc-700 text-zinc-400 dark:text-zinc-400 font-mono">
-          <span>{filename || languageClass}</span>
-          <button
-            onClick={copyToClipboard}
-            className="p-1.5 rounded-md bg-zinc-700 hover:bg-zinc-600 transition-colors text-zinc-300"
-            aria-label="Copy code to clipboard"
-          >
-            {copied ? (
-              <Check className="h-4 w-4 text-green-500" />
-            ) : (
-              <Copy className="h-4 w-4" />
-            )}
-          </button>
+    <div className="my-6 rounded-lg overflow-hidden border bg-zinc-950 dark:bg-zinc-900">
+      {/* Header bar */}
+      <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-800">
+        <div className="flex items-center gap-2 text-sm text-zinc-400">
+          {filename ? (
+            <>
+              <FileCode className="h-4 w-4" />
+              <span className="font-medium">{filename}</span>
+            </>
+          ) : (
+            <span className="font-medium">
+              {getLanguageDisplayName(language)}
+            </span>
+          )}
         </div>
-      )}
-      {!filename &&
-        languageClass === "text" && ( // Tombol copy untuk blok tanpa filename, jaga konsistensi
-          <div className="absolute right-2 top-2 z-10">
-            <button
-              onClick={copyToClipboard}
-              className="p-2 rounded-md bg-background/80 hover:bg-background transition-colors"
-              aria-label="Copy code to clipboard"
-            >
-              {copied ? (
-                <Check className="h-4 w-4 text-green-500" />
-              ) : (
-                <Copy className="h-4 w-4 text-muted-foreground" />
-              )}
-            </button>
+        <button
+          onClick={copyToClipboard}
+          className="p-1.5 rounded-md text-zinc-400 hover:bg-zinc-800 hover:text-zinc-50 transition-colors"
+          aria-label="Copy code to clipboard"
+        >
+          {copied ? (
+            <Check className="h-4 w-4 text-green-400" />
+          ) : (
+            <Copy className="h-4 w-4" />
+          )}
+        </button>
+      </div>
+
+      {/* Code content */}
+      <div className="relative overflow-x-auto">
+        <div className="flex">
+          {/* Line numbers */}
+          <div className="flex flex-col text-right pr-4 py-4 pl-4 text-zinc-500 text-sm font-mono select-none bg-zinc-900/50 border-r border-zinc-800">
+            {lines.map((_, index) => (
+              <div key={index} className="leading-6">
+                {index + 1}
+              </div>
+            ))}
           </div>
-        )}
-      <pre className={preClasses}>
-        {/* Atribut data-prismjs-copy dan sejenisnya bisa dinonaktifkan jika menggunakan tombol copy sendiri */}
-        {/* Untuk line numbers, plugin akan menangani penambahan elemen span */}
-        <code ref={codeRef} className={codeClasses}>
-          {value}
-        </code>
-      </pre>
+
+          {/* Code with syntax highlighting */}
+          <div className="flex-1 min-w-0">
+            {highlightedCode ? (
+              <div
+                className="shiki-container [&>pre]:!bg-transparent [&>pre]:!p-4 [&>pre]:!m-0"
+                dangerouslySetInnerHTML={{ __html: highlightedCode }}
+              />
+            ) : (
+              <pre className="p-4 text-zinc-200 bg-transparent font-mono text-sm leading-6">
+                <code>{value}</code>
+              </pre>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

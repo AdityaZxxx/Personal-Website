@@ -1,7 +1,7 @@
 import ConditionalComponents from "@/components/conditional-components";
 import { Header } from "@/components/layout/Header";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
-import "@/styles/prism-theme.css";
+import "@/styles/shiki-theme.css";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata, Viewport } from "next";
 import { Fredoka } from "next/font/google";
