@@ -75,8 +75,8 @@ export const AboutSection = () => {
             <Badge
               variant="outline"
               className={cn(
-                "border-blue-500/40 text-blue-300",
-                "hover:bg-blue-500/10 transition-colors duration-300",
+                "border-amber-500/40 text-amber-600",
+                "hover:bg-amber-500/10 transition-colors duration-300",
                 "shadow-md px-4 py-1"
               )}
               aria-label="About section"
@@ -86,8 +86,8 @@ export const AboutSection = () => {
             <h2
               id="about-heading"
               className={cn(
-                "text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight",
-                "bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-200",
+                "text-3xl md:text-4xl lg:text-5xl font-bold",
+                "bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-orange-300",
                 "leading-tight md:leading-tighter"
               )}
             >
