@@ -1,5 +1,5 @@
-import { ProjectCard } from "@/components/project/ProjectCard";
 import { getAllProjects } from "@/lib/sanity/queries";
+import { ProjectCard } from "./ProjectCard";
 
 interface ProjectListProps {
   searchParams: {

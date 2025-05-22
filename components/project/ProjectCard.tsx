@@ -22,7 +22,7 @@ interface ProjectCardProps {
   };
 }
 
-function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
