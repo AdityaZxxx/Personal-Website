@@ -80,13 +80,77 @@ const config = {
         "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "ping-slow": "ping 2s cubic-bezier(0, 0, 0.2, 1) infinite",
       },
-      typography: {
+      typography: (theme: any) => ({
         DEFAULT: {
           css: {
-            maxWidth: "100%",
+            "--tw-prose-body": theme("colors.gray[700]"),
+            "--tw-prose-headings": theme("colors.gray[900]"),
+            "--tw-prose-links": theme("colors.primary[600]"),
+            "--tw-prose-bold": theme("colors.gray[900]"),
+            "--tw-prose-counters": theme("colors.gray[500]"),
+            "--tw-prose-bullets": theme("colors.gray[400]"),
+            "--tw-prose-hr": theme("colors.gray[200]"),
+            "--tw-prose-quotes": theme("colors.gray[900]"),
+            "--tw-prose-quote-borders": theme("colors.primary[300]"),
+            "--tw-prose-captions": theme("colors.gray[500]"),
+            "--tw-prose-code": theme("colors.gray[900]"),
+            "--tw-prose-pre-code": theme("colors.gray[200]"),
+            "--tw-prose-pre-bg": theme("colors.gray[800]"),
+            "--tw-prose-th-borders": theme("colors.gray[300]"),
+            "--tw-prose-td-borders": theme("colors.gray[200]"),
+            "--tw-prose-invert-body": theme("colors.gray[300]"),
+            "--tw-prose-invert-headings": theme("colors.white"),
+            "--tw-prose-invert-links": theme("colors.primary[400]"),
+            "--tw-prose-invert-bold": theme("colors.white"),
+            "--tw-prose-invert-counters": theme("colors.gray[400]"),
+            "--tw-prose-invert-bullets": theme("colors.gray[600]"),
+            "--tw-prose-invert-hr": theme("colors.gray[700]"),
+            "--tw-prose-invert-quotes": theme("colors.gray[100]"),
+            "--tw-prose-invert-quote-borders": theme("colors.primary[700]"),
+            "--tw-prose-invert-captions": theme("colors.gray[400]"),
+            "--tw-prose-invert-code": theme("colors.white"),
+            "--tw-prose-invert-pre-code": theme("colors.gray[300]"),
+            "--tw-prose-invert-pre-bg": theme("colors.gray[800]"),
+            "--tw-prose-invert-th-borders": theme("colors.gray[600]"),
+            "--tw-prose-invert-td-borders": theme("colors.gray[700]"),
+            maxWidth: "75ch",
+            lineHeight: theme("lineHeight.relaxed"),
+            "h1, h2, h3, h4, h5, h6": {
+              scrollMarginTop: theme("spacing.24"),
+              fontWeight: theme("fontWeight.semibold"),
+            },
+            h1: { fontSize: theme("fontSize.4xl") },
+            h2: { fontSize: theme("fontSize.3xl") },
+            h3: { fontSize: theme("fontSize.2xl") },
+            p: {
+              marginTop: theme("spacing.6"),
+              marginBottom: theme("spacing.6"),
+            },
+            img: {
+              borderRadius: theme("borderRadius.lg"),
+              boxShadow: theme("boxShadow.md"),
+            },
+            code: {
+              fontWeight: "normal",
+              padding: "0.2em 0.4em",
+              borderRadius: theme("borderRadius.md"),
+            },
+            "code::before": { content: "none" },
+            "code::after": { content: "none" },
+            pre: {
+              lineHeight: theme("lineHeight.normal"),
+            },
           },
         },
-      },
+        lg: {
+          css: {
+            lineHeight: theme("lineHeight.relaxed"),
+            h1: { fontSize: theme("fontSize.5xl") },
+            h2: { fontSize: theme("fontSize.4xl") },
+            h3: { fontSize: theme("fontSize.3xl") },
+          },
+        },
+      }),
       backgroundImage: {
         gradient: "linear-gradient(to right, var(--tw-gradient-stops))",
         "gradient-vertical":
@@ -94,7 +158,11 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("tailwind-scrollbar"),
+    require("tailwindcss-animate"),
+  ],
 } satisfies Config;
 
 export default config;
