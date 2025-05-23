@@ -51,7 +51,7 @@ export function Header() {
         "sticky top-0 z-50 w-full border-b transition-all duration-300",
         "bg-background/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/80",
         isScrolled ? "shadow-sm" : "shadow-none",
-        isMenuOpen ? "border-transparent" : "border-border"
+        isMenuOpen ? "border-transparent" : "border-border/50"
       )}
       aria-label="Main navigation"
     >
@@ -65,7 +65,7 @@ export function Header() {
           >
             <Image
               src="/logo.jpg"
-              className="rounded-full shadow-sm hover:shadow-md transition-shadow duration-300"
+              className="rounded-full shadow-sm hover:shadow-md transition-all duration-300"
               alt="Website logo"
               width={36}
               height={36}
@@ -106,7 +106,7 @@ export function Header() {
           <motion.div
             id="mobile-navigation"
             className={cn(
-              "fixed inset-0 top-16 z-40 h-[calc(100vh-4rem)] overflow-y-auto",
+              "fixed inset-0 top-16 z-40 h-screen overflow-y-auto",
               "bg-background/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/80"
             )}
             initial={{ opacity: 0, y: -20 }}
@@ -188,11 +188,8 @@ const NavItems = ({ icon = false }: { icon?: boolean }) => {
             href={item.href}
             prefetch
             className={cn(
-              "flex items-center transition-all duration-200 hover:bg-accent/50 rounded-lg",
+              "flex items-center relative group",
               "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-              isActive
-                ? "bg-primary text-primary-foreground font-medium"
-                : "text-foreground/90 hover:text-foreground",
               icon ? "gap-3 px-4 py-3 text-base" : "gap-2 px-3 py-2 text-sm"
             )}
             aria-current={isActive ? "page" : undefined}
@@ -200,16 +197,22 @@ const NavItems = ({ icon = false }: { icon?: boolean }) => {
             {icon && (
               <span
                 className={cn(
-                  isActive
-                    ? "text-primary-foreground"
-                    : "text-muted-foreground",
-                  "flex-shrink-0"
+                  isActive ? "text-primary" : "text-muted-foreground",
+                  "flex-shrink-0 transition-colors duration-200"
                 )}
               >
                 {item.icon}
               </span>
             )}
-            <span>{item.label}</span>
+            <span className="relative">
+              {item.label}
+              <span
+                className={cn(
+                  "absolute bottom-0 left-0 h-0.5 bg-primary transition-all duration-300",
+                  isActive ? "w-full" : "w-0 group-hover:w-full"
+                )}
+              />
+            </span>
             {isActive && <span className="sr-only">(current page)</span>}
           </Link>
         );

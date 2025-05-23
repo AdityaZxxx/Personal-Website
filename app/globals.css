@@ -227,3 +227,27 @@ pre[class*="language-"].line-numbers > code {
   padding-right: 0.8em;
   text-align: right;
 }
+
+@layer utilities {
+  @keyframes gradient-flow {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  .animate-gradient-slow {
+    /* Slower and smoother for continuous text animation */
+    animation: gradient-flow 15s ease infinite;
+  }
+
+  /* Optional: if your CategoryFilter buttons need explicit focus styling not covered by Tailwind's focus:ring */
+  /* .category-filter-button:focus-visible {
+    outline: 2px solid hsl(var(--primary)); 
+    outline-offset: 2px;
+  } */
+}
