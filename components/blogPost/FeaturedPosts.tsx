@@ -21,10 +21,7 @@ interface FeaturedPostsProps {
   title?: string;
 }
 
-export function FeaturedPosts({
-  posts,
-  title = "Featured Posts",
-}: FeaturedPostsProps) {
+export function FeaturedPosts({ posts, title }: FeaturedPostsProps) {
   if (!posts || posts.length === 0) return null;
 
   return (
