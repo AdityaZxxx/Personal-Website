@@ -1,11 +1,11 @@
 "use client";
 
-import { BlurImage } from "@/components/blur-image";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { urlForImage } from "@/lib/sanity/image";
 import { formatDate } from "@/lib/utils";
 import { Bookmark, Heart, MessageSquare, Play, Share2 } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 
 interface GalleryItemProps {
@@ -43,8 +43,8 @@ export function GalleryItem({ item, notFoundMessage }: GalleryItemProps) {
         onClick={() => setIsOpen(true)}
       >
         {thumbnailImage ? (
-          <BlurImage
-            image={thumbnailImage}
+          <Image
+            src={thumbnailImage}
             alt={item.title}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -106,8 +106,8 @@ export function GalleryItem({ item, notFoundMessage }: GalleryItemProps) {
             {/* Media Section */}
             <div className="relative w-full sm:w-3/5 bg-black flex items-center justify-center">
               {item.mediaType === "image" && item.image ? (
-                <BlurImage
-                  image={item.image}
+                <Image
+                  src={item.image}
                   alt={item.title}
                   width={1200}
                   height={1200}

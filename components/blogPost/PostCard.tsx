@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button";
 import { PostType } from "@/types/PostType";
 import { ArrowRight, Calendar } from "lucide-react";
 import * as motion from "motion/react-client";
+import Image from "next/image";
 import Link from "next/link";
+import { urlFor } from "../../lib/sanity/image";
 import { getLatestPosts } from "../../lib/sanity/queries";
 import { formatDate } from "../../lib/utils";
-import { BlurImage } from "../blur-image";
 import { Badge } from "../ui/badge";
 import { Card, CardContent, CardHeader } from "../ui/card";
 
@@ -21,8 +22,8 @@ export function PostCard({ post }: { post: PostType }) {
             <CardContent className="p-4 flex gap-3">
               {post.mainImage && (
                 <div className="relative h-32 w-32 flex-shrink-0 rounded-md overflow-hidden">
-                  <BlurImage
-                    image={post.mainImage}
+                  <Image
+                    src={urlFor(post.mainImage).width(200).url()}
                     alt={post.title}
                     fill
                     className="object-cover"
@@ -42,7 +43,11 @@ export function PostCard({ post }: { post: PostType }) {
                 </div>
                 {post.categories && post.categories.length > 0 && (
                   <div className="mt-2">
-                    <Badge variant="secondary" className="text-xs">
+                    <Badge
+                      key={post._id}
+                      variant="secondary"
+                      className="text-xs"
+                    >
                       {post.categories[0].title}
                     </Badge>
                   </div>

@@ -1,9 +1,10 @@
-import { BlurImage } from "@/components/blur-image";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatDate } from "@/lib/utils";
 import { Calendar } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import { urlFor } from "../../lib/sanity/image";
 
 interface FeaturedPostsProps {
   posts: Array<{
@@ -25,17 +26,17 @@ export function FeaturedPosts({ posts, title }: FeaturedPostsProps) {
   if (!posts || posts.length === 0) return null;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 bg-slate-800/70">
       <h3 className="font-bold text-lg">{title}</h3>
       <div className="space-y-4">
-        {posts.map((post) => (
-          <Link key={post._id} href={`/blog/${post.slug.current}`}>
-            <Card className="overflow-hidden hover:shadow-md transition-shadow">
+        {posts.map((post, index) => (
+          <Link key={index} href={`/blog/${post.slug.current}`}>
+            <Card className="overflow-hidden hover:shadow-md bg-slate-800/90 transition-shadow">
               <CardContent className="p-4 flex gap-3">
                 {post.mainImage && (
                   <div className="relative h-16 w-16 flex-shrink-0 rounded-md overflow-hidden">
-                    <BlurImage
-                      image={post.mainImage}
+                    <Image
+                      src={urlFor(post.mainImage).url()}
                       alt={post.title}
                       fill
                       className="object-cover"
@@ -55,7 +56,11 @@ export function FeaturedPosts({ posts, title }: FeaturedPostsProps) {
                   </div>
                   {post.categories && post.categories.length > 0 && (
                     <div className="mt-2">
-                      <Badge variant="secondary" className="text-xs">
+                      <Badge
+                        key={post._id}
+                        variant="secondary"
+                        className="text-xs"
+                      >
                         {post.categories[0].title}
                       </Badge>
                     </div>

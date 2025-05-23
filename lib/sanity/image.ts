@@ -1,13 +1,12 @@
-import createImageUrlBuilder from "@sanity/image-url"
-import { client } from "./client"
+import imageUrlBuilder from "@sanity/image-url";
+import { client } from "./client";
 
-const imageBuilder = createImageUrlBuilder(client)
+// Get a pre-configured url-builder from your sanity client
+const builder = imageUrlBuilder(client);
 
-export const urlForImage = (source: any) => {
-  if (!source?.asset?._ref) {
-    return null
-  }
-
-  return imageBuilder.image(source)
+// Then we like to make a simple function like this that gives the
+// builder an image and returns the builder for you to specify additional
+// parameters:
+export function urlFor(source: any) {
+  return builder.image(source);
 }
-

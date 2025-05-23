@@ -1,9 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, ExternalLink, Github } from "lucide-react";
 import * as motion from "motion/react-client";
+import Image from "next/image";
 import Link from "next/link";
+import { urlFor } from "../../lib/sanity/image";
 import { getFeaturedProjects } from "../../lib/sanity/queries";
-import { BlurImage } from "../blur-image";
 import { Button } from "../ui/button";
 
 interface ProjectCardProps {
@@ -42,8 +43,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
           {project.mainImage ? (
             <>
               <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-transparent to-slate-900/80 z-10" />
-              <BlurImage
-                image={project.mainImage}
+              <Image
+                src={urlFor(project.mainImage).width(200).url()}
                 alt={`Screenshot of ${project.title} project`}
                 fill
                 className="transition-transform duration-500 group-hover:scale-105 object-cover"
@@ -79,9 +80,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
       {/* Technologies */}
       <div className="px-6 pb-4 flex flex-wrap gap-2">
-        {project.technologies?.slice(0, 3).map((tech) => (
+        {project.technologies?.slice(0, 3).map((tech, index) => (
           <Badge
-            key={tech}
+            key={tech + index}
             variant="secondary"
             className="rounded-full bg-slate-800/80 backdrop-blur-sm text-xs font-medium"
           >
@@ -89,7 +90,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           </Badge>
         ))}
         {project.technologies && project.technologies.length > 3 && (
-          <Badge variant="outline" className="text-xs">
+          <Badge key={project._id} variant="outline" className="text-xs">
             +{project.technologies.length - 3} more
           </Badge>
         )}

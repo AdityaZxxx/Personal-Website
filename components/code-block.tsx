@@ -20,7 +20,7 @@ export function CodeBlock({ language, value, filename }: CodeBlockProps) {
     const initHighlighter = async () => {
       try {
         const shikiHighlighter = await getSingletonHighlighter({
-          themes: ["github-dark"],
+          themes: ["tokyo-night"],
           langs: [
             "javascript",
             "typescript",
@@ -61,9 +61,8 @@ export function CodeBlock({ language, value, filename }: CodeBlockProps) {
     initHighlighter();
   }, []);
 
-  // Map language aliases to Shiki supported languages
   const getLanguageClass = (lang: string) => {
-    if (!lang) return "plaintext";
+    if (!lang) return "javascript";
 
     const languageMap: Record<string, string> = {
       js: "javascript",
@@ -121,7 +120,7 @@ export function CodeBlock({ language, value, filename }: CodeBlockProps) {
         const mappedLanguage = getLanguageClass(language);
         const highlighted = highlighter.codeToHtml(value, {
           lang: mappedLanguage,
-          theme: "github-dark",
+          theme: "tokyo-night",
         });
         setHighlightedCode(highlighted);
       } catch (error) {
@@ -180,7 +179,7 @@ export function CodeBlock({ language, value, filename }: CodeBlockProps) {
       <div className="relative overflow-x-auto">
         <div className="flex">
           {/* Line numbers */}
-          <div className="flex flex-col text-right pr-4 py-4 pl-4 text-zinc-500 text-sm font-mono select-none bg-zinc-900/50 border-r border-zinc-800">
+          <div className="flex flex-col text-right pr-4 py-3 pl-4 text-zinc-500 text-sm font-mono select-none bg-zinc-900/50 border-r border-zinc-800">
             {lines.map((_, index) => (
               <div key={index} className="leading-6">
                 {index + 1}

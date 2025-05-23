@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import AnimatedSection from "@/components/animated-section";
 import { EmailCopyBox } from "@/components/email-copy";
-import { FeaturedProjectsSection } from "@/components/project/ProjectCard";
 import { SparklesCore } from "@/components/sparkles";
 import { Mail } from "lucide-react";
 import Image from "next/image";
@@ -10,6 +9,7 @@ import { AboutSection } from "../components/about/AboutMotion";
 import { BlogPostsSection } from "../components/blogPost/PostCard";
 import ContactSection from "../components/contact/ContactSection";
 import GithubSection from "../components/gitgraph/GithubSection";
+import { FeaturedProjectsSection } from "../components/project/ProjectCard";
 import { Badge } from "../components/ui/badge";
 
 export const metadata = {
@@ -41,7 +41,7 @@ export default function Home() {
         <div className="absolute inset-0 -z-10">
           <Image
             src="/horizon.jpg"
-            alt=""
+            alt="Background Image"
             fill
             className="object-cover opacity-50"
             quality={90}

@@ -18,7 +18,7 @@ export function TrakteerSupport({
   return (
     <Card
       className={cn(
-        "group relative overflow-hidden rounded-xl border-2 border-transparent bg-card text-card-foreground shadow-lg transition-all duration-300 ease-out hover:shadow-2xl hover:border-purple-500/50 dark:hover:border-purple-400/60",
+        "group relative overflow-hidden rounded-xl border-2 border-transparent bg-slate-800/70 bg-card text-card-foreground shadow-lg transition-all duration-300 ease-out hover:shadow-2xl hover:border-purple-500/50 dark:hover:border-purple-400/60",
         "bg-gradient-to-br from-slate-50 via-gray-50 to-stone-100 dark:from-slate-900 dark:via-gray-800/95 dark:to-neutral-900", // Subtle background gradient
         className
       )}

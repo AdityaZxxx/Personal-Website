@@ -147,9 +147,9 @@ export function ShareButtons({
     <div className="space-y-3">
       <h4 className="text-lg font-medium">Share this post</h4>
       <div className="flex flex-wrap gap-2">
-        {shareLinks.map((link) => (
+        {shareLinks.map((link, index) => (
           <Button
-            key={link.name}
+            key={index}
             variant="outline"
             size="icon"
             rel="noopener noreferrer"

@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Globe, Mail } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { FaGithub, FaInstagram, FaYoutube } from "react-icons/fa";
-import { BlurImage } from "./blur-image";
+import { urlFor } from "../lib/sanity/image";
 import { CustomLogo } from "./custom-logo";
 
 interface AuthorProfileProps {
@@ -48,7 +49,7 @@ export function AuthorProfile({ author, className }: AuthorProfileProps) {
   return (
     <Card
       className={cn(
-        "overflow-hidden hover:shadow-md transition-shadow",
+        "overflow-hidden bg-slate-800 hover:shadow-md transition-shadow",
         className
       )}
     >
@@ -57,8 +58,8 @@ export function AuthorProfile({ author, className }: AuthorProfileProps) {
           {/* Author Image */}
           {author.image && (
             <div className="relative w-24 h-24 rounded-full border-4 border-primary/20 dark:border-primary/30 group">
-              <BlurImage
-                image={author.image}
+              <Image
+                src={urlFor(author.image).url()}
                 alt={author.name}
                 width={96}
                 height={96}

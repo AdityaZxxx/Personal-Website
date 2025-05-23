@@ -1,6 +1,6 @@
 import { CategoryFilter } from "@/components/category-filter";
 import { ProjectList } from "@/components/project/ProjectList";
-import { Skeleton } from "@/components/ui/skeleton"; // Assuming Skeleton is from shadcn/ui
+import { Skeleton } from "@/components/ui/skeleton";
 import { getAllProjectCategories } from "@/lib/sanity/queries";
 import type { Metadata } from "next";
 import { Suspense } from "react";
@@ -10,20 +10,20 @@ export const metadata: Metadata = {
   description: "Explore my portfolio of web development and design projects.",
 };
 
-interface ProjectsPageProps {
-  searchParams: {
-    category?: string;
-  };
-}
+type ResolvedSearchParams = {
+  category?: string;
+  search?: string;
+};
 
-export default async function ProjectsPage(props: ProjectsPageProps) {
-  // No need to await props.searchParams, it's directly available
-  const { searchParams } = props;
+export default async function ProjectsPage(props: {
+  searchParams: Promise<ResolvedSearchParams>;
+}) {
+  const resolvedSearchParams = await props.searchParams;
 
-  const category =
-    typeof searchParams?.category === "string"
-      ? searchParams.category
-      : undefined;
+  const search = resolvedSearchParams.search;
+  const category = resolvedSearchParams.category;
+
+  console.log(search);
 
   const categories = await getAllProjectCategories();
 
@@ -69,7 +69,7 @@ export default async function ProjectsPage(props: ProjectsPageProps) {
 
       <div className="mt-8">
         <Suspense fallback={<ProjectListSkeleton />}>
-          <ProjectList searchParams={searchParams} />
+          <ProjectList params={search} />
         </Suspense>
       </div>
     </main>

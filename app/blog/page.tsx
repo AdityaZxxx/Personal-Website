@@ -12,15 +12,26 @@ export const metadata: Metadata = {
     "Read my thoughts on web development, design, and technology. I also write about random things such as current trends, politics and the economy",
 };
 
-interface BlogPageProps {
-  searchParams: {
-    category?: string;
-    search?: string;
-  };
-}
+// Definisikan tipe untuk objek searchParams yang telah di-resolve
+type ResolvedSearchParams = {
+  category?: string;
+  search?: string;
+};
 
-export default async function BlogPage(props: BlogPageProps) {
-  const { searchParams } = props; // No need to await, it's directly available
+// Komponen BlogPage Anda
+export default async function BlogPage(
+  // 'props' adalah objek, bukan Promise.
+  // 'props.searchParams' adalah Promise yang berisi objek ResolvedSearchParams.
+  props: {
+    // params: Promise<{ yourRouteParam?: string }>; // Tambahkan ini jika halaman Anda memiliki parameter rute dinamis
+    searchParams: Promise<ResolvedSearchParams>;
+  }
+) {
+  // Ambil dan await props.searchParams untuk mendapatkan objek search parameters
+  const resolvedSearchParams = await props.searchParams;
+
+  const search = resolvedSearchParams.search;
+  const category = resolvedSearchParams.category;
 
   const categories = await getAllCategories();
 
@@ -69,10 +80,7 @@ export default async function BlogPage(props: BlogPageProps) {
             <div className="w-full md:w-auto">
               {" "}
               {/* Allow CategoryFilter to take space or manage its own width */}
-              <CategoryFilter
-                categories={categories}
-                activeCategory={searchParams.category}
-              />
+              <CategoryFilter categories={categories} activeCategory={search} />
             </div>
             <div className="w-full md:w-auto md:max-w-xs">
               {" "}
@@ -88,10 +96,7 @@ export default async function BlogPage(props: BlogPageProps) {
         {" "}
         {/* Slightly narrower for better blog readability */}
         <Suspense fallback={<PostListSkeleton />}>
-          <PostListServer
-            category={searchParams.category}
-            searchQuery={searchParams.search}
-          />
+          <PostListServer category={category} searchQuery={search} />
         </Suspense>
       </div>
     </main>
