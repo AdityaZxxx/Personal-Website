@@ -2,8 +2,6 @@ import { Calendar, ChevronDown, Clock } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-// Suspense is not directly used in this file's JSX, but good to keep if child components use it.
-// import { Suspense } from "react"; Removed if not directly used here.
 
 import { AuthorProfile } from "@/components/author-profile";
 import { FeaturedPosts } from "@/components/blogPost/FeaturedPosts";
@@ -32,15 +30,14 @@ import {
 } from "@/lib/sanity/queries";
 import { cn, formatDate } from "@/lib/utils";
 import { Geist } from "next/font/google";
-import Image from "next/image"; // Ensure next/image is imported
-import { urlFor } from "../../../lib/sanity/image"; // Assuming this is your configured Sanity image URL builder
+import Image from "next/image";
+import { urlFor } from "../../../lib/sanity/image";
 
 const GeistSans = Geist({ subsets: ["latin"] });
 
 const NEXT_PUBLIC_SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://example.com"; // Fallback for safety
+  process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
 const SITE_NAME = "Aditya Rahmad";
-// const LOGO_URL = `${NEXT_PUBLIC_SITE_URL}/logo.png`; // LOGO_URL not used in this file
 
 export async function generateMetadata({
   params: promiseParams,
@@ -121,8 +118,7 @@ const categoryColors = [
 ];
 
 function getColorClass(slug: string | undefined) {
-  // Handle potentially undefined slug
-  if (!slug) return categoryColors[0]; // Default color or handle error
+  if (!slug) return categoryColors[0];
   const index =
     slug.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) %
     categoryColors.length;
@@ -138,18 +134,19 @@ export default async function PostPage({
 
   const [post, featuredPostsData] = await Promise.all([
     getPostBySlug(slug),
-    getFeaturedPosts(4), // Fetches up to 4, then filters
+    getFeaturedPosts(4),
   ]);
 
   if (!post) {
     notFound();
   }
 
+  console.log(post);
+
   const filteredFeaturedPosts = featuredPostsData
     .filter((p: any) => p.slug?.current !== slug)
-    .slice(0, 3); // Ensures max 3 related posts
+    .slice(0, 3);
 
-  // Prepare image URLs for JSON-LD, ensuring they are valid strings
   const jsonLdImages: string[] = [];
   if (post.mainImage) {
     const imgUrl1200x630 = urlFor(post.mainImage).width(1200).height(630).url();
@@ -287,10 +284,10 @@ export default async function PostPage({
                           post.author.slug?.current
                             ? `/author/${post.author.slug.current}`
                             : `/blog`
-                        } // Fallback href
+                        }
                         className="flex items-center gap-2 hover:text-sky-400 transition-colors"
                       >
-                        {authorImageUrl && ( // Conditionally render Image
+                        {authorImageUrl && (
                           <Image
                             src={authorImageUrl} // Use the prepared URL string
                             alt={post.author.name || "Author image"}
@@ -326,7 +323,7 @@ export default async function PostPage({
                     <Image
                       src={mainImageUrl} // Use the prepared URL string
                       alt={`Main image for ${post.title}`}
-                      width={1600} // These are for aspect ratio, actual size determined by layout & 'sizes'
+                      width={1600}
                       height={900}
                       className="object-cover aspect-[16/9]" // Keeps aspect ratio
                       priority // This image will be preloaded

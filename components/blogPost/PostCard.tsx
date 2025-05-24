@@ -32,7 +32,7 @@ export function PostCard({ post }: { post: PostType }) {
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-sm line-clamp-2">
+                <h4 className="font-medium text-sm line-clamp-3">
                   {post.excerpt}
                 </h4>
                 <div className="flex items-center mt-1 text-xs text-muted-foreground">

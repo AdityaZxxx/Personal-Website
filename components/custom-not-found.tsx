@@ -113,6 +113,10 @@ export function PostNotFound(props: Omit<NotFoundProps, "type">) {
   return <NotFound type="post" {...props} />;
 }
 
+export function ProjectNotFound(props: Omit<NotFoundProps, "type">) {
+  return <NotFound type="post" {...props} />;
+}
+
 export function GalleryNotFound(props: Omit<NotFoundProps, "type">) {
   return <NotFound type="gallery" {...props} />;
 }

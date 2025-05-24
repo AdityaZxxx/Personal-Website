@@ -1,10 +1,9 @@
-import { BlogSearch } from "@/components/blog-search";
 import { PostListServer } from "@/components/blogPost/PostListServer";
-import { CategoryFilter } from "@/components/category-filter";
-import { Skeleton } from "@/components/ui/skeleton"; // Assuming Skeleton is from shadcn/ui
-import { getAllCategories } from "@/lib/sanity/queries";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getAllPostCategories } from "@/lib/sanity/queries";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { CategoryFilter } from "../../components/category-filter";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -12,135 +11,86 @@ export const metadata: Metadata = {
     "Read my thoughts on web development, design, and technology. I also write about random things such as current trends, politics and the economy",
 };
 
-// Definisikan tipe untuk objek searchParams yang telah di-resolve
-type ResolvedSearchParams = {
+type ResolvedPageSearchParams = {
   category?: string;
   search?: string;
 };
 
-// Komponen BlogPage Anda
-export default async function BlogPage(
-  // 'props' adalah objek, bukan Promise.
-  // 'props.searchParams' adalah Promise yang berisi objek ResolvedSearchParams.
-  props: {
-    // params: Promise<{ yourRouteParam?: string }>; // Tambahkan ini jika halaman Anda memiliki parameter rute dinamis
-    searchParams: Promise<ResolvedSearchParams>;
-  }
-) {
-  // Ambil dan await props.searchParams untuk mendapatkan objek search parameters
-  const resolvedSearchParams = await props.searchParams;
-
-  const search = resolvedSearchParams.search;
+export default async function BlogPage({
+  searchParams: searchParamsPromise,
+}: {
+  searchParams: Promise<ResolvedPageSearchParams>;
+}) {
+  const resolvedSearchParams = (await searchParamsPromise) || {};
   const category = resolvedSearchParams.category;
-
-  const categories = await getAllCategories();
+  const search = resolvedSearchParams.search;
+  const allCategories = await getAllPostCategories();
 
   return (
-    <main className="container mx-auto px-4 py-12 md:px-6 md:py-20 lg:py-24">
+    <main className="container mx-auto px-4 pt-12 pb-20 md:px-6 md:pt-16 lg:pt-20">
       {/* === Hero Section === */}
-      <div className="flex flex-col items-center text-center mb-16 md:mb-20">
-        <div className="max-w-3xl mx-auto space-y-6">
-          <h1 className="text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl pb-3 relative group">
-            {/* Main gradient text - using the refined animation */}
-            <span
-              className="relative z-10 bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] 
-                         bg-clip-text text-transparent 
-                         motion-safe:animate-gradient-slow dark:via-accent/90" // Assumes animate-gradient-slow is in global CSS
-            >
+      <section className="flex flex-col items-center text-center mb-16 md:mb-20 lg:mb-24">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+            <span className="bg-gradient-to-r from-primary via-accent to-primary dark:from-primary dark:via-accent/80 dark:to-primary bg-clip-text text-transparent">
               My Blog
             </span>
-            {/* Subtle glow */}
-            <span
-              className="absolute inset-0 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 
-                         dark:from-primary/15 dark:via-accent/10 dark:to-primary/15 
-                         bg-clip-text text-transparent blur-xl opacity-70 
-                         group-hover:opacity-90 motion-safe:transition-opacity motion-safe:duration-500 -z-10"
-            >
-              My Blog
-            </span>
-            {/* Refined underline animation */}
-            <span
-              className="absolute -bottom-2 left-1/2 -translate-x-1/2 h-[4px] bg-gradient-to-r from-primary to-accent 
-                         w-0 group-hover:w-1/3 motion-safe:transition-all motion-safe:duration-700 ease-out 
-                         [background-size:200%_auto] motion-safe:group-hover:animate-gradient-slow rounded-full"
-            />
           </h1>
-          <p className="text-lg text-muted-foreground md:text-xl leading-relaxed">
+
+          <p className="text-lg text-muted-foreground md:text-xl lg:text-2xl leading-relaxed max-w-3xl mx-auto">
             Exploring web development, design, tech trends, and occasionally,
             life's random musings.
           </p>
-        </div>
-      </div>
 
-      {/* === Sticky Filter & Search Bar === */}
-      <div className="sticky top-0 z-20 py-5 bg-background/90 backdrop-blur-lg supports-[backdrop-filter]:bg-background/80 border-b border-border/30 shadow-sm">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            {/* CategoryFilter might need internal adjustments for responsiveness in this context */}
-            <div className="w-full md:w-auto">
-              {" "}
-              {/* Allow CategoryFilter to take space or manage its own width */}
-              <CategoryFilter categories={categories} activeCategory={search} />
-            </div>
-            <div className="w-full md:w-auto md:max-w-xs">
-              {" "}
-              {/* Constrain search bar width on larger screens */}
-              <BlogSearch />
+          {/* Search and Filter Section */}
+          <div className="flex flex-col items-center gap-4 pt-4 w-full max-w-2xl mx-auto">
+            <div className="w-full flex justify-center">
+              <CategoryFilter
+                categories={allCategories}
+                activeCategory={category}
+              />
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* === Blog Post List === */}
-      <div className="mt-12 md:mt-16 max-w-5xl mx-auto">
-        {" "}
-        {/* Slightly narrower for better blog readability */}
+      <section className="mt-8 md:mt-12 max-w-6xl mx-auto">
         <Suspense fallback={<PostListSkeleton />}>
           <PostListServer category={category} searchQuery={search} />
         </Suspense>
-      </div>
+      </section>
     </main>
   );
 }
 
 function PostListSkeleton() {
   return (
-    <div className="grid grid-cols-1 gap-10 md:gap-12">
-      {" "}
-      {/* Increased gap */}
-      {Array(4) // Reduced to 4 for a cleaner skeleton page, adjust as needed
+    <div className="grid grid-cols-1 gap-8 md:gap-10">
+      {Array(3)
         .fill(0)
         .map((_, i) => (
-          <article // Changed to <article> for semantic correctness
+          <article
             key={i}
-            className="group flex flex-col md:flex-row md:items-start gap-6 lg:gap-8 p-4 rounded-xl border border-border/20 bg-card shadow-sm hover:shadow-lg motion-safe:transition-shadow motion-safe:duration-300"
+            className="group flex flex-col md:flex-row md:items-start gap-6 p-5 rounded-xl border border-border/30 bg-card hover:shadow-md transition-shadow duration-200"
           >
-            {/* Image Placeholder */}
-            <div className="w-full md:w-[280px] lg:w-[320px] aspect-[16/10] md:aspect-[4/3] shrink-0">
-              <Skeleton className="h-full w-full rounded-lg bg-muted/60 group-hover:opacity-90 motion-safe:transition-opacity" />
+            <div className="w-full md:w-64 lg:w-80 aspect-video shrink-0">
+              <Skeleton className="h-full w-full rounded-lg bg-muted/50" />
             </div>
-            {/* Content Placeholder */}
-            <div className="flex-1 space-y-3 pt-2 md:pt-0">
-              {/* Category/Date Placeholder */}
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-                <Skeleton className="h-5 w-20 rounded-full bg-muted/50" />
-                <span className="text-muted-foreground/50">•</span>
-                <Skeleton className="h-5 w-24 rounded-full bg-muted/50" />
+            <div className="flex-1 space-y-3">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+                <Skeleton className="h-5 w-24 rounded-full bg-muted/40" />
+                <span className="text-muted-foreground/30">•</span>
+                <Skeleton className="h-5 w-28 rounded-full bg-muted/40" />
               </div>
-              {/* Title Placeholder */}
-              <Skeleton className="h-7 w-full rounded bg-muted/60" />
-              <Skeleton className="h-7 w-3/4 rounded bg-muted/60 md:hidden" />{" "}
-              {/* Shorter line for mobile title */}
-              {/* Excerpt Placeholder Lines */}
-              <div className="space-y-2 pt-1">
-                <Skeleton className="h-4 w-full rounded bg-muted/50" />
-                <Skeleton className="h-4 w-5/6 rounded bg-muted/50" />
-                <Skeleton className="h-4 w-full rounded bg-muted/50 sm:w-11/12" />
-                <Skeleton className="h-4 w-3/4 rounded bg-muted/50 sm:w-1/2" />
+              <Skeleton className="h-8 w-full max-w-md rounded bg-muted/60" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-full rounded bg-muted/40" />
+                <Skeleton className="h-4 w-11/12 rounded bg-muted/40" />
+                <Skeleton className="h-4 w-4/5 rounded bg-muted/40" />
               </div>
-              {/* Read More Placeholder */}
               <div className="pt-2">
-                <Skeleton className="h-6 w-32 rounded-md bg-muted/40" />
+                <Skeleton className="h-6 w-32 rounded-md bg-muted/30" />
               </div>
             </div>
           </article>

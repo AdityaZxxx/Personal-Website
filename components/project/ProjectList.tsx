@@ -1,28 +1,17 @@
+// File: components/project/ProjectList.tsx
 import { getAllProjects } from "@/lib/sanity/queries";
+import { ProjectNotFound } from "../custom-not-found";
 import { ProjectCard } from "./ProjectCard";
 
 interface ProjectListProps {
-  searchParams: {
-    category?: string;
-  };
+  category?: string;
 }
 
-export async function ProjectList({ searchParams }: ProjectListProps) {
-  // Extract category from searchParams here
-  // const category = searchParams?.category;
-  const category =
-    typeof searchParams?.category === "string"
-      ? searchParams.category
-      : undefined;
-
+export async function ProjectList({ category }: ProjectListProps) {
   const projects = await getAllProjects(category);
 
   if (!projects || projects.length === 0) {
-    return (
-      <div className="text-center py-10">
-        <p className="text-muted-foreground">No projects found.</p>
-      </div>
-    );
+    return <ProjectNotFound message={"Your search not found"} />;
   }
 
   return (

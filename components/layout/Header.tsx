@@ -1,5 +1,6 @@
 "use client";
 
+import { BlogSearch } from "@/components/blog-search"; // <-- 1. Impor BlogSearch
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
@@ -23,14 +24,15 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
 
+  // 2. Logika untuk menampilkan BlogSearch
+  const showBlogSearch = pathname === "/blog" || pathname?.startsWith("/blog/");
+
   const closeMenu = useCallback(() => setIsMenuOpen(false), []);
 
-  // Close menu on route change
   useEffect(() => {
     closeMenu();
   }, [pathname, closeMenu]);
 
-  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -39,7 +41,6 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Prevent body scroll when menu is open
   useEffect(() => {
     document.body.classList.toggle("overflow-hidden", isMenuOpen);
     return () => document.body.classList.remove("overflow-hidden");
@@ -51,20 +52,21 @@ export function Header() {
         "sticky top-0 z-50 w-full border-b transition-all duration-300",
         "bg-background/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/80",
         isScrolled ? "shadow-sm" : "shadow-none",
-        isMenuOpen ? "border-transparent" : "border-border/50"
+        isMenuOpen ? "border-transparent" : "border-border/50" // Atau bg-background saat menu terbuka
       )}
       aria-label="Main navigation"
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
-        {/* Logo on the left */}
-        <div className="flex items-center">
+        {/* Logo di kiri */}
+        <div className="flex-shrink-0">
           <Link
             href="/"
             className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-full"
             aria-label="Home"
+            onClick={closeMenu} // Tutup menu jika logo diklik saat di mobile
           >
             <Image
-              src="/logo.jpg"
+              src="/logo.jpg" // Pastikan path logo ini benar
               className="rounded-full shadow-sm hover:shadow-md transition-all duration-300"
               alt="Website logo"
               width={36}
@@ -74,59 +76,93 @@ export function Header() {
           </Link>
         </div>
 
-        {/* Centered navigation on desktop */}
-        <nav className="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2">
-          <NavItems />
+        {/* Navigasi tengah untuk Desktop */}
+        <nav className="hidden md:flex items-center absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <NavItems closeMenu={closeMenu} />
         </nav>
 
-        {/* Mobile menu button (right side) */}
-        <div className="flex items-center md:hidden">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label={
-              isMenuOpen ? "Close navigation menu" : "Open navigation menu"
-            }
-            aria-expanded={isMenuOpen}
-            aria-controls="mobile-navigation"
-          >
-            {isMenuOpen ? (
-              <X className="h-5 w-5" aria-hidden="true" />
-            ) : (
-              <Menu className="h-5 w-5" aria-hidden="true" />
-            )}
-          </Button>
+        {/* Konten tengah untuk Mobile (bisa BlogSearch atau kosong) */}
+        <div className="md:hidden flex-1 flex justify-center items-center min-w-0 px-2 sm:px-4">
+          {showBlogSearch && !isMenuOpen && (
+            <div className="w-full max-w-xs">
+              <BlogSearch />
+            </div>
+          )}
+        </div>
+
+        {/* Bagian kanan Header */}
+        <div className="flex-shrink-0 flex items-center">
+          {/* BlogSearch untuk Desktop */}
+          {showBlogSearch && (
+            <div className="hidden md:block">
+              <div className="w-auto md:w-56 lg:w-64">
+                {" "}
+                {/* Sesuaikan lebar search bar desktop */}
+                <BlogSearch />
+              </div>
+            </div>
+          )}
+
+          {/* Tombol Menu Mobile */}
+          <div className="md:hidden ml-2">
+            {" "}
+            {/* Tambahkan ml-2 jika BlogSearch tidak tampil di mobile untuk spacing */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label={
+                isMenuOpen ? "Close navigation menu" : "Open navigation menu"
+              }
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-navigation"
+            >
+              {isMenuOpen ? (
+                <X className="h-5 w-5" aria-hidden="true" />
+              ) : (
+                <Menu className="h-5 w-5" aria-hidden="true" />
+              )}
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Panel Menu Mobile */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
             id="mobile-navigation"
             className={cn(
-              "fixed inset-0 top-16 z-40 h-screen overflow-y-auto",
+              "fixed inset-0 top-16 z-40 h-[calc(100vh-4rem)] overflow-y-auto", // Sesuaikan tinggi agar tidak overlap header
               "bg-background/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/80"
             )}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            onClick={closeMenu}
+            // Tidak perlu onClick={closeMenu} di sini karena NavItems akan menanganinya
           >
-            <motion.div
-              className="relative z-20 mx-4 mt-4 rounded-lg bg-card shadow-lg"
-              onClick={(e) => e.stopPropagation()}
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            >
-              <nav className="grid gap-1 p-2" aria-label="Mobile navigation">
-                <NavItems icon />
-              </nav>
-            </motion.div>
+            {/* Wrapper untuk konten menu agar bisa di-scroll jika item banyak */}
+            <div className="pt-4 pb-12">
+              <motion.div
+                className="relative z-20 mx-4 mt-2 mb-4 rounded-lg bg-card shadow-lg border border-border/50" // Styling menu card
+                onClick={(e) => e.stopPropagation()} // Cegah penutupan menu saat klik di dalam card
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 30,
+                  delay: 0.05,
+                }}
+              >
+                <nav className="grid gap-1 p-2" aria-label="Mobile navigation">
+                  {/* NavItems menerima closeMenu untuk menutup menu saat item diklik */}
+                  <NavItems icon closeMenu={closeMenu} />
+                </nav>
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -140,7 +176,14 @@ interface NavItemProps {
   icon: React.ReactNode;
 }
 
-const NavItems = ({ icon = false }: { icon?: boolean }) => {
+// NavItems sekarang menerima prop closeMenu
+const NavItems = ({
+  icon = false,
+  closeMenu,
+}: {
+  icon?: boolean;
+  closeMenu?: () => void;
+}) => {
   const pathname = usePathname();
   const navItems: NavItemProps[] = [
     {
@@ -179,39 +222,54 @@ const NavItems = ({ icon = false }: { icon?: boolean }) => {
     <>
       {navItems.map((item) => {
         const isActive =
-          pathname === item.href ||
+          (item.href === "/" && pathname === item.href) || // Penanganan khusus untuk Home
           (item.href !== "/" && pathname?.startsWith(item.href));
 
         return (
           <Link
             key={item.href}
             href={item.href}
-            prefetch
+            prefetch={false} // Bisa diatur true jika ingin prefetch
+            onClick={closeMenu} // Panggil closeMenu saat item navigasi diklik
             className={cn(
-              "flex items-center relative group",
-              "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-              icon ? "gap-3 px-4 py-3 text-base" : "gap-2 px-3 py-2 text-sm"
+              "flex items-center relative group rounded-md transition-colors duration-200",
+              "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              icon
+                ? "gap-3 px-3 py-2.5 text-base hover:bg-muted/80 dark:hover:bg-slate-700/60" // Styling untuk mobile menu items
+                : "gap-2 px-3 py-2 text-sm hover:bg-muted/50 dark:hover:bg-slate-700/50", // Styling untuk desktop nav items
+              isActive && icon
+                ? "text-primary dark:text-sky-400 bg-muted dark:bg-slate-700"
+                : "",
+              isActive && !icon
+                ? "text-primary dark:text-sky-400"
+                : "text-foreground/70 dark:text-slate-300 hover:text-foreground dark:hover:text-slate-100"
             )}
             aria-current={isActive ? "page" : undefined}
           >
             {icon && (
               <span
                 className={cn(
-                  isActive ? "text-primary" : "text-muted-foreground",
+                  isActive
+                    ? "text-primary dark:text-sky-400"
+                    : "text-muted-foreground dark:text-slate-400",
                   "flex-shrink-0 transition-colors duration-200"
                 )}
               >
                 {item.icon}
               </span>
             )}
-            <span className="relative">
+            <span className={cn("relative", icon ? "font-medium" : "")}>
               {item.label}
-              <span
-                className={cn(
-                  "absolute bottom-0 left-0 h-0.5 bg-primary transition-all duration-300",
-                  isActive ? "w-full" : "w-0 group-hover:w-full"
-                )}
-              />
+              {!icon && ( // Hanya tampilkan garis bawah untuk navigasi desktop
+                <span
+                  className={cn(
+                    "absolute -bottom-0.5 left-0 h-[2px] bg-sky-400 transition-all duration-300 ease-out",
+                    isActive
+                      ? "w-3/4 opacity-100"
+                      : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-75" // Efek hover yang lebih halus
+                  )}
+                />
+              )}
             </span>
             {isActive && <span className="sr-only">(current page)</span>}
           </Link>

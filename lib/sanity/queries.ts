@@ -45,7 +45,8 @@ export async function getPostBySlug(slug: string) {
         slug,
         socialLinks
       },
-      "tags": tags[]->{ _id, title, slug }
+      // "rawTags": tags
+      tags
     }`,
     { slug }
   );
@@ -70,7 +71,7 @@ export async function getAllPostSlugs() {
   );
 }
 
-export async function getAllCategories() {
+export async function getAllPostCategories() {
   return client.fetch(
     groq`*[_type == "category"] | order(title asc) {
       _id,
