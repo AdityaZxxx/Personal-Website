@@ -17,7 +17,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import { Skeleton } from "../ui/skeleton";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -85,7 +86,11 @@ export function Header() {
         <div className="md:hidden flex-1 flex justify-center items-center min-w-0 px-2 sm:px-4">
           {showBlogSearch && !isMenuOpen && (
             <div className="w-full max-w-xs">
-              <BlogSearch />
+              <Suspense
+                fallback={<Skeleton className="h-10 w-48 rounded-md" />}
+              >
+                <BlogSearch />
+              </Suspense>
             </div>
           )}
         </div>
