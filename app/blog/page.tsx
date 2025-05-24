@@ -45,7 +45,9 @@ export default async function BlogPage({
           {/* Search and Filter Section */}
           <div className="flex flex-col items-center gap-4 pt-4 w-full max-w-2xl mx-auto">
             <div className="w-full flex justify-center">
-              <Suspense>
+              <Suspense
+                fallback={<Skeleton className="h-10 w-48 rounded-md" />}
+              >
                 <CategoryFilter
                   categories={allCategories}
                   activeCategory={category}
