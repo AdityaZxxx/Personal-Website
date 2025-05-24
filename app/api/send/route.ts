@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
-import redis from "../../../lib/redis";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -46,15 +45,15 @@ export async function POST(request: Request) {
     const ip = request.headers.get("x-forwarded-for") || "local";
 
     // Enhanced rate limiting with IP-based tracking
-    const { limited, remaining } = await redis.checkRateLimit(ip, {
-      limit: 10,
-      window: 60,
-      prefix: "contact_form",
-    });
+    // const { limited, remaining } = await redis.checkRateLimit(ip, {
+    //   limit: 10,
+    //   window: 60,
+    //   prefix: "contact_form",
+    // });
 
-    if (limited) {
-      throw new Error(`Too many requests. Try again in ${remaining} seconds.`);
-    }
+    // if (limited) {
+    //   throw new Error(`Too many requests. Try again in ${remaining} seconds.`);
+    // }
 
     // Enhanced validation schema matching your contact form
     const ContactFormSchema = z.object({
