@@ -45,10 +45,12 @@ export default async function BlogPage({
           {/* Search and Filter Section */}
           <div className="flex flex-col items-center gap-4 pt-4 w-full max-w-2xl mx-auto">
             <div className="w-full flex justify-center">
-              <CategoryFilter
-                categories={allCategories}
-                activeCategory={category}
-              />
+              <Suspense>
+                <CategoryFilter
+                  categories={allCategories}
+                  activeCategory={category}
+                />
+              </Suspense>
             </div>
           </div>
         </div>
