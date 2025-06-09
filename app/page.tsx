@@ -16,13 +16,9 @@ export default function Home() {
     <main className="relative flex flex-col items-center overflow-hidden bg-transparent text-white">
       <HeroPage />
 
-      <AnimatedSection>
-        <AboutPage />
-      </AnimatedSection>
+      <AboutPage />
 
-      <AnimatedSection delay={100}>
-        <BentoShowcase />
-      </AnimatedSection>
+      <BentoShowcase />
 
       <AnimatedSection delay={100}>
         <GithubSection />
