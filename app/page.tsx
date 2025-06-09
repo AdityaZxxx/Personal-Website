@@ -16,7 +16,7 @@ export default function Home() {
     <main className="relative flex flex-col items-center overflow-hidden bg-transparent text-white">
       <HeroPage />
 
-      <AnimatedSection delay={100}>
+      <AnimatedSection>
         <AboutPage />
       </AnimatedSection>
 
