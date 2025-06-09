@@ -36,9 +36,9 @@ export const metadata: Metadata = {
 
   // 5. Open Graph (Untuk Facebook, LinkedIn, WhatsApp, dll.)
   openGraph: {
-    title: "Aditya Rahmad | Full-Stack Developer & Content Creator",
+    title: "Aditya Rahmad | Tech Enthusiast & Software Engineer",
     description:
-      "Jelajahi portofolio Aditya Rahmad, seorang Full-Stack Developer dari Indonesia yang bersemangat dalam membangun aplikasi web modern dan skalabel.",
+      "Jelajahi portofolio Aditya Rahmad, seorang Tech Enthusiast & Software Engineer dari Indonesia yang bersemangat dalam membangun aplikasi web modern dan skalabel.",
     url: "https://adxxya30.vercel.app", // GANTI DENGAN DOMAIN ANDA
     siteName: "Aditya Rahmad Portfolio",
     images: [
@@ -56,11 +56,11 @@ export const metadata: Metadata = {
   // 6. Twitter Cards (Tampilan khusus saat dibagikan di Twitter)
   twitter: {
     card: "summary_large_image",
-    title: "Aditya Rahmad | Full-Stack Developer & Content Creator",
+    title: "Aditya Rahmad | Tech Enthusiast & Software Engineer",
     description:
-      "Jelajahi portofolio Aditya Rahmad, seorang Full-Stack Developer dari Indonesia yang bersemangat dalam membangun aplikasi web modern dan skalabel.",
+      "Jelajahi portofolio Aditya Rahmad, seorang Tech Enthusiast & Software Engineer dari Indonesia yang bersemangat dalam membangun aplikasi web modern dan skalabel.",
     creator: "@adxxya30", // GANTI DENGAN HANDLE TWITTER ANDA
-    images: ["/og-image.png"], // Gunakan gambar yang sama dengan Open Graph
+    images: ["og-image.png"], // Gunakan gambar yang sama dengan Open Graph
   },
 
   // 7. Informasi Tambahan
