@@ -3,7 +3,8 @@
 import { Clock, MapPin } from "lucide-react";
 import * as motion from "motion/react-client";
 import { useState } from "react";
-import { cn } from "../../lib/utils";
+import { useAnimate } from "../../hooks/use-animate";
+import { cardVariants, cn } from "../../lib/utils";
 
 const timezones = [
   { country: "UK", flag: "🇬🇧", offset: 0 },
@@ -12,6 +13,7 @@ const timezones = [
 ];
 
 export function TimezoneCard({ className }: { className?: string }) {
+  const { ref, controls } = useAnimate();
   const [currentTime, setCurrentTime] = useState(() => {
     const now = new Date();
     return {
@@ -35,15 +37,17 @@ export function TimezoneCard({ className }: { className?: string }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.5 }} // Sesuaikan delay jika perlu agar cocok dengan item lain
+      ref={ref}
+      initial="hidden"
+      animate={controls}
+      variants={cardVariants}
       viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: 0.5 }} // Sesuaikan delay jika perlu agar cocok dengan item lain
       className={cn(
         "group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl p-4 md:p-5", // Padding dikurangi (p-6 -> p-4 atau p-5)
         "border border-slate-700/70 bg-gradient-to-br from-slate-800/80 via-slate-800/60 to-slate-900/80 backdrop-blur-md", // Sedikit penyesuaian gradient
         "shadow-xl transition-all duration-300 hover:border-sky-500/60 hover:shadow-2xl hover:shadow-sky-500/25",
-        className,
+        className
       )}
     >
       <div className="hover:bg-card-hover group h-full min-h-[280px] overflow-hidden rounded-2xl p-6 backdrop-blur-sm transition-all duration-300">

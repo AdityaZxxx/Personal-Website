@@ -9,9 +9,12 @@ export function useAnimate() {
 
   useEffect(() => {
     if (isInView) {
-      void controls.start("visible");
+      // Tidak perlu 'void', cukup panggil start
+      controls.start("visible");
     }
-  }, [isInView, controls]);
+    // 'controls' dari useAnimation dijamin stabil, tapi untuk kebersihan,
+    // kita bisa menghapusnya dari dependency array karena logikanya hanya bergantung pada isInView.
+  }, [isInView]);
 
   return {
     ref,

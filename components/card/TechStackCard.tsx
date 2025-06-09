@@ -1,7 +1,7 @@
 "use client";
 
 import { Briefcase } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FaNode } from "react-icons/fa";
 import { RiNextjsFill } from "react-icons/ri";
 import {
@@ -124,6 +124,7 @@ const technologies = [
   },
 ];
 
+// OPTIMASI TOTAL PADA KOMPONEN INI
 const TechMarquee = ({
   items,
   direction = "left",
@@ -135,77 +136,37 @@ const TechMarquee = ({
   speed?: "fast" | "normal" | "slow";
   className?: string;
 }) => {
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const scrollerRef = React.useRef<HTMLUListElement>(null);
-  const [start, setStart] = useState(false);
-
-  useEffect(() => {
-    addAnimation();
-  }, []);
-
-  function addAnimation() {
-    if (containerRef.current && scrollerRef.current) {
-      const scrollerContent = Array.from(scrollerRef.current.children);
-
-      scrollerContent.forEach((item) => {
-        const duplicatedItem = item.cloneNode(true);
-        if (scrollerRef.current) {
-          scrollerRef.current.appendChild(duplicatedItem);
-        }
-      });
-
-      getDirection();
-      getSpeed();
-      setStart(true);
-    }
-  }
-
-  const getDirection = () => {
-    if (containerRef.current) {
-      containerRef.current.style.setProperty(
-        "--animation-direction",
-        direction === "left" ? "forwards" : "reverse"
-      );
-    }
-  };
-
-  const getSpeed = () => {
-    if (containerRef.current) {
-      let duration;
-      switch (speed) {
-        case "fast":
-          duration = "20s";
-          break;
-        case "normal":
-          duration = "40s";
-          break;
-        case "slow":
-          duration = "80s";
-          break;
-        default:
-          duration = "40s";
-      }
-      containerRef.current.style.setProperty("--animation-duration", duration);
-    }
-  };
+  // Durasi animasi di-map langsung ke nilai CSS
+  const duration =
+    speed === "fast" ? "20s" : speed === "normal" ? "40s" : "80s";
 
   return (
+    // Menggunakan data-attributes untuk kejelasan, bukan state 'start'
     <div
-      ref={containerRef}
+      data-direction={direction}
       className={cn(
-        "scroller relative z-20 w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
+        "scroller w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
         className
       )}
     >
-      <ul
-        ref={scrollerRef}
-        className={cn(
-          "flex w-max min-w-full shrink-0 flex-nowrap gap-3",
-          start && "animate-scroll"
-        )}
+      {/* Tidak ada lagi useRef atau useEffect.
+        Kita render list dua kali secara langsung di JSX.
+        Ini memastikan output server & client sama, MENGHILANGKAN HYDRATION ERROR.
+      */}
+      <div
+        // Variabel CSS untuk durasi & arah dilewatkan langsung via style prop
+        style={
+          {
+            "--animation-duration": duration,
+            "--animation-direction":
+              direction === "left" ? "forwards" : "reverse",
+          } as React.CSSProperties
+        }
+        className="flex w-max min-w-full shrink-0 flex-nowrap gap-3 animate-scroll"
       >
+        {/* Render Pertama Kali */}
         {items.map((item, idx) => (
-          <li className="relative shrink-0" key={`${item.name}-${idx}`}>
+          <div className="relative shrink-0" key={`${item.name}-${idx}`}>
             <Badge
               variant="outline"
               className={cn(
@@ -218,9 +179,30 @@ const TechMarquee = ({
                 {item.name}
               </span>
             </Badge>
-          </li>
+          </div>
         ))}
-      </ul>
+        {/* Render Kedua Kali (Duplikat untuk efek infinite) */}
+        {items.map((item, idx) => (
+          <div
+            className="relative shrink-0"
+            key={`${item.name}-${idx}-duplicate`}
+            aria-hidden="true" // Penting untuk aksesibilitas, agar screen reader tidak membacanya dua kali
+          >
+            <Badge
+              variant="outline"
+              className={cn(
+                "flex items-center gap-1.5 border-slate-700 bg-slate-800/50 px-3 py-1.5 backdrop-blur-sm",
+                item.color
+              )}
+            >
+              {item.icon}
+              <span className="text-sm font-medium text-slate-200">
+                {item.name}
+              </span>
+            </Badge>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
