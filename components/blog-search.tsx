@@ -25,7 +25,7 @@ export function BlogSearch() {
   }, [debouncedQuery, router, searchParams]);
 
   return (
-    <div className="flex w-full max-w-md">
+    <div className="flex w-full h-full max-w-md">
       <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground " />
       <Input
         type="search"

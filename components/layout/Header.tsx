@@ -1,6 +1,5 @@
 "use client";
 
-import { BlogSearch } from "@/components/blog-search"; // <-- 1. Impor BlogSearch
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
@@ -17,8 +16,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Suspense, useCallback, useEffect, useState } from "react";
-import { Skeleton } from "../ui/skeleton";
+import { useCallback, useEffect, useState } from "react";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -82,32 +80,8 @@ export function Header() {
           <NavItems closeMenu={closeMenu} />
         </nav>
 
-        {/* Konten tengah untuk Mobile (bisa BlogSearch atau kosong) */}
-        <div className="md:hidden flex-1 flex justify-center items-center min-w-0 px-2 sm:px-4">
-          {showBlogSearch && !isMenuOpen && (
-            <div className="w-full max-w-xs">
-              <Suspense
-                fallback={<Skeleton className="h-10 w-48 rounded-md" />}
-              >
-                <BlogSearch />
-              </Suspense>
-            </div>
-          )}
-        </div>
-
         {/* Bagian kanan Header */}
         <div className="flex-shrink-0 flex items-center">
-          {/* BlogSearch untuk Desktop */}
-          {showBlogSearch && (
-            <div className="hidden md:block">
-              <div className="w-auto md:w-56 lg:w-64">
-                {" "}
-                {/* Sesuaikan lebar search bar desktop */}
-                <BlogSearch />
-              </div>
-            </div>
-          )}
-
           {/* Tombol Menu Mobile */}
           <div className="md:hidden ml-2">
             {" "}

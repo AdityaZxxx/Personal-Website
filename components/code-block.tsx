@@ -156,6 +156,7 @@ export function CodeBlock({ language, value, filename }: CodeBlockProps) {
               <FileCode className="h-4 w-4" />
               <span className="font-medium">{filename}</span>
             </>
+            
           ) : (
             <span className="font-medium">
               {getLanguageDisplayName(language)}

@@ -29,11 +29,11 @@ import {
   getPostBySlug,
 } from "@/lib/sanity/queries";
 import { cn, formatDate } from "@/lib/utils";
-import { Geist } from "next/font/google";
+import { Rethink_Sans } from "next/font/google";
 import Image from "next/image";
 import { urlFor } from "../../../lib/sanity/image";
 
-const GeistSans = Geist({ subsets: ["latin"] });
+const GeistSans = Rethink_Sans({ subsets: ["latin"] });
 
 const NEXT_PUBLIC_SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
@@ -141,8 +141,6 @@ export default async function PostPage({
     notFound();
   }
 
-  console.log(post);
-
   const filteredFeaturedPosts = featuredPostsData
     .filter((p: any) => p.slug?.current !== slug)
     .slice(0, 3);
@@ -200,7 +198,7 @@ export default async function PostPage({
       />
       <main
         className={cn(
-          "container bg-slate-800/80 px-4 py-10 md:px-6 md:py-16 lg:py-20 backdrop-blur-sm",
+          "container bg-black/80 px-4 py-10 md:px-6 md:py-16 lg:py-20 backdrop-blur-sm",
           GeistSans.className
         )}
       >

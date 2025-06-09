@@ -3,6 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getAllPostCategories } from "@/lib/sanity/queries";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { BlogSearch } from "../../components/blog-search";
 import { CategoryFilter } from "../../components/category-filter";
 
 export const metadata: Metadata = {
@@ -44,14 +45,21 @@ export default async function BlogPage({
 
           {/* Search and Filter Section */}
           <div className="flex flex-col items-center gap-4 pt-4 w-full max-w-2xl mx-auto">
-            <div className="w-full flex justify-center">
+            <Suspense fallback={<Skeleton className="h-10 w-48 rounded-md" />}>
+              <div className="mb-2">
+                <BlogSearch />
+              </div>
+            </Suspense>
+            <div className="w-full flex justify-center flex-row">
               <Suspense
                 fallback={<Skeleton className="h-10 w-48 rounded-md" />}
               >
-                <CategoryFilter
-                  categories={allCategories}
-                  activeCategory={category}
-                />
+                <div>
+                  <CategoryFilter
+                    categories={allCategories}
+                    activeCategory={category}
+                  />
+                </div>
               </Suspense>
             </div>
           </div>

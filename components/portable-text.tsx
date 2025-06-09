@@ -16,7 +16,6 @@ const components = {
       if (!value?.asset?._ref) {
         return null;
       }
-      console.log(value);
       return (
         <figure className="my-8 group">
           <div className="relative aspect-video overflow-hidden rounded-lg shadow-md border border-gray-200 dark:border-gray-800">
