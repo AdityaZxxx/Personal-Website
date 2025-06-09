@@ -24,7 +24,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://adxxya.vercel.app"),
+  metadataBase: new URL("https://adxxya30.vercel.app"),
   title: {
     default: "Aditya Rahmad | Full Stack Developer",
     template: "%s | Aditya Rahmad",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   description:
     "I help founders turn ideas into seamless digital experiences. Professional Full Stack Developer specializing in modern web technologies.",
   applicationName: "Aditya Rahmad Portfolio",
-  authors: [{ name: "Aditya Rahmad", url: "https://adxxya.vercel.app" }],
+  authors: [{ name: "Aditya Rahmad", url: "https://adxxya30.vercel.app" }],
   generator: "Next.js",
   keywords: [
     "Full Stack Developer",
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Aditya Rahmad | Full Stack Developer",
     description: "I help founders turn ideas into seamless digital experiences",
-    url: "https://adxxya.vercel.app",
+    url: "https://adxxya30.vercel.app",
     siteName: "Aditya Rahmad",
     images: [
       {
@@ -85,7 +85,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Aditya Rahmad | Full Stack Developer",
     description: "I help founders turn ideas into seamless digital experiences",
-    creator: "@adityarahmad",
+    creator: "@adxxya30",
     images: ["/im-coding.webp"],
   },
   // verification: {

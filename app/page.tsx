@@ -28,18 +28,18 @@ export const metadata: Metadata = {
   ],
 
   // 3. Nama Pembuat
-  authors: [{ name: "Aditya Rahmad", url: "https://adxxya.vercel.app " }],
+  authors: [{ name: "Aditya Rahmad", url: "https://adxxya30.vercel.app" }],
   creator: "Aditya Rahmad",
 
   // 4. Metadata Dasar untuk URL Kanonikal
-  metadataBase: new URL("https://adxxya.vercel.app"), // GANTI DENGAN DOMAIN ANDA
+  metadataBase: new URL("https://adxxya30.vercel.app"), // GANTI DENGAN DOMAIN ANDA
 
   // 5. Open Graph (Untuk Facebook, LinkedIn, WhatsApp, dll.)
   openGraph: {
     title: "Aditya Rahmad | Full-Stack Developer & Content Creator",
     description:
       "Jelajahi portofolio Aditya Rahmad, seorang Full-Stack Developer dari Indonesia yang bersemangat dalam membangun aplikasi web modern dan skalabel.",
-    url: "https://adxxya.vercel.app", // GANTI DENGAN DOMAIN ANDA
+    url: "https://adxxya30.vercel.app", // GANTI DENGAN DOMAIN ANDA
     siteName: "Aditya Rahmad Portfolio",
     images: [
       {
