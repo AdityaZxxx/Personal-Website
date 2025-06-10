@@ -66,7 +66,7 @@ export function Footer() {
           <div className="md:col-span-2 lg:col-span-1 space-y-4">
             <div className="flex items-center gap-3">
               <Image
-                src="/logo.jpg"
+                src="/logo.avif"
                 alt="Aditya's Logo"
                 width={40}
                 height={40}

@@ -65,7 +65,7 @@ export function Header() {
             onClick={closeMenu} // Tutup menu jika logo diklik saat di mobile
           >
             <Image
-              src="/logo.jpg" // Pastikan path logo ini benar
+              src="/logo.avif" // Pastikan path logo ini benar
               className="rounded-full shadow-sm hover:shadow-md transition-all duration-300"
               alt="Website logo"
               width={36}

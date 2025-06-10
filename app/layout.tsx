@@ -3,14 +3,14 @@ import { Header } from "@/components/layout/Header";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata, Viewport } from "next";
-import { Fredoka } from "next/font/google";
+import { Rethink_Sans } from "next/font/google";
 import type React from "react";
 import { Suspense } from "react";
 import "../styles/shiki-theme.css";
 import "./globals.css";
 import GlobalLoading from "./loading";
 
-const fredoka = Fredoka({
+const rethinkSans = Rethink_Sans({
   weight: "500",
   subsets: ["latin"],
   display: "swap",
@@ -132,7 +132,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={fredoka.className}>
+      <body className={rethinkSans.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

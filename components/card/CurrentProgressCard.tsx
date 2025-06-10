@@ -1,10 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
+// Impor yang dibutuhkan, semua dalam satu file
+import { motion, useInView, type Variants } from "framer-motion";
 import { CheckCircle, Layers, Lightbulb, Rocket } from "lucide-react";
-import { useAnimate } from "../../hooks/use-animate";
-import { cardVariants, cn, itemVariants } from "../../lib/utils";
+import { useRef } from "react";
+import { cn } from "../../lib/utils";
 
+// Data fitur (tidak berubah)
 const features = [
   {
     title: "API Gateway Integration",
@@ -16,6 +18,7 @@ const features = [
     icon: <CheckCircle size={16} className="text-emerald-400" />,
     status: "completed",
   },
+  // ... sisa data fitur
   {
     title: "Secure Payment System",
     icon: <CheckCircle size={16} className="text-emerald-400" />,
@@ -48,86 +51,65 @@ const features = [
   },
 ];
 
+// Variants untuk animasi masuk (entry animation)
+// Kita definisikan di sini agar kode lebih terorganisir
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1, // Animasi anak-anaknya akan muncul berurutan
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+};
+
 export const CurrentProjectCard = ({ className }: { className?: string }) => {
-  const { ref, controls, isInView } = useAnimate();
+  // Logika dari hook 'useAnimate' digabungkan ke sini
+  const ref = useRef(null);
+  // 'once: true' memastikan animasi hanya berjalan sekali saat elemen masuk layar
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
+
   return (
+    // Kita gunakan 'variants' untuk mengelola animasi masuk secara terpusat
     <motion.div
       ref={ref}
+      variants={containerVariants}
       initial="hidden"
-      animate={controls}
-      variants={cardVariants}
+      animate={isInView ? "visible" : "hidden"} // Animasi dikontrol oleh isInView
       className={cn(
         "group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl p-5 md:p-6",
         "border border-slate-700/60 bg-gradient-to-br from-slate-800/90 via-slate-800/70 to-slate-900/90 backdrop-blur-lg",
-        "shadow-2xl shadow-slate-900/30 transition-all duration-300 hover:border-sky-500/70 hover:shadow-sky-500/20",
+        "shadow-xl shadow-slate-900/30 transition-all duration-300 hover:border-sky-500/70", // Shadow saat hover lebih simpel
         className
       )}
     >
-      {/* OPTIMASI: Animasi hanya berjalan saat komponen terlihat */}
-      <motion.div
-        className="absolute inset-0 z-0 opacity-[0.08] will-change-transform"
-        style={{
-          backgroundImage:
-            "conic-gradient(from 0deg at 50% 50%, #0ea5e920, #6366f120, #0ea5e920)",
-        }}
-        animate={isInView ? { rotate: 360 } : { rotate: 0 }}
-        transition={{
-          duration: 30,
-          repeat: isInView ? Infinity : 0,
-          ease: "linear",
-        }}
-      />
-      <motion.div
-        className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-sky-500/50 blur-3xl md:h-56 md:w-56 will-change-transform"
-        animate={
-          isInView
-            ? { scale: [1, 1.1, 1], opacity: [0.05, 0.1, 0.05] }
-            : { scale: 1, opacity: 0.05 }
-        }
-        transition={{
-          duration: 7,
-          repeat: isInView ? Infinity : 0,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="absolute -bottom-16 -left-16 h-40 w-40 rounded-full bg-purple-500/40 blur-3xl md:h-48 md:w-48 will-change-transform"
-        animate={
-          isInView
-            ? { scale: [1, 1.05, 1], opacity: [0.04, 0.08, 0.04] }
-            : { scale: 1, opacity: 0.04 }
-        }
-        transition={{
-          duration: 8,
-          repeat: isInView ? Infinity : 0,
-          ease: "easeInOut",
-          delay: 1.5,
-        }}
-      />
+      {/* [DIHAPUS] Semua animasi background yang berulang (conic-gradient, orbs) 
+        dihilangkan untuk meringankan beban GPU. Tampilan statis jauh lebih ringan.
+      */}
 
-      {/* Header (Animasi rocket juga dioptimalkan) */}
+      {/* Header */}
       <div className="relative z-10 mb-6 md:mb-8">
         <motion.div
           variants={itemVariants}
           className="mb-4 flex items-center gap-3"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400/15 p-2 shadow-md backdrop-blur-sm">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400/15 p-2">
             <Lightbulb className="h-5 w-5 text-amber-400" />
           </div>
-          <motion.div
-            animate={
-              isInView
-                ? { y: [-2, 2, -2], opacity: [0.7, 1, 0.7] }
-                : { y: 0, opacity: 0.7 }
-            }
-            transition={{
-              duration: 2.5,
-              repeat: isInView ? Infinity : 0,
-              ease: "easeInOut",
-            }}
-          >
-            <Rocket className="h-4 w-4 text-purple-400/70" />
-          </motion.div>
+          {/* [DIHAPUS] Animasi rocket yang 'terbang' dihilangkan, ikon statis lebih ringan */}
+          <Rocket className="h-4 w-4 text-purple-400/70" />
         </motion.div>
         <motion.h3
           variants={itemVariants}
@@ -147,32 +129,25 @@ export const CurrentProjectCard = ({ className }: { className?: string }) => {
         </motion.p>
       </div>
 
-      {/* Features Grid (tidak ada perubahan signifikan, sudah cukup baik) */}
+      {/* Features Grid */}
       <motion.div
         variants={itemVariants}
         className="relative z-10 mb-6 grid flex-grow grid-cols-2 gap-3 md:grid-cols-3 md:gap-4"
       >
         {features.map((feature) => (
-          <motion.div
+          // [DISEDERHANAKAN] Efek hover kini hanya menggunakan transisi CSS, tanpa Framer Motion
+          <div
             key={feature.title}
-            variants={itemVariants}
-            whileHover={{
-              scale: 1.03,
-              y: -3,
-              boxShadow: "0px 7px 20px rgba(0, 0, 0, 0.2)",
-              transition: { type: "spring", stiffness: 300, damping: 10 },
-            }}
             className={cn(
-              "rounded-xl p-3 transition-colors duration-200",
-              feature.status === "completed"
-                ? "border border-emerald-600/30 bg-emerald-500/10 hover:bg-emerald-500/20"
-                : "border border-sky-600/30 bg-sky-500/10 hover:bg-sky-500/20"
+              "rounded-xl p-3 transition-all duration-200 ease-out", // Transisi untuk hover
+              "border border-slate-700/80 bg-slate-800/50",
+              "hover:bg-slate-700/60 hover:-translate-y-1" // Efek hover simpel
             )}
           >
             <div className="flex items-start gap-2.5">
               <div
                 className={cn(
-                  "mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg shadow-inner",
+                  "mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg",
                   feature.status === "completed"
                     ? "bg-emerald-500/25 text-emerald-300"
                     : "bg-sky-500/25 text-sky-300"
@@ -196,46 +171,29 @@ export const CurrentProjectCard = ({ className }: { className?: string }) => {
                 </p>
               </div>
             </div>
-          </motion.div>
+          </div>
         ))}
       </motion.div>
 
-      {/* OPTIMASI: Progress bar menggunakan scaleX */}
+      {/* Progress bar */}
       <motion.div variants={itemVariants} className="relative z-10 mt-auto">
         <div className="mb-1.5 flex justify-between text-xs font-semibold text-slate-200">
           <span>Overall Progress</span>
           <span>67%</span>
         </div>
         <div className="h-2.5 w-full rounded-full bg-slate-700/80 shadow-inner overflow-hidden">
+          {/* [DIPERTAHANKAN] Animasi progress bar ini penting dan hanya berjalan sekali */}
           <motion.div
             className="h-full w-full origin-left rounded-full bg-gradient-to-r from-sky-500 via-cyan-400 to-emerald-400"
             initial={{ scaleX: 0 }}
             animate={isInView ? { scaleX: 0.67 } : { scaleX: 0 }}
             transition={{
-              delay: 0.5 + features.length * 0.05,
-              duration: 1.5,
-              ease: [0.16, 1, 0.3, 1],
+              delay: 0.5,
+              duration: 1.2,
+              ease: "easeOut",
             }}
-          >
-            <motion.div
-              className="h-full w-full rounded-full opacity-40 will-change-transform"
-              style={{
-                backgroundImage:
-                  "linear-gradient(90deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%)",
-              }}
-              animate={
-                isInView
-                  ? { backgroundPosition: ["-150% 0%", "150% 0%"] }
-                  : { backgroundPosition: "-150% 0%" }
-              }
-              transition={{
-                duration: 2.5,
-                repeat: isInView ? Infinity : 0,
-                ease: "linear",
-                delay: 1.5 + features.length * 0.05,
-              }}
-            />
-          </motion.div>
+          />
+          {/* [DIHAPUS] Efek 'shimmer' pada progress bar dihilangkan */}
         </div>
       </motion.div>
     </motion.div>

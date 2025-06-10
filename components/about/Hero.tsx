@@ -96,10 +96,10 @@ export default function AboutHero() {
       {/* Background Image and Gradient */}
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/horizon.jpg" // Ensure this image path is correct
+          src="/horizon.avif" // Ensure this image path is correct
           alt="Modern digital landscape background with horizon"
           fill
-          className="object-cover opacity-30 sm:opacity-50" // Adjust opacity based on screen size
+          className="object-cover opacity-80 sm:opacity-50" // Adjust opacity based on screen size
           quality={90}
           priority
           sizes="(max-width: 768px) 100vw, 100vw"

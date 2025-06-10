@@ -38,7 +38,7 @@ const GeistSans = Rethink_Sans({ subsets: ["latin"] });
 const NEXT_PUBLIC_SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://adxxya30.vercel.app";
 const SITE_NAME = "Aditya Rahmad";
-const DEFAULT_OG_IMAGE = `${NEXT_PUBLIC_SITE_URL}/og-image.png`; // Simpan gambar default di /public
+const DEFAULT_OG_IMAGE = `${NEXT_PUBLIC_SITE_URL}/og-image.avif`; // Simpan gambar default di /public
 
 export async function generateMetadata({
   params: promiseParams,
@@ -48,7 +48,7 @@ export async function generateMetadata({
   const { slug } = await promiseParams;
   const post = await getPostBySlug(slug);
 
-   if (!post) {
+  if (!post) {
     return {
       title: "Post Not Found",
       robots: { index: false },
@@ -60,7 +60,8 @@ export async function generateMetadata({
     : DEFAULT_OG_IMAGE;
 
   const canonicalUrl = `${NEXT_PUBLIC_SITE_URL}/blog/${slug}`;
-  const postKeywords = post.tags?.map((tag: { title: string; }) => tag.title) || [];
+  const postKeywords =
+    post.tags?.map((tag: { title: string }) => tag.title) || [];
 
   return {
     title: post.title,
@@ -79,7 +80,7 @@ export async function generateMetadata({
       type: "article",
       publishedTime: post.publishedAt,
       modifiedTime: post._updatedAt || post.publishedAt,
-      authors: post.author?.slug?.current 
+      authors: post.author?.slug?.current
         ? [`${NEXT_PUBLIC_SITE_URL}/author/${post.author.slug.current}`] // URL Author
         : undefined,
       section: post.categories?.[0]?.title,

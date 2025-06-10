@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     siteName: "Aditya Rahmad Portfolio",
     images: [
       {
-        url: "/og-image.png", // Letakkan gambar di folder /public
+        url: "/og-image.avif", // Letakkan gambar di folder /public
         width: 1200,
         height: 630,
         alt: "Aditya Rahmad - Halaman Utama Portofolio",
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     description:
       "Jelajahi portofolio Aditya Rahmad, seorang Tech Enthusiast & Software Engineer dari Indonesia yang bersemangat dalam membangun aplikasi web modern dan skalabel.",
     creator: "@adxxya30", // GANTI DENGAN HANDLE TWITTER ANDA
-    images: ["og-image.png"], // Gunakan gambar yang sama dengan Open Graph
+    images: ["og-image.avif"], // Gunakan gambar yang sama dengan Open Graph
   },
 
   // 7. Informasi Tambahan

@@ -33,7 +33,7 @@ function HeroPage() {
 
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/horizon.jpg"
+          src="/horizon.avif"
           alt="Background Image"
           fill
           className="object-cover opacity-50"

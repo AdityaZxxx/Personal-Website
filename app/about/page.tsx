@@ -30,7 +30,6 @@ import {
 } from "react-icons/si";
 import AboutSoftSkill from "../../components/about/AboutSoftSkill";
 import AboutHero from "../../components/about/Hero";
-import TechStackSection from "../../components/about/TechStackSection";
 import { Timeline } from "../../components/about/TimelineJourney";
 
 // Tech stack data with icons
@@ -120,9 +119,7 @@ export default function AboutPage() {
   return (
     <main className="relative flex flex-col items-center overflow-hidden bg-transparent text-white">
       {/* Hero Section */}
-      <AnimatedSection>
-        <AboutHero />
-      </AnimatedSection>
+      <AboutHero />
 
       {/* What I Do Section */}
       <AnimatedSection className="my-16" delay={200}>
@@ -226,9 +223,9 @@ export default function AboutPage() {
       </AnimatedSection>
 
       {/* Tech Stack Section */}
-      <AnimatedSection className="mb-16" delay={300}>
+      {/* <AnimatedSection className="mb-16" delay={300}>
         <TechStackSection />
-      </AnimatedSection>
+      </AnimatedSection> */}
 
       {/* Soft Skills Section */}
       <AnimatedSection className="mb-16" delay={400}>

@@ -1,24 +1,25 @@
 "use client";
 
-import { motion } from "framer-motion"; // PERUBAHAN: Menggunakan framer-motion
+// Impor yang dibutuhkan
+import { motion, useInView, type Variants } from "framer-motion";
 import { ArrowRight, Send } from "lucide-react";
 import Link from "next/link";
-import { useAnimate } from "../../hooks/use-animate";
-import { cardVariants, cn } from "../../lib/utils";
+import { useRef } from "react";
+import { cn } from "../../lib/utils"; // Impor 'cn' dari utils tetap dipertahankan
 
-// OPTIMASI: Definisikan variants untuk staggering
-const containerVariants = {
+// Variants untuk animasi masuk (staggering), tidak berubah
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
       staggerChildren: 0.15,
-      delayChildren: 0.6,
+      delayChildren: 0.4, // Sedikit dipercepat
     },
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
@@ -28,87 +29,28 @@ const itemVariants = {
 };
 
 export const LetsWorkTogetherCard = ({ className }: { className?: string }) => {
-  const { ref, controls, isInView } = useAnimate();
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    // OPTIMASI: Throttle dengan requestAnimationFrame
-    const { currentTarget } = e;
-    const rect = currentTarget.getBoundingClientRect();
-    requestAnimationFrame(() => {
-      currentTarget.style.setProperty(
-        "--mouse-x",
-        `${e.clientX - rect.left}px`
-      );
-      currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
-    });
-  };
+  // Logika dari hook 'useAnimate' digabungkan ke sini
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.3 }); // 'once: true' penting
 
   return (
     <motion.div
       ref={ref}
+      variants={containerVariants}
       initial="hidden"
-      animate={controls}
-      variants={cardVariants}
-      viewport={{ once: true, amount: 0.2 }}
-      onMouseMove={handleMouseMove}
+      animate={isInView ? "visible" : "hidden"} // Lebih deklaratif, tanpa 'controls'
       className={cn(
         "group relative flex h-full min-h-[300px] flex-col items-center justify-center overflow-hidden rounded-2xl p-6 text-center md:p-8",
-        "border border-sky-700/40 bg-gradient-to-br from-sky-900/70 via-sky-800/60 to-slate-900/70 backdrop-blur-lg",
-        "shadow-2xl shadow-sky-900/40 transition-all duration-400 hover:border-sky-500/60 hover:shadow-sky-500/25",
+        "border border-slate-700/40 bg-gradient-to-br from-sky-900/70 via-sky-800/60 to-slate-900/70 backdrop-blur-lg",
+        "shadow-xl shadow-sky-900/40 transition-all duration-300 hover:border-sky-500/60",
         className
       )}
     >
-      {/* OPTIMASI: Animasi hanya aktif saat terlihat */}
-      <motion.div className="absolute inset-0 -z-10 opacity-30 will-change-transform">
-        <motion.div
-          className="absolute top-1/4 left-1/4 h-32 w-32 rounded-full bg-sky-500/20 blur-3xl md:h-40 md:w-40"
-          animate={
-            isInView
-              ? { scale: [1, 1.05, 1], opacity: [0.7, 1, 0.7] }
-              : { scale: 1, opacity: 0.7 }
-          }
-          transition={{
-            duration: 8,
-            repeat: isInView ? Infinity : 0,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute right-1/4 bottom-1/4 h-28 w-28 rounded-full bg-blue-600/20 blur-3xl md:h-36 md:w-36"
-          animate={
-            isInView
-              ? { scale: [1, 1.08, 1], opacity: [0.6, 0.9, 0.6] }
-              : { scale: 1, opacity: 0.6 }
-          }
-          transition={{
-            duration: 10,
-            repeat: isInView ? Infinity : 0,
-            ease: "easeInOut",
-            delay: 2,
-          }}
-        />
-      </motion.div>
+      {/* [DIHAPUS] Semua animasi background (orbs dan mouse-follow) dihilangkan. */}
+      {/* Tampilan kini statis dan sangat ringan. */}
 
-      {/* Shiny overlay effect */}
-      <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl">
-        <motion.div
-          className="absolute -inset-12 will-change-transform"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(14, 165, 233, 0.15) 0%, transparent 30%, transparent 100%)",
-          }}
-          initial={{ opacity: 0 }}
-          whileHover={{ opacity: 1, transition: { duration: 0.3 } }}
-        />
-      </div>
-
-      {/* OPTIMASI: Kontainer untuk stagger animation */}
-      <motion.div
-        className="relative z-10 flex flex-col items-center justify-center"
-        variants={containerVariants}
-        initial="hidden"
-        animate={controls} // Gunakan controls yang sama dengan parent
-      >
+      {/* Kontainer untuk stagger animation */}
+      <div className="relative z-10 flex flex-col items-center justify-center">
         <motion.div variants={itemVariants} className="mb-3 md:mb-4">
           <Send className="h-10 w-10 text-sky-300/90 drop-shadow-lg md:h-12 md:w-12" />
         </motion.div>
@@ -133,36 +75,24 @@ export const LetsWorkTogetherCard = ({ className }: { className?: string }) => {
         <motion.div variants={itemVariants} className="mt-auto">
           <Link
             href="mailto:adityaofficial714@gmail.com"
-            className="group/button relative inline-flex ..."
+            className={cn(
+              "group/button relative inline-flex transform-gpu items-center gap-2 overflow-hidden rounded-lg px-6 py-3 text-sm font-medium outline-none md:px-8 md:py-3.5",
+              "bg-gradient-to-r from-sky-500 via-sky-400 to-blue-500 text-white shadow-lg",
+              "transition-all duration-300 ease-out hover:shadow-xl hover:shadow-sky-500/40 focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-sky-900"
+            )}
           >
-            {/* Pulsing background (juga dioptimalkan) */}
-            <motion.span
-              className="absolute inset-0 z-0"
-              animate={
-                isInView
-                  ? { scale: [1, 1.15, 1], opacity: [0.15, 0.3, 0.15] }
-                  : { scale: 1, opacity: 0.15 }
-              }
-              transition={{
-                duration: 2,
-                repeat: isInView ? Infinity : 0,
-                ease: "easeInOut",
-              }}
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(56,189,248,0.5) 0%, transparent 70%)",
-                borderRadius: "inherit",
-              }}
-            />
+            {/* [DIHAPUS] Efek 'pulse' pada background tombol dihilangkan. */}
 
             {/* Konten Tombol */}
             <span className="relative z-10 flex items-center">
+              {/* [DISEDERHANAKAN] Animasi ikon menggunakan CSS transisi yang ringan */}
               <Send className="mr-2 h-4 w-4 transition-transform duration-300 group-hover/button:scale-110 group-hover/button:rotate-[360deg]" />
               Get in Touch
-              <ArrowRight className="relative ml-2 z-10 h-4 w-4 transition-transform duration-300 group-hover/button:translate-x-1.5 group-hover/button:scale-110" />
             </span>
+            <ArrowRight className="relative z-10 h-4 w-4 transition-transform duration-300 group-hover/button:translate-x-1.5" />
 
-            {/* Efek shine */}
+            {/* [DIPERTAHANKAN] Efek 'shiny' ini adalah animasi utama saat hover. */}
+            {/* Ini hanya aktif saat interaksi, jadi tidak memberatkan. */}
             <motion.div
               className="absolute inset-0 z-0"
               initial={{ x: "-100%", opacity: 0 }}
@@ -178,7 +108,7 @@ export const LetsWorkTogetherCard = ({ className }: { className?: string }) => {
             />
           </Link>
         </motion.div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 };
