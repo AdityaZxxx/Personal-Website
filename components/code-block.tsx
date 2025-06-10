@@ -16,7 +16,7 @@ export async function CodeBlock({
     // PERBAIKAN DI SINI
     // Tambahkan pengecekan untuk menangani jika 'lang' adalah undefined
     if (!lang) {
-      return "plaintext"; // Default ke 'plaintext' jika bahasa tidak ada
+      return "javascript"; // Default ke 'plaintext' jika bahasa tidak ada
     }
     // ========================================================================
 

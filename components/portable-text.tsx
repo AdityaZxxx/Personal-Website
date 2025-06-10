@@ -1,90 +1,52 @@
-import { cn } from "@/lib/utils";
-import { PortableText as SanityPortableText } from "@portabletext/react";
+import { cn, slugify } from "@/lib/utils";
+import {
+  PortableText as SanityPortableText,
+  type PortableTextComponents,
+} from "@portabletext/react";
 import Image from "next/image";
 import Link from "next/link";
+import React from "react"; // Impor React untuk tipe React.ReactNode
 import { urlFor } from "../lib/sanity/image";
-import { CodeBlock } from "./code-block"; // Pastikan path ini benar
+import { CodeBlock } from "./code-block";
 
 // ============================================================================
 // 1. HELPER & SUB-COMPONENTS
 // ============================================================================
 
-const slugify = (text: string) => {
-  if (typeof text !== "string") return ""; // Pengaman tambahan
-  return text
-    .toLowerCase()
-    .replace(/ /g, "-")
-    .replace(/[^\w-]+/g, "");
-};
-
-// Komponen untuk me-render Heading dengan Anchor Link (SUDAH DIPERBAIKI)
 const HeadingRenderer = ({
-  level,
+  value,
   children,
 }: {
-  level: number;
-  children: any;
+  value: any;
+  children?: React.ReactNode;
 }) => {
-  const textContent = Array.isArray(children)
-    ? children.map((child) => child.text).join("")
-    : children;
-
+  const level = value.style;
+  const Tag = level;
+  const textContent =
+    value.children?.map((child: any) => child.text).join("") || "";
   const id = slugify(textContent);
 
-  const commonProps = {
-    id,
-    className: "group relative scroll-mt-24",
-  };
-
-  const anchorLink = (
-    <a
-      href={`#${id}`}
-      className="absolute -left-6 top-1/2 -translate-y-1/2 text-slate-500 opacity-0 transition-opacity group-hover:opacity-100"
-      aria-label={`Link to section: ${textContent}`}
-    >
-      #
-    </a>
+  return (
+    <Tag id={id} className="group relative scroll-mt-24">
+      <a
+        href={`#${id}`}
+        className="absolute -left-6 top-1/2 -translate-y-1/2 text-slate-500 opacity-0 transition-opacity group-hover:opacity-100"
+        aria-label={`Link to section: ${textContent}`}
+      >
+        #
+      </a>
+      {children}
+    </Tag>
   );
-
-  switch (level) {
-    case 2:
-      return (
-        <h2 {...commonProps}>
-          {anchorLink}
-          {children}
-        </h2>
-      );
-    case 3:
-      return (
-        <h3 {...commonProps}>
-          {anchorLink}
-          {children}
-        </h3>
-      );
-    case 4:
-      return (
-        <h4 {...commonProps}>
-          {anchorLink}
-          {children}
-        </h4>
-      );
-    default:
-      return (
-        <h2 {...commonProps}>
-          {anchorLink}
-          {children}
-        </h2>
-      );
-  }
 };
 
 // ============================================================================
 // 2. DEFINISI KOMPONEN PORTABLE TEXT
 // ============================================================================
 
-const components = {
+const components: PortableTextComponents = {
   types: {
-    image: ({ value }: any) => {
+    image: ({ value }) => {
       if (!value?.asset?._ref) return null;
       const blurDataURL = value.asset.metadata?.lqip;
       return (
@@ -108,7 +70,7 @@ const components = {
         </figure>
       );
     },
-    code: ({ value }: any) => (
+    code: ({ value }) => (
       <CodeBlock
         language={value.language}
         value={value.code}
@@ -117,7 +79,7 @@ const components = {
     ),
   },
   marks: {
-    link: ({ children, value }: any) => {
+    link: ({ children, value }) => {
       if (!value?.href) {
         return (
           <span className="text-red-500" title="Link URL is missing">
@@ -138,26 +100,20 @@ const components = {
     },
   },
   block: {
-    h2: ({ children }: any) => (
-      <HeadingRenderer level={2}>{children}</HeadingRenderer>
-    ),
-    h3: ({ children }: any) => (
-      <HeadingRenderer level={3}>{children}</HeadingRenderer>
-    ),
-    h4: ({ children }: any) => (
-      <HeadingRenderer level={4}>{children}</HeadingRenderer>
-    ),
-    blockquote: ({ children }: any) => (
+    h2: (props) => <HeadingRenderer {...props} />,
+    h3: (props) => <HeadingRenderer {...props} />,
+    h4: (props) => <HeadingRenderer {...props} />,
+    blockquote: ({ children }) => (
       <blockquote className="border-l-4 border-sky-400 pl-4 italic text-slate-400">
         {children}
       </blockquote>
     ),
   },
   list: {
-    bullet: ({ children }: any) => (
+    bullet: ({ children }) => (
       <ul className="list-disc pl-6 space-y-2">{children}</ul>
     ),
-    number: ({ children }: any) => (
+    number: ({ children }) => (
       <ol className="list-decimal pl-6 space-y-2">{children}</ol>
     ),
   },
