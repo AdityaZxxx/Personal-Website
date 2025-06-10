@@ -1,3 +1,4 @@
+// components/blogPost/TableOfContents.tsx
 "use client";
 
 import { cn } from "@/lib/utils";
@@ -19,80 +20,55 @@ export function TableOfContents() {
 
   useEffect(() => {
     const articleElement = document.querySelector("article");
-    if (!articleElement) {
-      return;
-    }
+    if (!articleElement) return;
 
     const headingElements = Array.from(
-      articleElement.querySelectorAll("h2, h3")
-    ) as HTMLHeadingElement[];
+      articleElement.querySelectorAll<HTMLHeadingElement>("h2, h3")
+    );
 
-    if (headingElements.length === 0) {
-      setHeadings([]);
-      return;
-    }
-
-    const idSet = new Set<string>();
-    const mappedHeadings = headingElements.map((heading, index) => {
-      let baseIdTry =
-        heading.id ||
-        heading.textContent
-          ?.trim()
-          .toLowerCase()
-          .replace(/\s+/g, "-")
-          .replace(/[^\w-]+/g, "") ||
-        "";
-
-      if (!baseIdTry) {
-        baseIdTry = `toc-heading-${index}`;
-      }
-
-      let uniqueId = baseIdTry;
-      let counter = 1;
-      while (idSet.has(uniqueId)) {
-        uniqueId = `${baseIdTry}-${counter++}`;
-      }
-      idSet.add(uniqueId);
-
-      if (heading.id !== uniqueId) {
-        heading.id = uniqueId;
-      }
-
-      return {
-        id: uniqueId,
-        text: heading.textContent?.trim() || "Untitled Section",
-        level: parseInt(heading.tagName.substring(1), 10),
-      };
-    });
+    const mappedHeadings = headingElements
+      .map((heading) => {
+        if (heading.id) {
+          return {
+            id: heading.id,
+            text: heading.textContent?.trim() || "Untitled Section",
+            level: parseInt(heading.tagName.substring(1), 10),
+          };
+        }
+        return null;
+      })
+      .filter((h): h is HeadingData => h !== null);
 
     setHeadings(mappedHeadings);
 
+    if (mappedHeadings.length === 0) return;
+
     const observerCallback: IntersectionObserverCallback = (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveId(entry.target.id);
-        }
-      });
+      const visibleHeadings = entries.filter((entry) => entry.isIntersecting);
+      if (visibleHeadings.length > 0) {
+        visibleHeadings.sort(
+          (a, b) => a.boundingClientRect.top - b.boundingClientRect.top
+        );
+        setActiveId(visibleHeadings[0].target.id);
+      }
     };
 
-    const observerOptions: IntersectionObserverInit = {
-      rootMargin: "0px 0px -65% 0px", // Menjadikan aktif sedikit lebih awal saat scroll ke bawah
-      threshold: 0.1, // Cukup sedikit bagian dari heading terlihat
-    };
+    const observer = new IntersectionObserver(observerCallback, {
+      rootMargin: `-${SCROLL_OFFSET_FOR_STICKY_HEADER}px 0px -55% 0px`,
+    });
 
-    const observer = new IntersectionObserver(
-      observerCallback,
-      observerOptions
-    );
-    headingElements.forEach((element) => observer.observe(element));
+    headingElements.forEach((element) => {
+      if (element.id) observer.observe(element);
+    });
 
-    // Cleanup observer saat komponen di-unmount
     return () => observer.disconnect();
   }, []);
 
+  // --- FUNGSI YANG DIPERBAIKI ---
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {
       event.preventDefault();
+
       const targetElement = document.getElementById(id);
 
       if (targetElement) {
@@ -104,6 +80,11 @@ export function TableOfContents() {
           top: offsetPosition,
           behavior: "smooth",
         });
+
+        // Update URL di address bar
+        const newUrl = `${window.location.pathname}${window.location.search}#${id}`;
+        window.history.replaceState(null, "", newUrl);
+
         setActiveId(id);
       }
     },
@@ -111,7 +92,11 @@ export function TableOfContents() {
   );
 
   if (headings.length === 0) {
-    return null;
+    return (
+      <p className="text-slate-400 text-sm">
+        There are no sub-headings in this article.
+      </p>
+    );
   }
 
   return (
@@ -137,10 +122,8 @@ export function TableOfContents() {
               {heading.level === 3 && (
                 <ChevronRight
                   className={cn(
-                    "w-3 h-3 mt-[5px] flex-shrink-0 transition-transform duration-150 ease-in-out",
-                    activeId === heading.id
-                      ? "text-sky-400 opacity-100"
-                      : "text-slate-500 group-hover:text-slate-300 opacity-70"
+                    "w-3 h-3 mt-[5px] flex-shrink-0 transition-transform",
+                    activeId === heading.id ? "text-sky-400" : "text-slate-500"
                   )}
                 />
               )}

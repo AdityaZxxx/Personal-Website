@@ -11,7 +11,7 @@ import "./globals.css";
 import GlobalLoading from "./loading";
 
 const rethinkSans = Rethink_Sans({
-  weight: "500",
+  weight: "400",
   subsets: ["latin"],
   display: "swap",
 });

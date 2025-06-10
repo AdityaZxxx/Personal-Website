@@ -1,6 +1,5 @@
 import { Calendar, ChevronDown, Clock } from "lucide-react";
 import type { Metadata } from "next";
-import { Rethink_Sans } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -37,8 +36,6 @@ import {
   TrakteerSupport,
 } from "../../../components/blogPost/DinamicImport";
 import { urlFor } from "../../../lib/sanity/image";
-
-const GeistSans = Rethink_Sans({ subsets: ["latin"] });
 
 const NEXT_PUBLIC_SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://adxxya30.vercel.app";
@@ -207,8 +204,7 @@ export default async function PostPage({
 
       <main
         className={cn(
-          "container bg-black/80 px-4 py-10 md:px-6 md:py-16 lg:py-20 backdrop-blur-sm",
-          GeistSans.className
+          "container bg-[#0A0A0A] px-4 py-10 md:px-6 md:py-16 lg:py-20 backdrop-blur-sm"
         )}
       >
         <div className="mx-auto max-w-screen-xl">
@@ -352,7 +348,7 @@ export default async function PostPage({
                   </figure>
                 )}
 
-                <article className="prose prose-lg prose-slate dark:prose-invert max-w-none prose-headings:text-slate-100 prose-headings:font-semibold prose-headings:tracking-tight prose-headings:scroll-mt-24 prose-a:text-sky-400 hover:prose-a:text-sky-300 prose-strong:text-slate-100 prose-blockquote:border-sky-400 prose-blockquote:text-slate-300 prose-code:text-pink-400 prose-code:bg-slate-800/80 prose-code:p-1 prose-code:rounded-md prose-img:rounded-lg prose-img:shadow-md prose-code:font-mono">
+                <article className="prose prose-p:font-light prose-lg max-w-none prose-p:text-gray-400 prose-headings:text-gray-100 prose-headings:tracking-tight prose-li:text-gray-400 prose-headings:scroll-mt-24 prose-a:text-sky-400 hover:prose-a:text-sky-300 prose-strong:text-gray-300 prose-blockquote:border-sky-400 prose-blockquote:text-slate-300 prose-code:text-gray-300 prose-code:bg-slate-800/80 prose-code:p-1 prose-code:rounded-md prose-img:rounded-lg prose-img:shadow-md prose-code:font-mono">
                   <PortableText value={post.body} />
                 </article>
 
