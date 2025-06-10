@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { PostType } from "@/types/PostType";
-import { ArrowRight, Calendar } from "lucide-react";
+import { ArrowRight, Calendar, Clock } from "lucide-react";
 import * as motion from "motion/react-client";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,55 +8,55 @@ import { urlFor } from "../../lib/sanity/image";
 import { getLatestPosts } from "../../lib/sanity/queries";
 import { formatDate } from "../../lib/utils";
 import { Badge } from "../ui/badge";
-import { Card, CardContent, CardHeader } from "../ui/card";
+import { Card, CardContent } from "../ui/card";
 
 export function PostCard({ post }: { post: PostType }) {
   return (
     <div className="space-y-4">
-      <div className="space-y-4">
-        <Link key={post._id} href={`/blog/${post.slug.current}`}>
-          <Card className="overflow-hidden hover:shadow-md transition-shadow">
-            <CardHeader>
-              <h3 className="font-bold text-lg">{post.title}</h3>
-            </CardHeader>
-            <CardContent className="p-4 flex gap-3">
-              {post.mainImage && (
-                <div className="relative h-32 w-32 flex-shrink-0 rounded-md overflow-hidden">
-                  <Image
-                    src={urlFor(post.mainImage).width(200).url()}
-                    alt={post.title}
-                    fill
-                    className="object-cover"
-                    sizes="64px"
-                  />
+      <Link key={post._id} href={`/blog/${post.slug.current}`}>
+        <Card className="overflow-hidden hover:shadow-md transition-shadow">
+          <CardContent className="p-4 flex gap-3 flex-col md:flex-row">
+            <div className="flex-1 min-w-0 order-2 md:order-1">
+              <div className="flex items-center mt-1 mb-2 text-xs text-muted-foreground">
+                <Calendar className="h-3 w-3 mr-1" />
+                <time dateTime={post.publishedAt}>
+                  {formatDate(post.publishedAt)}
+                </time>
+              </div>
+              <h3 className="font-bold text-base md:text-lg line-clamp-2">
+                {post.title}
+              </h3>
+              <h4 className="font-medium text-sm line-clamp-3 text-gray-400">
+                {post.excerpt}
+              </h4>
+              {post.estimatedReadingTime && (
+                <div className="flex items-center gap-1.5">
+                  <Clock className="h-4 w-4" />
+                  <span>{post.estimatedReadingTime} min read</span>
                 </div>
               )}
-              <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-sm line-clamp-3">
-                  {post.excerpt}
-                </h4>
-                <div className="flex items-center mt-1 text-xs text-muted-foreground">
-                  <Calendar className="h-3 w-3 mr-1" />
-                  <time dateTime={post.publishedAt}>
-                    {formatDate(post.publishedAt)}
-                  </time>
+              {post.categories && post.categories.length > 0 && (
+                <div className="mt-4">
+                  <Badge key={post._id} variant="secondary" className="text-xs">
+                    {post.categories[0].title}
+                  </Badge>
                 </div>
-                {post.categories && post.categories.length > 0 && (
-                  <div className="mt-2">
-                    <Badge
-                      key={post._id}
-                      variant="secondary"
-                      className="text-xs"
-                    >
-                      {post.categories[0].title}
-                    </Badge>
-                  </div>
-                )}
+              )}
+            </div>
+            {post.mainImage && (
+              <div className="order-1 md:order-2 relative w-full rounded-md overflow-hidden aspect-video flex-shrink-0  md:w-48 lg:w-56">
+                <Image
+                  src={urlFor(post.mainImage).width(800).url()}
+                  alt={post.title}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 767px) 100vw, 33vw"
+                />
               </div>
-            </CardContent>
-          </Card>
-        </Link>
-      </div>
+            )}
+          </CardContent>
+        </Card>
+      </Link>
     </div>
   );
 }
