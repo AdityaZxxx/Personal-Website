@@ -1,21 +1,91 @@
 import { groq } from "next-sanity";
 import { client } from "./client";
 
-// --- Post Queries ---
+// ============================================================================
+// FRAGMENTS (untuk kode yang lebih bersih dan reusable)
+// ============================================================================
+
+const imageFields = groq`
+  alt,
+  caption,
+  "lqip": asset->metadata.lqip,
+  asset->{
+    _id,
+    url,
+    "width": metadata.dimensions.width,
+    "height": metadata.dimensions.height
+  }
+`;
+
+const postCardFields = groq`
+  _id,
+  title,
+  slug,
+  excerpt,
+  "estimatedReadingTime": round(length(pt::text(body)) / 5 / 180),
+  publishedAt,
+  "categories": categories[]->{ _id, title, "slug": slug.current },
+  "mainImage": mainImage { ${imageFields} }
+`;
+
+const projectCardFields = groq`
+  _id,
+  title,
+  slug,
+  excerpt,
+  "mainImage": mainImage { ${imageFields} },
+  technologies,
+  "categories": categories[]->{ _id, title, "slug": slug.current }
+`;
+
+const galleryCardFields = groq`
+  _id,
+  title,
+  slug,
+  mediaType,
+  "image": image { ${imageFields} },
+  "videoThumbnail": videoThumbnail { ${imageFields} }
+`;
+
+// ============================================================================
+// POST QUERIES
+// ============================================================================
 
 export async function getLatestPosts(limit = 3) {
   return client.fetch(
     groq`*[_type == "post" && publishedAt < now() && !(_id in path("drafts.**"))] | order(publishedAt desc)[0...${limit}] {
-      _id,
-      title,
-      slug,
-      excerpt,
-      mainImage, // Fetches the image object including 'alt', 'caption' (if defined) and 'asset' reference
-      publishedAt,
-      "categories": categories[]->{ _id, title, slug },
-      "estimatedReadingTime": round(length(pt::text(body)) / 5 / 180)
+      ${postCardFields}
     }`
   );
+}
+
+export async function getFeaturedPosts(limit = 4) {
+  return client.fetch(
+    groq`*[_type == "post" && featured == true && publishedAt < now() && !(_id in path("drafts.**"))] | order(publishedAt desc)[0...${limit}] {
+      ${postCardFields}
+    }`
+  );
+}
+
+export async function getAllPosts(category?: string, searchQuery?: string) {
+  const query = groq`*[_type == "post" && publishedAt < now() && !(_id in path("drafts.**"))
+    && (!defined($category) || $category in categories[]->slug.current)
+    && (!defined($searchQuery) || (
+        title match $searchPattern ||
+        excerpt match $searchPattern ||
+        pt::text(body) match $searchPattern
+      ))
+  ] | order(publishedAt desc) {
+    ${postCardFields}
+  }`;
+
+  const params = {
+    category: category || null,
+    searchQuery: searchQuery || null,
+    searchPattern: searchQuery ? `*${searchQuery}*` : null,
+  };
+
+  return client.fetch(query, params);
 }
 
 export async function getPostBySlug(slug: string) {
@@ -25,131 +95,53 @@ export async function getPostBySlug(slug: string) {
       title,
       slug,
       excerpt,
-      mainImage, // Fetches image object with 'alt', 'caption', 'asset' ref
+      "mainImage": mainImage { ${imageFields} },
       body[]{
         ...,
-        _type == "image" => { // For images within Portable Text
-          alt,
-          caption,
-          asset // Fetches the asset reference { _ref: "...", _type: "reference" }
-        }
+        _type == "image" => { ${imageFields} }
       },
       publishedAt,
-      "categories": categories[]->{ _id, title, slug },
+      _updatedAt,
+      "categories": categories[]->{ _id, title, "slug": slug.current },
       "estimatedReadingTime": round(length(pt::text(body)) / 5 / 180),
       "author": author->{
         _id,
         name,
-        image, // Fetches author's image object with 'alt', 'caption', 'asset' ref
+        "image": image { ${imageFields} },
         bio,
         slug,
         socialLinks
       },
-      // "rawTags": tags
       tags
     }`,
     { slug }
   );
 }
 
-export async function getFeaturedPosts(limit = 4) {
-  return client.fetch(
-    groq`*[_type == "post" && featured == true && publishedAt < now() && !(_id in path("drafts.**"))] | order(publishedAt desc)[0...${limit}] {
-      _id,
-      title,
-      slug,
-      mainImage,
-      publishedAt,
-      "categories": categories[]->{ _id, title, slug }
-    }`
-  );
-}
-
 export async function getAllPostSlugs() {
-  return client.fetch(
-    groq`*[_type == "post" && defined(slug.current) && !(_id in path("drafts.**"))][].slug.current`
+  return client.fetch<string[]>(
+    groq`*[_type == "post" && defined(slug.current) && !(_id in path("drafts.**"))].slug.current`
   );
 }
 
-export async function getAllPostCategories() {
-  return client.fetch(
-    groq`*[_type == "category"] | order(title asc) {
-      _id,
-      title,
-      slug
-    }`
-  );
-}
-
-export async function getAllPosts(category?: string, searchQuery?: string) {
-  let query = `*[_type == "post" && publishedAt < now() && !(_id in path("drafts.**"))`;
-  const params: Record<string, any> = {};
-  const conditions: string[] = [];
-
-  if (category) {
-    conditions.push(`$category in categories[]->slug.current`);
-    params.category = category;
-  }
-
-  if (searchQuery && searchQuery.trim() !== "no") {
-    conditions.push(`(
-      title match $searchPattern ||
-      excerpt match $searchPattern ||
-      pt::text(body) match $searchPattern
-    )`);
-    params.searchPattern = `*${searchQuery}*`; // For "contains" style search
-  }
-
-  if (conditions.length > 0) {
-    query += ` && (${conditions.join(" && ")})`;
-  }
-
-  query += `] | order(publishedAt desc) {
-    _id,
-    title,
-    slug,
-    excerpt,
-    publishedAt,
-    "categories": categories[]->{ _id, title, slug },
-    mainImage // Fetches image object with 'alt', 'caption', 'asset' ref
-  }`;
-
-  return client.fetch(query, params);
-}
-
-// --- Project Queries ---
+// ============================================================================
+// PROJECT QUERIES
+// ============================================================================
 
 export async function getAllProjects(category?: string) {
-  let query = `*[_type == "project" && !(_id in path("drafts.**"))`;
-  const params: Record<string, any> = {};
-
-  if (category) {
-    query += ` && references(*[_type == "projectCategory" && slug.current == $category]._id)`;
-    params.category = category;
-  }
-
-  query += `] | order(completedAt desc) {
-    _id,
-    title,
-    slug,
-    excerpt,
-    mainImage, // Fetches image object
-    "technologies": technologies[]->{ _id, title, slug },
-    "categories": categories[]->{ _id, title, slug }
+  const query = groq`*[_type == "project" && !(_id in path("drafts.**"))
+    && (!defined($category) || $category in categories[]->slug.current)
+  ] | order(completedAt desc) {
+    ${projectCardFields}
   }`;
-  return client.fetch(query, params);
+
+  return client.fetch(query, { category: category || null });
 }
 
 export async function getFeaturedProjects(limit = 3) {
   return client.fetch(
     groq`*[_type == "project" && featured == true && !(_id in path("drafts.**"))] | order(completedAt desc)[0...${limit}] {
-      _id,
-      title,
-      slug,
-      excerpt,
-      mainImage, // Fetches image object
-      "technologies": technologies[]->{ _id, title, slug },
-      "categories": categories[]->{ _id, title, slug }
+      ${projectCardFields}
     }`
   );
 }
@@ -161,86 +153,49 @@ export async function getProjectBySlug(slug: string) {
       title,
       slug,
       excerpt,
-      mainImage, // Fetches image object
-      description[]{ // Assuming description is Portable Text
+      "mainImage": mainImage { ${imageFields} },
+      description[]{
         ...,
-        _type == "image" => {
-          alt,
-          caption,
-          asset // Fetches asset reference
-        }
+        _type == "image" => { ${imageFields} }
       },
-      "technologies": technologies[]->{ _id, title, slug },
+      technologies,
       completedAt,
       demoUrl,
       repoUrl,
-      images[]{ // Assuming 'images' is an array of image objects
+      images[]{
         _key,
-        alt,
-        caption,
-        asset // Fetches asset reference
+        ${imageFields}
       },
-      "categories": categories[]->{ _id, title, slug }
+      "categories": categories[]->{ _id, title, "slug": slug.current }
     }`,
     { slug }
   );
 }
 
 export async function getAllProjectSlugs() {
-  return client.fetch(
-    groq`*[_type == "project" && defined(slug.current) && !(_id in path("drafts.**"))][].slug.current`
+  return client.fetch<string[]>(
+    groq`*[_type == "project" && defined(slug.current) && !(_id in path("drafts.**"))].slug.current`
   );
 }
 
-export async function getAllProjectCategories() {
-  return client.fetch(
-    groq`*[_type == "projectCategory"] | order(title asc) {
-      _id,
-      title,
-      slug
-    }`
-  );
-}
-
-// --- Gallery Queries ---
+// ============================================================================
+// GALLERY QUERIES
+// ============================================================================
 
 export async function getAllGalleryItems(category?: string) {
-  let query = `*[_type == "galleryItem" && !(_id in path("drafts.**"))`;
-  const params: Record<string, any> = {};
-
-  if (category) {
-    query += ` && references(*[_type == "galleryCategory" && slug.current == $category]._id)`;
-    params.category = category;
-  }
-
-  query += `] | order(date desc) {
-    _id,
-    title,
-    slug,
-    description, // If Portable Text with images, expand asset ref inside
-    mediaType,
-    image, // Fetches image object (if mediaType is 'image')
-    "videoUrl": video.asset->url, // Keep dereferencing for direct URL if 'video' is a file type
-    videoThumbnail, // Fetches image object for thumbnail
-    date,
-    "categories": categories[]->{ _id, title, slug }
+  const query = groq`*[_type == "galleryItem" && !(_id in path("drafts.**"))
+    && (!defined($category) || $category in categories[]->slug.current)
+  ] | order(date desc) {
+    ${galleryCardFields}
   }`;
-  return client.fetch(query, params);
+
+  return client.fetch(query, { category: category || null });
 }
 
 export async function getFeaturedGalleryItems(limit = 6) {
   return client.fetch(
     groq`*[_type == "galleryItem" && featured == true && !(_id in path("drafts.**"))] | order(date desc)[0...${limit}] {
-      _id,
-      title,
-      slug,
-      description,
-      mediaType,
-      image,
-      "videoUrl": video.asset->url,
-      videoThumbnail,
-      date,
-      "categories": categories[]->{ _id, title, slug }
+      ${galleryCardFields}
     }`
   );
 }
@@ -250,17 +205,36 @@ export async function getGalleryItemBySlug(slug: string) {
     groq`*[_type == "galleryItem" && slug.current == $slug && !(_id in path("drafts.**"))][0] {
       _id,
       title,
-      slug,
-      description, // If Portable Text with images, expand asset ref inside
+      "slug": slug.current,
+      description[]{
+        ...,
+        _type == "image" => { ${imageFields} }
+      },
       mediaType,
-      image,
+      "image": image { ${imageFields} },
       "videoUrl": video.asset->url,
-      videoThumbnail,
+      "videoThumbnail": videoThumbnail { ${imageFields} },
       date,
-      "tags": tags[]->{ _id, title, slug },
-      "categories": categories[]->{ _id, title, slug }
+      "tags": tags[]->{ _id, title, "slug": slug.current },
+      "categories": categories[]->{ _id, title, "slug": slug.current }
     }`,
     { slug }
+  );
+}
+
+// ============================================================================
+// CATEGORY QUERIES
+// ============================================================================
+
+export async function getAllPostCategories() {
+  return client.fetch(
+    groq`*[_type == "category"] | order(title asc) { _id, title, "slug": slug.current }`
+  );
+}
+
+export async function getAllProjectCategories() {
+  return client.fetch(
+    groq`*[_type == "projectCategory"] | order(title asc) { _id, title, "slug": slug.current }`
   );
 }
 
@@ -269,8 +243,8 @@ export async function getAllGalleryCategories() {
     groq`*[_type == "galleryCategory"] | order(title asc) {
       _id,
       title,
-      slug,
-      description // If Portable Text with images, expand asset ref inside
+      "slug": slug.current,
+      description
     }`
   );
 }

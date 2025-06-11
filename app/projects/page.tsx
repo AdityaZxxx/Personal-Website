@@ -1,31 +1,27 @@
-// File: app/projects/page.tsx (atau path yang sesuai)
 import { CategoryFilter } from "@/components/category-filter";
-import { ProjectList } from "@/components/project/ProjectList"; // Pastikan path ini benar
+import { ProjectList } from "@/components/project/ProjectList";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { getAllProjectCategories } from "../../lib/sanity/queries"; // Pastikan path ini benar
+import { getAllProjectCategories } from "../../lib/sanity/queries";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "Explore my portfolio of web development and design projects.",
+  description: "Explore my portfolio of web development and projects.",
 };
 
-// Tipe untuk searchParams yang sudah di-resolve
 type ResolvedPageSearchParams = {
   category?: string;
-  search?: string; // Meskipun tidak digunakan saat ini, jaga jika diperlukan nanti
+  search?: string;
 };
 
 export default async function ProjectsPage({
-  searchParams: searchParamsPromise, // Destructure dan rename untuk kejelasan
+  searchParams: searchParamsPromise,
 }: {
   searchParams: Promise<ResolvedPageSearchParams>;
 }) {
   const resolvedSearchParams = (await searchParamsPromise) || {};
-
-  const category = resolvedSearchParams.category;
-
+  const currentCategory = resolvedSearchParams.category;
   const allCategories = await getAllProjectCategories();
 
   return (
@@ -59,24 +55,21 @@ export default async function ProjectsPage({
       </div>
 
       <div className="mb-12 md:mb-16 flex justify-center">
-        {/* Teruskan semua kategori dan kategori yang aktif ke CategoryFilter */}
-        <CategoryFilter categories={allCategories} activeCategory={category} />
+        <CategoryFilter
+          categories={allCategories}
+          activeCategory={currentCategory}
+        />
       </div>
 
       <div className="mt-8">
         <Suspense fallback={<ProjectListSkeleton />}>
-          {/* Teruskan hanya props yang dibutuhkan oleh ProjectList */}
-          {/* Jika ProjectList hanya butuh category, teruskan category */}
-          <ProjectList category={category} />
-          {/* Jika ProjectList butuh lebih banyak dari searchParams, Anda bisa meneruskan resolvedSearchParams: */}
-          {/* <ProjectList searchParams={resolvedSearchParams} /> // Ini akan memerlukan perubahan di ProjectList */}
+          <ProjectList category={currentCategory} />
         </Suspense>
       </div>
     </main>
   );
 }
 
-// ProjectListSkeleton tetap sama
 function ProjectListSkeleton() {
   return (
     <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
@@ -84,7 +77,7 @@ function ProjectListSkeleton() {
         .fill(0)
         .map((_, i) => (
           <div
-            key={i} // Menggunakan index sebagai key di sini oke karena listnya statis
+            key={i}
             className="flex flex-col space-y-4 bg-card p-4 rounded-xl border border-border/20 shadow-sm"
           >
             <Skeleton className="h-[220px] w-full rounded-lg bg-muted/50" />

@@ -30,8 +30,8 @@ export function PostCard({ post }: { post: PostType }) {
                 {post.excerpt}
               </h4>
               {post.estimatedReadingTime && (
-                <div className="flex items-center gap-1.5">
-                  <Clock className="h-4 w-4" />
+                <div className="flex items-center text-xs gap-1.5 mt-2 font-light text-gray-400">
+                  <Clock className="h-4 w-4" size="icon" />
                   <span>{post.estimatedReadingTime} min read</span>
                 </div>
               )}

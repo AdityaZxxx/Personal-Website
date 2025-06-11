@@ -11,5 +11,6 @@ export async function PostListServer({
   searchQuery,
 }: PostListServerProps) {
   const posts = await getAllPosts(category, searchQuery);
+
   return <PostList posts={posts} />;
 }

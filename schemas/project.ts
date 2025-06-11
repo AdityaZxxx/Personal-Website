@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity"
+import { defineField, defineType } from "sanity";
 
 export default defineType({
   name: "project",
@@ -98,5 +98,4 @@ export default defineType({
       media: "mainImage",
     },
   },
-})
-
+});

@@ -7,123 +7,135 @@ import { urlFor } from "../../lib/sanity/image";
 import { getFeaturedProjects } from "../../lib/sanity/queries";
 import { Button } from "../ui/button";
 
-interface ProjectCardProps {
-  project: {
-    _id: string;
-    title: string;
-    slug: {
-      _type: string;
-      current: string;
-    };
-    excerpt?: string;
-    mainImage?: any;
-    technologies?: string[];
-    githubUrl?: string;
-    liveUrl?: string;
+type ProjectCardType = {
+  _id: string;
+  title: string;
+  slug: {
+    _type: string;
+    current: string;
   };
-}
+  excerpt?: string;
+  mainImage?: {
+    alt?: string;
+    lqip: string;
+    asset: {
+      url: string;
+    };
+  };
+  technologies?: string[];
+  repoUrl?: string;
+  demoUrl?: string;
+};
 
-export function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({ project }: { project: ProjectCardType }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
       viewport={{ once: true, margin: "0px 0px -50px 0px" }}
       whileHover={{ y: -5 }}
-      className="group relative h-full overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-b from-slate-900/50 to-slate-900/20 shadow-lg transition-all duration-300 hover:border-slate-700 hover:shadow-slate-700/20 flex flex-col"
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-b from-slate-900/50 to-slate-900/20 shadow-lg transition-all duration-300 hover:border-slate-700 hover:shadow-slate-700/20"
       aria-labelledby={`project-${project._id}-title`}
     >
-      <Link
-        href={`/projects/${project.slug.current}`}
-        className="flex flex-col flex-grow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 rounded-t-2xl"
-        aria-label={`View ${project.title} project details`}
-      >
-        <div className="relative aspect-video overflow-hidden">
-          {project.mainImage ? (
-            <>
-              <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-transparent to-slate-900/80 z-10" />
-              <Image
-                src={urlFor(project.mainImage).width(200).url()}
-                alt={`Screenshot of ${project.title} project`}
-                fill
-                className="transition-transform duration-500 group-hover:scale-105 object-cover"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                priority={false}
-              />
-            </>
-          ) : (
-            <div className="flex h-full w-full items-center justify-center bg-muted">
-              <span className="text-muted-foreground">No image available</span>
-            </div>
-          )}
-        </div>
+      <div className="flex flex-col flex-grow">
+        <Link
+          href={`/projects/${project.slug.current}`}
+          className="block focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 rounded-t-2xl"
+          aria-label={`View ${project.title} project details`}
+        >
+          <div className="relative aspect-video overflow-hidden">
+            {project.mainImage?.asset?.url ? (
+              <>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent z-10" />
+                <Image
+                  src={urlFor(project.mainImage.asset.url).width(1200).url()}
+                  alt={
+                    project.mainImage.alt || `Screenshot of ${project.title}`
+                  }
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  placeholder="blur"
+                  blurDataURL={project.mainImage.lqip}
+                />
+              </>
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-slate-800">
+                <span className="text-slate-500">Image not available</span>
+              </div>
+            )}
+          </div>
+          <div className="p-6">
+            <h3
+              id={`project-${project._id}-title`}
+              className="font-bold text-lg text-white line-clamp-2 group-hover:text-sky-400 transition-colors"
+            >
+              {project.title}
+            </h3>
+            {project.excerpt && (
+              <p className="mt-2 text-sm text-slate-400 line-clamp-3">
+                {project.excerpt}
+              </p>
+            )}
+          </div>
+        </Link>
 
-        <div className="p-6 flex-grow">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h3
-                id={`project-${project._id}-title`}
-                className="font-bold text-white line-clamp-1"
+        <div className="mt-auto px-6 pb-6">
+          {/* PERBAIKAN 2: Logika map untuk 'technologies' sekarang menangani string */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            {project.technologies?.slice(0, 4).map((tech, index) => (
+              <Badge
+                key={index}
+                variant="secondary"
+                className="rounded-full bg-slate-800/80 backdrop-blur-sm text-xs font-medium"
               >
-                {project.title}
-              </h3>
-              {project.excerpt && (
-                <p className="mt-2 text-sm text-slate-400 line-clamp-2">
-                  {project.excerpt}
-                </p>
-              )}
-            </div>
+                {tech}
+              </Badge>
+            ))}
+          </div>
+
+          <div className="flex gap-2">
+            {project.repoUrl && (
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="rounded-full"
+              >
+                <a
+                  href={project.repoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  aria-label="View source code on GitHub"
+                >
+                  <Github className="h-4 w-4 mr-2" />
+                  Code
+                </a>
+              </Button>
+            )}
+            {project.demoUrl && (
+              <Button
+                asChild
+                variant="default"
+                size="sm"
+                className="rounded-full bg-sky-500 hover:bg-sky-600 text-white"
+              >
+                <a
+                  href={project.demoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  aria-label="View live demo"
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Live Demo
+                </a>
+              </Button>
+            )}
           </div>
         </div>
-      </Link>
-
-      {/* Technologies */}
-      <div className="px-6 pb-4 flex flex-wrap gap-2">
-        {project.technologies?.slice(0, 3).map((tech, index) => (
-          <Badge
-            key={tech + index}
-            variant="secondary"
-            className="rounded-full bg-slate-800/80 backdrop-blur-sm text-xs font-medium"
-          >
-            {tech}
-          </Badge>
-        ))}
-        {project.technologies && project.technologies.length > 3 && (
-          <Badge key={project._id} variant="outline" className="text-xs">
-            +{project.technologies.length - 3} more
-          </Badge>
-        )}
-      </div>
-
-      {/* Project links */}
-      <div className="px-6 pb-6 flex gap-2">
-        {project.githubUrl && (
-          <Link
-            href={project.githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-800/50 p-1.5 text-slate-400 transition-colors hover:bg-slate-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900"
-            aria-label={`View ${project.title} source code on GitHub (opens in new tab)`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Github className="h-4 w-4" />
-            <span className="sr-only">GitHub</span>
-          </Link>
-        )}
-        {project.liveUrl && (
-          <Link
-            href={project.liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-800/50 p-1.5 text-slate-400 transition-colors hover:bg-slate-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900"
-            aria-label={`View ${project.title} live demo (opens in new tab)`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <ExternalLink className="h-4 w-4" />
-            <span className="sr-only">Live Demo</span>
-          </Link>
-        )}
       </div>
     </motion.div>
   );
@@ -192,14 +204,18 @@ export const FeaturedProjectsSection = async () => {
           viewport={{ once: true }}
           className="mt-12 text-center"
         >
-          <Link
-            href="/projects"
-            className="inline-block focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 rounded-full"
-            aria-label="View full portfolio"
-          >
+          <Link href="/projects" aria-label="View full portfolio">
             <Button
               variant="outline"
-              className="group rounded-full border border-slate-700 bg-slate-900/50 px-6 py-5 text-white shadow-sm transition-all hover:bg-slate-800 hover:text-white hover:shadow-md hover:shadow-slate-700/30"
+              className={`
+                inline-flex items-center px-6 py-3 rounded-full 
+                bg-gradient-to-r from-red-500 to-amber-600 
+                text-white font-medium 
+                hover:shadow-lg hover:shadow-amber-500/20 
+                focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-slate-900
+                transition-all duration-300 
+                group
+              `}
             >
               Explore Full Portfolio
               <ArrowRight
