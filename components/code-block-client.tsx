@@ -25,15 +25,15 @@ export function CodeBlockClient({
   };
 
   const getLanguageDisplayName = (lang: string) => {
-    // ... (fungsi getLanguageDisplayName bisa tetap sama)
     const displayNames: Record<string, string> = {
-      javascript: "JavaScript" /*...*/,
+      javascript: "JavaScript",
+      typescript: "TypeScript",
     };
     return displayNames[lang] || lang.toUpperCase();
   };
 
   return (
-    <div className="my-6 rounded-lg overflow-hidden border bg-zinc-950/70 dark:bg-zinc-900/70 backdrop-blur-sm">
+    <div className="my-6 rounded-lg overflow-hidden border bg-zinc-950 dark:bg-zinc-900 backdrop-blur-sm">
       <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-800">
         <div className="flex items-center gap-2 text-sm text-zinc-400">
           {filename ? (
