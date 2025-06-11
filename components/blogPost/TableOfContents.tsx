@@ -102,9 +102,9 @@ export function TableOfContents() {
   return (
     <nav aria-label="Table of contents" className="text-sm">
       <ul className="space-y-1.5">
-        {headings.map((heading) => (
+        {headings.map((heading, i) => (
           <li
-            key={heading.id}
+            key={i}
             className={cn(
               "transition-all duration-150 ease-in-out",
               heading.level === 3 ? "pl-4" : "pl-0",

@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-// Komponen Internal
 import { AuthorProfile } from "@/components/author-profile";
 import { FeaturedPosts } from "@/components/blogPost/FeaturedPosts";
 import { ReadingProgress } from "@/components/blogPost/ReadingProgress";
@@ -24,23 +23,22 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// Lib & Utils
+import {
+  GiscusComments,
+  TrakteerSupport,
+} from "@/components/blogPost/DinamicImport";
+import { urlFor } from "@/lib/sanity/image";
 import {
   getAllPostSlugs,
   getFeaturedPosts,
   getPostBySlug,
 } from "@/lib/sanity/queries";
 import { cn, formatDate } from "@/lib/utils";
-import {
-  GiscusComments,
-  TrakteerSupport,
-} from "../../../components/blogPost/DinamicImport";
-import { urlFor } from "../../../lib/sanity/image";
 
 const NEXT_PUBLIC_SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://adxxya30.vercel.app";
 const SITE_NAME = "Aditya Rahmad";
-const DEFAULT_OG_IMAGE = `${NEXT_PUBLIC_SITE_URL}/og-image.avif`; // Simpan gambar default di /public
+const DEFAULT_OG_IMAGE = `${NEXT_PUBLIC_SITE_URL}/og-image.avif`;
 
 export async function generateMetadata({
   params: promiseParams,
@@ -68,7 +66,7 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.excerpt,
-    keywords: ["Aditya Rahmad", post.categories?.[0]?.title, ...postKeywords], // Keywords dinamis
+    keywords: ["Aditya Rahmad", post.categories?.[0]?.title, ...postKeywords],
     alternates: {
       canonical: canonicalUrl,
     },
@@ -78,12 +76,12 @@ export async function generateMetadata({
       url: canonicalUrl,
       siteName: SITE_NAME,
       images: [{ url: imageUrl, width: 1200, height: 630 }],
-      locale: "id_ID", // Pastikan sesuai bahasa konten
+      locale: "id_ID",
       type: "article",
       publishedTime: post.publishedAt,
       modifiedTime: post._updatedAt || post.publishedAt,
       authors: post.author?.slug?.current
-        ? [`${NEXT_PUBLIC_SITE_URL}/author/${post.author.slug.current}`] // URL Author
+        ? [`${NEXT_PUBLIC_SITE_URL}/author/${post.author.slug.current}`]
         : undefined,
       section: post.categories?.[0]?.title,
       tags: postKeywords,
@@ -93,14 +91,13 @@ export async function generateMetadata({
       title: post.title,
       description: post.excerpt,
       images: [imageUrl],
-      creator: "@adxxya30", // Username Twitter Anda
+      creator: "@adxxya30",
     },
   };
 }
 
 export async function generateStaticParams() {
   const posts = await getAllPostSlugs();
-  // Ensure slugs are strings and filter out any potential undefined/null values
   return posts
     .map((slug: any) => slug?.current || slug)
     .filter(
@@ -159,7 +156,6 @@ export default async function PostPage({
       .height(1200)
       .url();
     if (imgUrl1200x1200) jsonLdImages.push(imgUrl1200x1200);
-    // Add more sizes if needed, ensuring they are valid strings
   }
 
   const jsonLd = {
@@ -171,24 +167,23 @@ export default async function PostPage({
     },
     headline: post.title,
     description: post.excerpt,
-    image: jsonLdImages.length > 0 ? jsonLdImages : undefined, // Use the filtered array
+    image: jsonLdImages.length > 0 ? jsonLdImages : undefined,
     datePublished: post.publishedAt,
     dateModified: post._updatedAt || post.publishedAt,
     author: {
       "@type": "Person",
-      name: post.author?.name, // Added optional chaining for safety
+      name: post.author?.name,
       url: post.author?.slug?.current
         ? `${NEXT_PUBLIC_SITE_URL}/author/${post.author.slug.current}`
         : undefined,
     },
     publisher: {
-      "@type": "Organization",
+      "@type": "Personal",
       name: SITE_NAME,
-      // logo: { "@type": "ImageObject", url: LOGO_URL }, // Include if LOGO_URL is defined and used
+      logo: { "@type": "ImageObject", url: "/logo.avif" },
     },
   };
 
-  // Prepare URLs for <Image> components, ensuring they are strings or null
   const mainImageUrl = post.mainImage ? urlFor(post.mainImage).url() : null;
   const authorImageUrl = post.author?.image
     ? urlFor(post.author.image).url()
@@ -238,7 +233,6 @@ export default async function PostPage({
             </Breadcrumb>
           </div>
 
-          {/* OPTIMISASI UX: Mobile ToC dibuat lebih smooth */}
           <div className="lg:hidden sticky top-16 z-30 mb-6">
             <details className="group overflow-hidden rounded-lg bg-black/50 backdrop-blur-md border border-slate-700 shadow-lg">
               <summary className="flex items-center justify-between p-4 font-medium cursor-pointer list-none text-sm text-slate-100 hover:bg-slate-800/50 transition-colors">
@@ -277,7 +271,7 @@ export default async function PostPage({
                           <Badge
                             variant="outline"
                             className={cn(
-                              "px-3 py-1 text-xs font-medium rounded-full border transition-all duration-300", // OPTIMISASI UI: Tambah transisi
+                              "px-3 py-1 text-xs font-medium rounded-full border transition-all duration-300", //
                               getColorClass(category.slug?.current)
                             )}
                           >
@@ -294,7 +288,6 @@ export default async function PostPage({
                     {post.excerpt}
                   </p>
 
-                  {/* OPTIMISASI UI: Membungkus metadata dalam div untuk pemisahan visual */}
                   <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-400 border-t border-b border-slate-700 py-4">
                     {post.author && (
                       <Link
@@ -367,8 +360,6 @@ export default async function PostPage({
                 </div>
 
                 <div className="max-w-3xl space-y-12 pt-8 border-t border-slate-700 mt-10">
-                  {/* Bagian About Author & Related Posts (Mobile & Desktop) */}
-                  {/* Logika ini sudah bagus dan responsif, tidak perlu diubah secara fungsional */}
                   <div className="lg:hidden">
                     <Tabs defaultValue="author" className="w-full">
                       <TabsList className="grid w-full grid-cols-2 bg-slate-800 text-slate-300">
@@ -419,13 +410,11 @@ export default async function PostPage({
                     )}
                   </div>
 
-                  {/* OPTIMISASI PERFORMA: Gunakan komponen TrakteerSupport yang di-lazy load */}
                   <div className="p-4 border border-slate-700 rounded-lg bg-slate-800/50 shadow">
                     <TrakteerSupport username="adxxya30" />
                   </div>
                 </div>
 
-                {/* OPTIMISASI PERFORMA: Gunakan komponen Giscus yang di-lazy load */}
                 <div className="max-w-3xl pt-8">
                   <GiscusComments />
                 </div>

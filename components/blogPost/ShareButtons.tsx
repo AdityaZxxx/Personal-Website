@@ -1,24 +1,83 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
-import { Check, Facebook, Link2, Linkedin, Mail } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import { Check, Link2, Mail, Share2 } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  FaInstagram,
-  FaPinterest,
+  FaFacebook,
+  FaLinkedin,
   FaReddit,
   FaTelegram,
   FaWhatsapp,
 } from "react-icons/fa";
-import { CustomLogo } from "../custom-logo";
+import { RiTwitterXFill } from "react-icons/ri";
 
+// --- PROPS ---
 interface ShareButtonsProps {
   title: string;
-  imageUrl?: string; // Add image URL for sharing
-  description?: string; // Optional description for sharing
+  imageUrl?: string;
+  description?: string;
 }
+
+// --- KONFIGURASI ---
+const brandColors = {
+  X: "hover:bg-[#1DA1F2] hover:text-white",
+  Facebook: "hover:bg-[#1877F2] hover:text-white",
+  LinkedIn: "hover:bg-[#0A66C2] hover:text-white",
+  WhatsApp: "hover:bg-[#25D366] hover:text-white",
+  Telegram: "hover:bg-[#2AABEE] hover:text-white",
+  Email: "hover:bg-[#7f7f7f] hover:text-white",
+
+  Reddit: "hover:bg-[#FF4500] hover:text-white",
+};
+
+const shareLinks = [
+  {
+    name: "X",
+    icon: RiTwitterXFill,
+    getUrl: (url: string, title: string) =>
+      `https://x.com/intent/tweet?text=${encodeURIComponent(`${title} by @adxxya30`)}&url=${encodeURIComponent(url)}`,
+  },
+  {
+    name: "Facebook",
+    icon: FaFacebook,
+    getUrl: (url: string, title: string) =>
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(title)}`,
+  },
+  {
+    name: "LinkedIn",
+    icon: FaLinkedin,
+    getUrl: (url: string) =>
+      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+  },
+  {
+    name: "WhatsApp",
+    icon: FaWhatsapp,
+    getUrl: (url: string, title: string) =>
+      `https://wa.me/?text=${encodeURIComponent(`${title}\n\n${url}`)}`,
+  },
+  {
+    name: "Telegram",
+    icon: FaTelegram,
+    getUrl: (url: string, title: string) =>
+      `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
+  },
+  {
+    name: "Email",
+    icon: Mail,
+    getUrl: (url: string, title: string) =>
+      `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`Check out this article:\n\n${url}`)}`,
+  },
+  {
+    name: "Reddit",
+    icon: FaReddit,
+    getUrl: (url: string, title: string) =>
+      `https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`,
+  },
+];
 
 export function ShareButtons({
   title,
@@ -26,101 +85,20 @@ export function ShareButtons({
   description,
 }: ShareButtonsProps) {
   const pathname = usePathname();
-  const url =
-    typeof window !== "undefined" ? `${window.location.origin}${pathname}` : "";
+  const [url, setUrl] = useState("");
   const [copied, setCopied] = useState(false);
+  const [isShareApiAvailable, setIsShareApiAvailable] = useState(false);
+  const { toast } = useToast();
 
-  const shareLinks = [
-    {
-      name: "X",
-      icon: CustomLogo,
-      getUrl: () =>
-        `https://x.com/intent/tweet?text=${encodeURIComponent(
-          `${title} ${description ? `- ${description}` : ""}`
-        )}&url=${encodeURIComponent(url)}${
-          imageUrl ? `&media=${encodeURIComponent(imageUrl)}` : ""
-        }`,
-    },
-    {
-      name: "Facebook",
-      icon: Facebook,
-      getUrl: () =>
-        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-          url
-        )}&quote=${encodeURIComponent(title)}`,
-    },
-    {
-      name: "LinkedIn",
-      icon: Linkedin,
-      getUrl: () =>
-        `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-          url
-        )}`,
-    },
-    {
-      name: "WhatsApp",
-      icon: FaWhatsapp,
-      getUrl: () => {
-        const text = `${title}${
-          description ? `\n\n${description}` : ""
-        }\n\n${url}`;
-        return `https://wa.me/?text=${encodeURIComponent(text)}`;
-      },
-    },
-    {
-      name: "Instagram",
-      icon: FaInstagram,
-      getUrl: () => {
-        const text = `${title}${
-          description ? `\n\n${description}` : ""
-        }\n\n${url}`;
-        return `https://www.instagram.com/sharer/sharer.php?text=${encodeURIComponent(
-          text
-        )}`;
-      },
-    },
-    {
-      name: "Telegram",
-      icon: FaTelegram,
-      getUrl: () =>
-        `https://t.me/share/url?url=${encodeURIComponent(
-          url
-        )}&text=${encodeURIComponent(title)}`,
-    },
-    {
-      name: "Email",
-      icon: Mail,
-      getUrl: () => {
-        const subject = title;
-        const body = `${description ? `${description}\n\n` : ""}${url}`;
-        return `mailto:?subject=${encodeURIComponent(
-          subject
-        )}&body=${encodeURIComponent(body)}`;
-      },
-    },
-    {
-      name: "Pinterest",
-      icon: FaPinterest,
-      getUrl: () =>
-        imageUrl
-          ? `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(
-              url
-            )}&media=${encodeURIComponent(
-              imageUrl
-            )}&description=${encodeURIComponent(title)}`
-          : `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(
-              url
-            )}&description=${encodeURIComponent(title)}`,
-    },
-    {
-      name: "Reddit",
-      icon: FaReddit,
-      getUrl: () =>
-        `https://www.reddit.com/submit?url=${encodeURIComponent(
-          url
-        )}&title=${encodeURIComponent(title)}`,
-    },
-  ];
+  useEffect(() => {
+    if (typeof navigator !== "undefined" && "share" in navigator) {
+      setIsShareApiAvailable(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    setUrl(window.location.origin + pathname);
+  }, [pathname]);
 
   const copyToClipboard = async () => {
     try {
@@ -128,44 +106,99 @@ export function ShareButtons({
       setCopied(true);
       toast({
         title: "✅ Link copied",
-        description: "The link has been copied to your clipboard.",
+        description: "Link has been copied to your clipboard.",
       });
-
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       toast({
         title: "❎ Failed to copy",
-        description: "Could not copy the link to your clipboard.",
+        description: "Could not copy the link.",
         variant: "destructive",
       });
     }
   };
 
+  const handleNativeShare = async () => {
+    try {
+      await navigator.share({
+        title: title,
+        text: description,
+        url: url,
+      });
+    } catch (error) {
+      console.error("Error using Web Share API:", error);
+      await copyToClipboard();
+    }
+  };
+
+  if (!url) {
+    return (
+      <div className="h-16 w-full animate-pulse bg-slate-200 dark:bg-slate-800 rounded-lg" />
+    );
+  }
+
+  if (isShareApiAvailable) {
+    return (
+      <div className="space-y-3">
+        <h4 className="text-lg font-medium">Share this post</h4>
+        <div className="flex gap-2">
+          <Button
+            onClick={handleNativeShare}
+            className="w-full"
+            variant="outline"
+          >
+            <Share2 className="mr-2 h-4 w-4" />
+            Share via...
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={copyToClipboard}
+            aria-label="Copy link"
+          >
+            {copied ? (
+              <Check className="h-4 w-4 text-green-500" />
+            ) : (
+              <Link2 className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3">
       <h4 className="text-lg font-medium">Share this post</h4>
       <div className="flex flex-wrap gap-2">
-        {shareLinks.map((link, index) => (
-          <Button
-            key={index}
-            variant="outline"
-            size="icon"
-            rel="noopener noreferrer"
-            onClick={() => window.open(link.getUrl(), "_blank")}
-            className="hover:bg-accent/50 transition-colors"
-            aria-label={`Share on ${link.name}`}
-          >
-            <link.icon className="h-4 w-4" />
-          </Button>
-        ))}
+        {shareLinks.map((link) => {
+          return (
+            <a
+              key={link.name}
+              href={link.getUrl(url, title)}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Share on ${link.name}`}
+            >
+              <Button
+                variant="outline"
+                size="icon"
+                className={cn(
+                  "transition-colors",
+                  brandColors[link.name as keyof typeof brandColors]
+                )}
+              >
+                <link.icon className="h-4 w-4" />
+              </Button>
+            </a>
+          );
+        })}
 
         <Button
           variant="outline"
           size="icon"
           onClick={copyToClipboard}
-          className="relative hover:bg-accent/50 transition-colors"
+          className="relative transition-colors"
           aria-label="Copy link"
         >
           {copied ? (
@@ -174,7 +207,6 @@ export function ShareButtons({
             <Link2 className="h-4 w-4" />
           )}
         </Button>
-        {/* )} */}
       </div>
     </div>
   );
