@@ -41,10 +41,10 @@ const projectCardFields = groq`
 const galleryCardFields = groq`
   _id,
   title,
-  slug,
+ "slug": slug.current,
   mediaType,
-  "image": image { ${imageFields} },
-  "videoThumbnail": videoThumbnail { ${imageFields} }
+  // Membuat satu field 'thumbnail' yang cerdas
+  "thumbnail": coalesce(videoThumbnail, image) { ${imageFields} }
 `;
 
 // ============================================================================
@@ -102,7 +102,7 @@ export async function getPostBySlug(slug: string) {
       },
       publishedAt,
       _updatedAt,
-      "categories": categories[]->{ _id, title, "slug": slug.current },
+      "categories": categories[]->{ _id, title, slug },
       "estimatedReadingTime": round(length(pt::text(body)) / 5 / 180),
       "author": author->{
         _id,
@@ -184,10 +184,10 @@ export async function getAllProjectSlugs() {
 
 export async function getAllGalleryItems(category?: string) {
   const query = groq`*[_type == "galleryItem" && !(_id in path("drafts.**"))
-    && (!defined($category) || $category in categories[]->slug.current)
-  ] | order(date desc) {
-    ${galleryCardFields}
-  }`;
+  && (!defined($category) || $category in categories[]->slug.current)
+] | order(date desc) {
+  ${galleryCardFields}
+}`;
 
   return client.fetch(query, { category: category || null });
 }
@@ -195,29 +195,26 @@ export async function getAllGalleryItems(category?: string) {
 export async function getFeaturedGalleryItems(limit = 6) {
   return client.fetch(
     groq`*[_type == "galleryItem" && featured == true && !(_id in path("drafts.**"))] | order(date desc)[0...${limit}] {
-      ${galleryCardFields}
-    }`
+    ${galleryCardFields}
+  }`
   );
 }
 
 export async function getGalleryItemBySlug(slug: string) {
   return client.fetch(
     groq`*[_type == "galleryItem" && slug.current == $slug && !(_id in path("drafts.**"))][0] {
-      _id,
-      title,
-      "slug": slug.current,
-      description[]{
-        ...,
-        _type == "image" => { ${imageFields} }
-      },
-      mediaType,
-      "image": image { ${imageFields} },
-      "videoUrl": video.asset->url,
-      "videoThumbnail": videoThumbnail { ${imageFields} },
-      date,
-      "tags": tags[]->{ _id, title, "slug": slug.current },
-      "categories": categories[]->{ _id, title, "slug": slug.current }
-    }`,
+    _id,
+    title,
+    slug,
+    description,
+    mediaType,
+    "image": image { ${imageFields} },
+    "videoUrl": video.asset->url,
+    "videoThumbnail": videoThumbnail { ${imageFields} },
+    date,
+    tags, // PERBAIKAN: Diambil sebagai array of string
+    "categories": categories[]->{ _id, title, "slug": slug.current }
+  }`,
     { slug }
   );
 }

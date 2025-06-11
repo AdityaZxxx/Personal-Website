@@ -1,310 +1,290 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button"; // Impor Button
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { urlFor } from "@/lib/sanity/image"; // Pastikan path ini benar
-import { cn, formatDate } from "@/lib/utils"; // Pastikan path ini benar
-import { AnimatePresence, motion } from "framer-motion"; // Sudah Anda impor
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { cn, formatDate } from "@/lib/utils";
+import { motion } from "framer-motion";
 import {
   Bookmark,
   Heart,
-  Image as ImageIconPlaceholder, // Mengganti nama agar tidak konflik dengan next/image
+  Image as ImageIconPlaceholder,
+  Loader2,
   MessageSquare,
   Play,
   Share2,
-  UserCircle2, // Avatar placeholder
+  UserCircle2,
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-const DEFAULT_IMAGE_PLACEHOLDER = "/placeholder.svg"; // Definisikan path placeholder Anda
-
+interface SanityImage {
+  alt?: string;
+  lqip: string;
+  asset: { _id: string; url: string; width: number; height: number };
+}
 interface GalleryItemType {
   _id: string;
   title: string;
-  slug: { current: string };
-  description?: string;
+  slug: {
+    _type: string;
+    current: string;
+  };
   mediaType: "image" | "video";
-  image?: any; // Objek gambar Sanity
-  video?: string; // URL video
-  videoThumbnail?: any; // Objek gambar Sanity untuk thumbnail video
+  thumbnail: SanityImage;
+}
+
+type DetailedGalleryItem = {
+  mediaType: string;
+  description?: string;
+  videoUrl?: string;
+  image?: SanityImage;
+  videoThumbnail?: SanityImage;
   date: string;
-  categories?: Array<{
-    _id: string;
-    title: string;
-    slug: { current: string };
-  }>;
-  // Anda bisa menambahkan field author di sini jika ada per item galeri
-  // author?: { name: string; avatar?: any };
-}
+  categories?: Array<{ _id: string; title: string; slug: string }>;
+};
 
-interface GalleryItemProps {
-  item: GalleryItemType;
-  // notFoundMessage dihapus karena kita akan selalu render sesuatu atau placeholder
-}
-
-export function GalleryItem({ item }: GalleryItemProps) {
+export function GalleryItem({ item }: { item: GalleryItemType }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [detailedItem, setDetailedItem] = useState<DetailedGalleryItem | null>(
+    null
+  );
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
-  // 1. Logika untuk menentukan URL thumbnail
-  let thumbnailUrl = DEFAULT_IMAGE_PLACEHOLDER;
-  let hasValidThumbnail = false;
+  const handleOpenDialog = async () => {
+    setIsOpen(true);
 
-  if (item.mediaType === "image" && item.image?.asset) {
-    thumbnailUrl =
-      urlFor(item.image).width(400).height(400).fit("crop").url() ||
-      DEFAULT_IMAGE_PLACEHOLDER;
-    hasValidThumbnail = thumbnailUrl !== DEFAULT_IMAGE_PLACEHOLDER;
-  } else if (item.mediaType === "video") {
-    if (item.videoThumbnail?.asset) {
-      thumbnailUrl =
-        urlFor(item.videoThumbnail).width(400).height(400).fit("crop").url() ||
-        DEFAULT_IMAGE_PLACEHOLDER;
-    } else if (item.image?.asset) {
-      // Fallback ke item.image jika videoThumbnail tidak ada
-      thumbnailUrl =
-        urlFor(item.image).width(400).height(400).fit("crop").url() ||
-        DEFAULT_IMAGE_PLACEHOLDER;
+    if (detailedItem) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/gallery/${item.slug}`);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch: ${response.statusText}`);
+      }
+
+      const data: DetailedGalleryItem = await response.json();
+      setDetailedItem(data);
+    } catch (err) {
+      console.error("Failed to fetch gallery item details:", err);
+      setError("Could not load details. Please try again later.");
+    } finally {
+      setIsLoading(false);
     }
-    hasValidThumbnail = thumbnailUrl !== DEFAULT_IMAGE_PLACEHOLDER;
-  }
+  };
 
-  // Logika untuk media utama di dialog
-  const dialogMediaUrl =
-    item.mediaType === "image" && item.image?.asset
-      ? urlFor(item.image).url() // Ambil versi lebih besar untuk dialog
-      : null;
-  const dialogVideoPosterUrl = item.videoThumbnail?.asset
-    ? urlFor(item.videoThumbnail).url()
-    : item.image?.asset
-      ? urlFor(item.image).url()
-      : undefined;
+  const thumbnail = item.thumbnail;
+  const hasValidThumbnail = thumbnail?.asset?.url;
 
   return (
     <>
       {/* Gallery Thumbnail */}
       <div
-        className="group relative aspect-square overflow-hidden rounded-lg cursor-pointer bg-slate-800 shadow-md" // Latar belakang untuk placeholder
-        onClick={() => setIsOpen(true)}
+        className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg bg-slate-800 shadow-md"
+        onClick={handleOpenDialog}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => e.key === "Enter" && setIsOpen(true)}
+        onKeyDown={(e) => e.key === "Enter" && handleOpenDialog()}
         aria-label={`View details for ${item.title}`}
       >
         {hasValidThumbnail ? (
           <Image
-            src={thumbnailUrl}
-            alt={`Thumbnail for ${item.title}`}
+            src={thumbnail.asset.url}
+            alt={thumbnail.alt || `Thumbnail for ${item.title}`}
             fill
             className="object-cover transition-all duration-300 ease-in-out group-hover:scale-105 group-hover:brightness-90"
-            sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            placeholder="blur"
+            blurDataURL={thumbnail.lqip}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-slate-700 text-slate-500">
-            <ImageIconPlaceholder className="w-12 h-12" />
+            <ImageIconPlaceholder className="h-12 w-12" />
           </div>
         )}
-
         {item.mediaType === "video" && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors duration-300">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/20">
             <div className="rounded-full bg-black/60 p-3 backdrop-blur-sm shadow-lg">
-              <Play className="h-5 w-5 text-white fill-white sm:h-6 sm:w-6" />
+              <Play className="h-5 w-5 fill-white text-white sm:h-6 sm:w-6" />
             </div>
           </div>
         )}
-
-        {/* Overlay saat hover - lebih halus */}
-        <AnimatePresence>
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileHover={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-between p-3 sm:p-4"
-          >
-            {/* Bagian atas overlay: Kosong atau ikon kecil jika perlu */}
-            <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
-              {/* Bisa tambahkan ikon tipe media jika perlu, misal ikon Video atau Foto */}
-            </div>
-
-            {/* Bagian bawah overlay: Kategori dan Judul */}
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100 transform group-hover:translate-y-0 translate-y-4">
-              {item.categories && item.categories.length > 0 && (
-                <div className="flex flex-wrap gap-1 mb-1.5">
-                  {item.categories.slice(0, 2).map(
-                    (
-                      category // Batasi jumlah kategori di thumbnail
-                    ) => (
-                      <Badge
-                        key={category._id}
-                        variant="secondary"
-                        className="bg-white/15 text-white text-xs px-1.5 py-0.5 hover:bg-white/25 backdrop-blur-sm"
-                      >
-                        {category.title}
-                      </Badge>
-                    )
-                  )}
-                </div>
-              )}
-              <h3 className="text-white font-semibold text-sm sm:text-base line-clamp-2 leading-tight">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <div className="flex h-full flex-col justify-end p-3 sm:p-4">
+            <div className="translate-y-4 transform transition-transform duration-300 group-hover:translate-y-0">
+              <h3 className="text-sm font-semibold text-white sm:text-base line-clamp-2 leading-tight">
                 {item.title}
               </h3>
             </div>
-          </motion.div>
-        </AnimatePresence>
+          </div>
+        </div>
       </div>
 
-      {/* Dialog Tampilan Detail (Instagram-like) */}
+      {/* Dialog Tampilan Detail */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="max-w-4xl lg:max-w-5xl w-[95vw] sm:w-full h-[90vh] max-h-[800px] p-0 flex flex-col sm:flex-row overflow-hidden data-[state=open]:animate-contentShow">
-          {/* Bagian Media (Kiri di Desktop, Atas di Mobile) */}
-          <DialogTitle className="sr-only">Dialog open</DialogTitle>
-          <div className="relative w-full sm:w-[60%] h-1/2 sm:h-full bg-black flex items-center justify-center overflow-hidden">
-            {item.mediaType === "image" && dialogMediaUrl ? (
-              <Image
-                src={dialogMediaUrl}
-                alt={item.title}
-                width={1920} // Beri nilai besar agar kualitas baik, next/image akan optimasi
-                height={1080}
-                className="w-auto h-auto max-w-full max-h-full object-contain"
-                priority // Muat gambar ini dengan prioritas saat dialog terbuka
-              />
-            ) : item.mediaType === "video" && item.video ? (
-              <video
-                src={item.video}
-                controls
-                autoPlay
-                loop
-                className="w-full h-full object-contain"
-                poster={dialogVideoPosterUrl}
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center bg-slate-900 text-slate-500">
-                <ImageIconPlaceholder className="w-24 h-24" />
-              </div>
+          <DialogHeader className="sr-only">
+            <DialogTitle>{item.title}</DialogTitle>
+            {detailedItem?.description && (
+              <DialogDescription>{detailedItem.description}</DialogDescription>
             )}
-          </div>
+          </DialogHeader>
 
-          {/* Bagian Info & Aksi (Kanan di Desktop, Bawah di Mobile) */}
-          <div className="w-full sm:w-[40%] flex flex-col bg-card text-card-foreground border-t sm:border-t-0 sm:border-l border-border">
-            {/* Header Info Penulis/Post */}
-            <div className="p-4 border-b border-border">
-              <div className="flex items-center space-x-3">
-                {/* Ganti dengan avatar penulis jika ada, atau avatar default situs */}
-                <UserCircle2 className="h-9 w-9 text-muted-foreground rounded-full" />
-                <div>
-                  <span className="font-semibold text-sm block">adxxya30</span>{" "}
-                  {/* Atau item.author.name */}
-                  {/* <span className="text-xs text-muted-foreground">Original Post</span> */}
-                </div>
-              </div>
+          {/* Konten Dialog: Loading, Error, atau Data */}
+          {isLoading && (
+            <div className="w-full h-full flex items-center justify-center bg-black">
+              <Loader2 className="h-8 w-8 text-sky-400 animate-spin" />
             </div>
-
-            {/* Konten Deskripsi & Kategori (Scrollable) */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin">
-              <div className="space-y-1">
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                  {" "}
-                  {/* whitespace-pre-wrap untuk menghargai baris baru */}
-                  {/* Tampilkan deskripsi jika ada, jika tidak tampilkan judul */}
-                  <span className="font-semibold text-sm mr-1">adxxya30</span>
-                  {item.description || item.title}
-                </p>
-                <time
-                  dateTime={item.date}
-                  className="block text-xs text-muted-foreground hover:underline pt-1"
-                >
-                  {formatDate(item.date)}
-                </time>
+          )}
+          {error && (
+            <div className="w-full h-full flex items-center justify-center bg-black p-4 text-center text-red-400">
+              <p>Error: {error}</p>
+            </div>
+          )}
+          {detailedItem && !isLoading && (
+            <>
+              {/* Bagian Media */}
+              <div className="relative flex h-1/2 w-full items-center justify-center overflow-hidden bg-black sm:h-full sm:w-[60%]">
+                {detailedItem.mediaType === "image" &&
+                detailedItem.image?.asset?.url ? (
+                  <Image
+                    src={detailedItem.image.asset.url}
+                    alt={detailedItem.image.alt || item.title}
+                    width={detailedItem.image.asset.width}
+                    height={detailedItem.image.asset.height}
+                    className="h-auto w-auto max-h-full max-w-full object-contain"
+                    placeholder="blur"
+                    blurDataURL={detailedItem.image.lqip}
+                    priority
+                  />
+                ) : detailedItem.mediaType === "video" &&
+                  detailedItem.videoUrl ? (
+                  <video
+                    src={detailedItem.videoUrl}
+                    controls
+                    autoPlay
+                    loop
+                    className="h-full w-full object-contain"
+                    poster={detailedItem.videoThumbnail?.asset?.url}
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-slate-900 text-slate-500">
+                    <ImageIconPlaceholder className="h-24 w-24" />
+                  </div>
+                )}
               </div>
 
-              {item.categories && item.categories.length > 0 && (
-                <div className="flex flex-wrap gap-2 pt-2">
-                  {item.categories.map((category) => (
-                    <Badge
-                      key={category._id}
-                      variant="secondary" // Gunakan variant yang sesuai dengan tema
-                      className="text-xs bg-secondary hover:bg-secondary/80"
-                    >
-                      {category.title}
-                    </Badge>
-                  ))}
+              {/* Bagian Info & Aksi */}
+              <div className="flex w-full flex-1 flex-col border-t border-border bg-card text-card-foreground sm:h-full sm:w-[40%] sm:border-t-0 sm:border-l min-h-0">
+                <div className="p-4 border-b border-border flex-shrink-0">
+                  <div className="flex items-center space-x-3">
+                    <UserCircle2 className="h-9 w-9 text-muted-foreground rounded-full" />
+                    <div>
+                      <span className="font-semibold text-sm block">
+                        adxxya30
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              )}
-              {/* Tempat untuk menampilkan komentar jika ada */}
-            </div>
-
-            {/* Bagian Aksi & Input Komentar */}
-            <div className="p-4 border-t border-border space-y-3 bg-background/50 sm:bg-transparent">
-              <div className="flex justify-between items-center">
-                <div className="flex space-x-1 sm:space-x-2">
-                  <motion.div whileTap={{ scale: 0.9 }}>
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin">
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                    <span className="font-semibold text-sm mr-1">adxxya30</span>
+                    {detailedItem.description || item.title}
+                  </p>
+                  <time
+                    dateTime={detailedItem.date}
+                    className="block text-xs text-muted-foreground hover:underline pt-1"
+                  >
+                    {formatDate(detailedItem.date)}
+                  </time>
+                  {detailedItem.categories &&
+                    detailedItem.categories.length > 0 && (
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        {detailedItem.categories.map((category) => (
+                          <Badge key={category._id} variant="secondary">
+                            {category.title}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                </div>
+                <div className="p-4 border-t border-border space-y-3 bg-background/50 sm:bg-transparent flex-shrink-0">
+                  <div className="flex justify-between items-center">
+                    <div className="flex space-x-1 sm:space-x-2">
+                      <motion.div whileTap={{ scale: 0.9 }}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setIsLiked(!isLiked)}
+                          aria-label={isLiked ? "Unlike" : "Like"}
+                        >
+                          <Heart
+                            className={cn(
+                              "h-6 w-6 transition-colors",
+                              isLiked
+                                ? "fill-red-500 text-red-500"
+                                : "text-foreground hover:text-red-500/80"
+                            )}
+                          />
+                        </Button>
+                      </motion.div>
+                      <Button variant="ghost" size="icon" aria-label="Comment">
+                        <MessageSquare className="h-6 w-6 text-foreground hover:text-foreground/80" />
+                      </Button>
+                      <Button variant="ghost" size="icon" aria-label="Share">
+                        <Share2 className="h-6 w-6 text-foreground hover:text-foreground/80" />
+                      </Button>
+                    </div>
+                    <motion.div whileTap={{ scale: 0.9 }}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setIsSaved(!isSaved)}
+                        aria-label={isSaved ? "Unsave" : "Save"}
+                      >
+                        <Bookmark
+                          className={cn(
+                            "h-6 w-6 transition-colors",
+                            isSaved
+                              ? "fill-foreground text-foreground"
+                              : "text-foreground hover:text-foreground/80"
+                          )}
+                        />
+                      </Button>
+                    </motion.div>
+                  </div>
+                  <div className="flex items-center pt-2 border-t border-border">
+                    <input
+                      type="text"
+                      placeholder="Add a comment..."
+                      className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground py-1"
+                      aria-label="Add a comment"
+                    />
                     <Button
                       variant="ghost"
-                      size="icon"
-                      onClick={() => setIsLiked(!isLiked)}
-                      aria-label={isLiked ? "Unlike" : "Like"}
+                      size="sm"
+                      className="text-primary hover:text-primary/80 font-semibold"
                     >
-                      <Heart
-                        className={cn(
-                          "h-6 w-6 transition-colors",
-                          isLiked
-                            ? "fill-red-500 text-red-500"
-                            : "text-foreground hover:text-red-500/80"
-                        )}
-                      />
+                      Post
                     </Button>
-                  </motion.div>
-                  <Button variant="ghost" size="icon" aria-label="Comment">
-                    {" "}
-                    {/* Arahkan ke input komentar */}
-                    <MessageSquare className="h-6 w-6 text-foreground hover:text-foreground/80" />
-                  </Button>
-                  <Button variant="ghost" size="icon" aria-label="Share">
-                    <Share2 className="h-6 w-6 text-foreground hover:text-foreground/80" />
-                  </Button>
+                  </div>
                 </div>
-                <motion.div whileTap={{ scale: 0.9 }}>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setIsSaved(!isSaved)}
-                    aria-label={isSaved ? "Unsave" : "Save"}
-                  >
-                    <Bookmark
-                      className={cn(
-                        "h-6 w-6 transition-colors",
-                        isSaved
-                          ? "fill-foreground text-foreground"
-                          : "text-foreground hover:text-foreground/80"
-                      )}
-                    />
-                  </Button>
-                </motion.div>
               </div>
-
-              {/* Jika Anda memiliki data jumlah like yang sebenarnya */}
-              {/* <div className="text-sm font-semibold">{item.likeCount || 0} likes</div> */}
-
-              <div className="flex items-center pt-2 border-t border-border">
-                <input
-                  type="text"
-                  placeholder="Add a comment..."
-                  className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground py-1"
-                  aria-label="Add a comment"
-                />
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-primary hover:text-primary/80 font-semibold"
-                >
-                  Post
-                </Button>
-              </div>
-            </div>
-          </div>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </>
