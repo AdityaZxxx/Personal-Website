@@ -69,7 +69,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          From my first line of code to becoming a full-stack developer.
+          From my first line of code to becoming a Software Engineer.
         </motion.p>
 
         <div ref={ref} className="relative">

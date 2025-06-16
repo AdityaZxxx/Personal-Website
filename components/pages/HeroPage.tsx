@@ -13,10 +13,9 @@ function HeroPage() {
       aria-labelledby="hero-heading"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
-      transition={{ duration: 0.5 }} // Transisi masuk halaman lebih lama sedikit
+      transition={{ duration: 0.5 }}
       viewport={{ once: true }}
     >
-      {/* Background elements */}
       <div className="absolute inset-0 -z-20 overflow-hidden">
         <SparklesCore
           id="tsparticlesfullpage"
@@ -26,7 +25,7 @@ function HeroPage() {
           speed={0.8}
           particleDensity={30}
           className="h-full w-full"
-          particleColor="#3b82f6" // Blue-500 for consistency
+          particleColor="#3b82f6"
           aria-hidden="true"
         />
       </div>
@@ -48,20 +47,17 @@ function HeroPage() {
         />
       </div>
 
-      {/* Content container */}
       <div className="z-10 mx-auto flex w-full max-w-4xl flex-col items-center justify-center text-center">
         <h1 id="hero-heading" className="sr-only">
           Aditya Rahmad - Software Engineer
         </h1>
 
-        {/* Animated badge */}
         <div className="mb-6 md:mb-8">
           <Badge
             variant="outline"
             className="group relative inline-flex h-8 overflow-hidden rounded-full border-transparent p-[2px] text-slate-100 backdrop-blur-sm transition-all duration-500 focus:ring-2 focus:ring-sky-500 focus:outline-none"
             aria-label="Call to action"
           >
-            {/* Animated gradient border */}
             <span
               className="absolute inset-0 rounded-full bg-[conic-gradient(from_var(--angle),#60a5fa_0%,#7c3aed_50%,#60a5fa_100%)] opacity-90 transition-opacity duration-500 group-hover:opacity-100"
               style={
@@ -83,15 +79,12 @@ function HeroPage() {
               aria-hidden="true"
             />
 
-            {/* Inner content */}
-
             <span className="relative z-10 flex h-full w-full items-center justify-center rounded-full bg-slate-800/90 px-6 py-[6px] text-sm font-medium text-slate-100 backdrop-blur-md transition-colors duration-300 group-hover:bg-slate-800/80">
               🚀 {""}Let&apos;s grow together
             </span>
           </Badge>
         </div>
 
-        {/* Headline */}
         <div className="max-w-3xl">
           <motion.p
             initial={{ opacity: 0, y: 25 }}
@@ -104,7 +97,6 @@ function HeroPage() {
               I help founders turn ideas into seamless digital experiences
             </span>
 
-            {/* Desktop version */}
             <span className="hidden md:block">
               <span className="text-gradient bg-gradient-to-r from-sky-400 via-indigo-500 to-purple-400 bg-clip-text text-transparent">
                 I help founders turn ideas
@@ -120,7 +112,6 @@ function HeroPage() {
               </span>
             </span>
 
-            {/* Mobile version */}
             <span className="flex flex-col md:hidden">
               <span className="text-gradient bg-gradient-to-r from-sky-400 to-indigo-500 bg-clip-text text-transparent">
                 I help founders turn
@@ -133,7 +124,6 @@ function HeroPage() {
           </motion.p>
         </div>
 
-        {/* Profile section */}
         <div
           className="group mt-8 flex flex-col items-center gap-4 sm:flex-row md:mt-10"
           role="region"
@@ -159,7 +149,7 @@ function HeroPage() {
             <strong className="font-semibold text-white">Aditya Rahmad</strong>,
             a{" "}
             <span className="relative inline-block">
-              <span className="relative z-10 bg-gradient-to-r from-sky-500 to-indigo-500 bg-clip-text text-transparent">
+              <span className="relative z-10 bg-gradient-to-r from-sky-500 to-indigo-500 bg-clip-text text-transparent ">
                 Software Engineer
               </span>
               <span
@@ -170,7 +160,6 @@ function HeroPage() {
           </p>
         </div>
 
-        {/* CTA buttons */}
         <div
           className="mt-10 flex flex-col items-center gap-4 sm:flex-row md:mt-12"
           role="group"

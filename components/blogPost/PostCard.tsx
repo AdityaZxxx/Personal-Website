@@ -14,7 +14,7 @@ export function PostCard({ post }: { post: PostType }) {
   return (
     <div className="space-y-4">
       <Link key={post._id} href={`/blog/${post.slug.current}`}>
-        <Card className="overflow-hidden hover:shadow-md transition-shadow">
+        <Card className="overflow-hidden hover:shadow-md transition-shadow border-x-0 border-y rounded-none">
           <CardContent className="p-4 flex gap-3 flex-col md:flex-row">
             <div className="flex-1 min-w-0 order-2 md:order-1">
               <div className="flex items-center mt-1 mb-2 text-xs text-muted-foreground">
@@ -30,8 +30,8 @@ export function PostCard({ post }: { post: PostType }) {
                 {post.excerpt}
               </h4>
               {post.estimatedReadingTime && (
-                <div className="flex items-center text-xs gap-1.5 mt-2 font-light text-gray-400">
-                  <Clock className="h-4 w-4" size="icon" />
+                <div className="flex items-center text-xs gap-1.5 pt-4 font-light text-gray-400">
+                  <Clock className="h-4 w-4" />
                   <span>{post.estimatedReadingTime} min read</span>
                 </div>
               )}

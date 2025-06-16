@@ -1,23 +1,22 @@
 import AnimatedSection from "@/components/animated-section";
+import { BlogPostsSection } from "@/components/blogPost/PostCard";
+import ContactSection from "@/components/contact/ContactSection";
+import GithubSection from "@/components/gitgraph/GithubSection";
+import AboutPage from "@/components/pages/AboutPage";
+import BentoShowcase from "@/components/pages/BentoPage";
+import HeroPage from "@/components/pages/HeroPage";
+import { FeaturedProjectsSection } from "@/components/project/ProjectCard";
 import { Metadata } from "next";
-import { BlogPostsSection } from "../components/blogPost/PostCard";
-import ContactSection from "../components/contact/ContactSection";
-import GithubSection from "../components/gitgraph/GithubSection";
-import AboutPage from "../components/pages/AboutPage";
-import BentoShowcase from "../components/pages/BentoPage";
-import HeroPage from "../components/pages/HeroPage";
-import { FeaturedProjectsSection } from "../components/project/ProjectCard";
 
 export const metadata: Metadata = {
-  // 1. Judul (Title) yang Lebih Baik
-  title: "Aditya Rahmad | Full-Stack Developer & Content Creator",
+  title: "Aditya Rahmad |  Software Engineer & Tech Enthusiast",
   description:
-    "Jelajahi portofolio Aditya Rahmad, seorang Full-Stack Developer dari Indonesia yang bersemangat dalam membangun aplikasi web modern dan skalabel. Lihat proyek-proyek terbaru, baca tulisan teknis, dan mari berkolaborasi.",
+    "Explore the portfolio of Aditya Rahmad, a Software Engineer from Indonesia who is passionate about building modern and scalable web applications. See latest projects, read technical writings, and let's collaborate.",
 
-  // 2. Keywords (Meskipun pengaruhnya kecil, tetap baik untuk ada)
   keywords: [
     "Aditya Rahmad",
-    "Full-Stack Developer",
+    "Tech Enthusiast",
+    "Software Engineer",
     "Web Developer",
     "Next.js",
     "React",
@@ -27,43 +26,38 @@ export const metadata: Metadata = {
     "Developer Indonesia",
   ],
 
-  // 3. Nama Pembuat
   authors: [{ name: "Aditya Rahmad", url: "https://adxxya30.vercel.app" }],
   creator: "Aditya Rahmad",
 
-  // 4. Metadata Dasar untuk URL Kanonikal
-  metadataBase: new URL("https://adxxya30.vercel.app"), // GANTI DENGAN DOMAIN ANDA
+  metadataBase: new URL("https://adxxya30.vercel.app"),
 
-  // 5. Open Graph (Untuk Facebook, LinkedIn, WhatsApp, dll.)
   openGraph: {
     title: "Aditya Rahmad | Tech Enthusiast & Software Engineer",
     description:
-      "Jelajahi portofolio Aditya Rahmad, seorang Tech Enthusiast & Software Engineer dari Indonesia yang bersemangat dalam membangun aplikasi web modern dan skalabel.",
-    url: "https://adxxya30.vercel.app", // GANTI DENGAN DOMAIN ANDA
+      "Explore the portfolio of Aditya Rahmad, a Software Engineer & Tech Enthusiast from Indonesia who is passionate about building modern and scalable web applications.",
+    url: "https://adxxya30.vercel.app",
     siteName: "Aditya Rahmad Portfolio",
     images: [
       {
-        url: "/og-image.avif", // Letakkan gambar di folder /public
+        url: "/og-image.avif",
         width: 1200,
         height: 630,
-        alt: "Aditya Rahmad - Halaman Utama Portofolio",
+        alt: "Aditya Rahmad - Homepage Portfolio",
       },
     ],
     locale: "id_ID",
     type: "website",
   },
 
-  // 6. Twitter Cards (Tampilan khusus saat dibagikan di Twitter)
   twitter: {
     card: "summary_large_image",
-    title: "Aditya Rahmad | Tech Enthusiast & Software Engineer",
+    title: "Aditya Rahmad | Software Engineer & Tech Enthusiast",
     description:
-      "Jelajahi portofolio Aditya Rahmad, seorang Tech Enthusiast & Software Engineer dari Indonesia yang bersemangat dalam membangun aplikasi web modern dan skalabel.",
-    creator: "@adxxya30", // GANTI DENGAN HANDLE TWITTER ANDA
-    images: ["og-image.avif"], // Gunakan gambar yang sama dengan Open Graph
+      "Explore the portfolio of Aditya Rahmad, a Software Engineer & Tech Enthusiast from Indonesia who is passionate about building modern and scalable web applications.",
+    creator: "@adxxya30",
+    images: ["og-image.avif"],
   },
 
-  // 7. Informasi Tambahan
   robots: {
     index: true,
     follow: true,
@@ -76,7 +70,6 @@ export const metadata: Metadata = {
     },
   },
 
-  // 8. Ikon Situs
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon-16x16.png",

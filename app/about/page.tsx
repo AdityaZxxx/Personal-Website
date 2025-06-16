@@ -222,11 +222,6 @@ export default function AboutPage() {
         </section>
       </AnimatedSection>
 
-      {/* Tech Stack Section */}
-      {/* <AnimatedSection className="mb-16" delay={300}>
-        <TechStackSection />
-      </AnimatedSection> */}
-
       {/* Soft Skills Section */}
       <AnimatedSection className="mb-16" delay={400}>
         <AboutSoftSkill />

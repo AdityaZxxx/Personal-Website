@@ -92,7 +92,7 @@ export default function AboutHero() {
   );
 
   return (
-    <section className="relative w-full min-h-[90vh] flex flex-col items-center justify-center pt-16 pb-8 md:pt-24 md:pb-12 px-4 overflow-hidden">
+    <section className="relative w-full min-h-[90vh] flex flex-col items-center justify-center pt-10 pb-8 md:pt-24 md:pb-12 px-4 overflow-hidden">
       {/* Background Image and Gradient */}
       <div className="absolute inset-0 -z-10">
         <Image
@@ -126,16 +126,16 @@ export default function AboutHero() {
               Aditya
             </span>
           </h1>
-          <p className="text-zinc-300 text-lg md:text-xl font-light leading-relaxed">
+          <p className="text-zinc-400 text-lg md:text-xl font-light leading-relaxed">
             I'm Aditya Rahmad, a{" "}
-            <strong className="font-semibold">full-stack developer</strong>{" "}
-            driven by a passion for crafting dynamic web experiences.
-            Self-taught through online resources and leveraging AI, I've built
-            my skills from HTML and JavaScript to mastering the{" "}
+            <strong className="font-semibold">Software Engineer</strong> driven
+            by a passion for crafting dynamic web experiences. Self-taught
+            through online resources and leveraging AI, I've built my skills
+            from HTML and JavaScript to mastering the{" "}
             <strong className="font-semibold">React & Next.js ecosystem</strong>
             .
           </p>
-          <p className="text-zinc-300 text-lg md:text-xl font-light leading-relaxed mb-6">
+          <p className="text-zinc-400 text-lg md:text-xl font-light leading-relaxed mb-6">
             Constantly experimenting with new projects and exploring the digital
             frontier, I believe continuous learning and curiosity are key. My
             approach integrates tools like Copilot and ChatGPT, enabling rapid
