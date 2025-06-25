@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity"
+import { defineField, defineType } from "sanity";
 
 export default defineType({
   name: "post",
@@ -75,6 +75,23 @@ export default defineType({
       description: "Feature this post in the sidebar",
       initialValue: false,
     }),
+    defineField({
+      name: "viewCount",
+      title: "View Count",
+      type: "number",
+      description:
+        "Jumlah berapa kali artikel ini dilihat. Di-update secara otomatis.",
+      initialValue: 0,
+      readOnly: true,
+    }),
+    defineField({
+      name: "likeCount",
+      title: "Like Count",
+      type: "number",
+      description: "Jumlah suka untuk artikel ini. Di-update secara otomatis.",
+      initialValue: 0,
+      readOnly: true,
+    }),
   ],
 
   preview: {
@@ -84,9 +101,8 @@ export default defineType({
       media: "mainImage",
     },
     prepare(selection) {
-      const { author } = selection
-      return { ...selection, subtitle: author && `by ${author}` }
+      const { author } = selection;
+      return { ...selection, subtitle: author && `by ${author}` };
     },
   },
-})
-
+});
