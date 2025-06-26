@@ -67,5 +67,10 @@ export default defineType({
         language: "javascript",
       },
     }),
+    defineArrayMember({
+      name: "table",
+      title: "Table",
+      type: "table",
+    }),
   ],
 });
