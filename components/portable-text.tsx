@@ -1,24 +1,26 @@
+// ============================================================================
+// File: components/portable-text.tsx
+// ============================================================================
 import { cn, slugify } from "@/lib/utils";
 import {
   PortableText as SanityPortableText,
   type PortableTextComponents,
 } from "@portabletext/react";
+import { Hash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react"; // Impor React untuk tipe React.ReactNode
 import { urlFor } from "../lib/sanity/image";
 import { CodeBlock } from "./code-block";
-
-// ============================================================================
-// 1. HELPER & SUB-COMPONENTS
-// ============================================================================
+import { TableComponent } from "./TableBlogContent";
 
 const HeadingRenderer = ({
   value,
   children,
+  className,
 }: {
   value: any;
   children?: React.ReactNode;
+  className?: string;
 }) => {
   const level = value.style;
   const Tag = level;
@@ -27,46 +29,42 @@ const HeadingRenderer = ({
   const id = slugify(textContent);
 
   return (
-    <Tag id={id} className="group relative scroll-mt-24">
+    <Tag id={id} className={cn("group relative scroll-mt-24", className)}>
       <a
         href={`#${id}`}
         className="absolute -left-6 top-1/2 -translate-y-1/2 text-slate-500 opacity-0 transition-opacity group-hover:opacity-100"
         aria-label={`Link to section: ${textContent}`}
       >
-        #
+        <Hash />
       </a>
       {children}
     </Tag>
   );
 };
 
-// ============================================================================
-// 2. DEFINISI KOMPONEN PORTABLE TEXT
-// ============================================================================
-
 const components: PortableTextComponents = {
   types: {
+    table: ({ value }) => {
+      if (!value?.rows) return null;
+      return <TableComponent value={value} />;
+    },
     image: ({ value }) => {
       if (!value?.asset?._ref) return null;
       const blurDataURL = value.asset.metadata?.lqip;
       return (
-        <figure className="my-8 group">
-          <div className="relative aspect-video overflow-hidden rounded-lg shadow-md border border-slate-200 dark:border-slate-800">
+        <figure>
+          <div className="relative aspect-video overflow-hidden rounded-lg">
             <Image
               src={urlFor(value).width(1600).height(900).url()}
               alt={value.alt || "Blog post image"}
               fill
-              className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+              className="object-cover"
               sizes="(max-width: 768px) 100vw, 800px"
               placeholder={blurDataURL ? "blur" : "empty"}
               blurDataURL={blurDataURL}
             />
           </div>
-          {value.caption && (
-            <figcaption className="mt-3 text-center text-sm text-slate-600 dark:text-slate-400">
-              {value.caption}
-            </figcaption>
-          )}
+          {value.caption && <figcaption>{value.caption}</figcaption>}
         </figure>
       );
     },
@@ -78,7 +76,42 @@ const components: PortableTextComponents = {
       />
     ),
   },
+  block: {
+    h2: (props) => (
+      <HeadingRenderer
+        {...props}
+        className="text-2xl py-2 font-semibold text-[#F5F5F5] hover:text-[#D4D4D4] transition-colors duration-200 hover:underline no-underline"
+      />
+    ),
+    h3: (props) => (
+      <HeadingRenderer
+        {...props}
+        className="text-xl py-1 font-semibold text-[#F5F5F5] hover:text-[#D4D4D4] transition-colors duration-200 hover:underline no-underline"
+      />
+    ),
+    h4: (props) => (
+      <HeadingRenderer
+        {...props}
+        className="text-lg font-semibold text-[#F5F5F5] hover:text-[#D4D4D4] transition-colors duration-200 hover:underline no-underline py-1"
+      />
+    ),
+    blockquote: ({ children }) => (
+      <blockquote className="border-l-4 border-sky-400 pl-4 my-4 italic text-[#D4D4D4] font-medium">
+        {children}
+      </blockquote>
+    ),
+    bold: ({ children }) => (
+      <strong className="font-semibold text-[#D4D4D4]">{children}</strong>
+    ),
+  },
   marks: {
+    em: ({ children }) => (
+      <em className="text-[#D4D4D4] font-semibold">{children}</em>
+    ),
+    strong: ({ children }) => (
+      <strong className="text-[#D4D4D4] font-semibold">{children}</strong>
+    ),
+
     link: ({ children, value }) => {
       if (!value?.href) {
         return (
@@ -93,21 +126,16 @@ const components: PortableTextComponents = {
       const target = !isInternal ? "_blank" : undefined;
 
       return (
-        <Link href={value.href} rel={rel} target={target}>
+        <Link
+          href={value.href}
+          rel={rel}
+          target={target}
+          className="text-[#F5F5F5] hover:text-[#D4D4D4] transition-colors duration-200 no-underline hover:underline font-semibold "
+        >
           {children}
         </Link>
       );
     },
-  },
-  block: {
-    h2: (props) => <HeadingRenderer {...props} />,
-    h3: (props) => <HeadingRenderer {...props} />,
-    h4: (props) => <HeadingRenderer {...props} />,
-    blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-sky-400 pl-4 italic text-slate-400">
-        {children}
-      </blockquote>
-    ),
   },
   list: {
     bullet: ({ children }) => (
@@ -119,10 +147,6 @@ const components: PortableTextComponents = {
   },
 };
 
-// ============================================================================
-// 3. KOMPONEN UTAMA
-// ============================================================================
-
 export function PortableText({
   value,
   className,
@@ -131,7 +155,12 @@ export function PortableText({
   className?: string;
 }) {
   return (
-    <div className={cn(className)}>
+    <div
+      className={cn(
+        "font-normal hyphens-auto text-base/7 bg-[#0A0A0A] text-[#A3A3A3] ",
+        className
+      )}
+    >
       <SanityPortableText value={value} components={components} />
     </div>
   );

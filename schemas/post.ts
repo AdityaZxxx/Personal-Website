@@ -66,7 +66,14 @@ export default defineType({
     defineField({
       name: "body",
       title: "Body",
-      type: "blockContent",
+      type: "array",
+      of: [
+        {
+          name: "sizeChart",
+          title: "Size Chart",
+          type: "table",
+        },
+      ],
     }),
     defineField({
       name: "featured",
