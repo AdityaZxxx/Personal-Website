@@ -24,6 +24,8 @@ const postCardFields = groq`
   excerpt,
   "estimatedReadingTime": round(length(pt::text(body)) / 5 / 180),
   publishedAt,
+  viewCount,
+  likeCount,
   "categories": categories[]->{ _id, title, "slug": slug.current },
   "mainImage": mainImage { ${imageFields} }
 `;
@@ -102,6 +104,8 @@ export async function getPostBySlug(slug: string) {
       },
       publishedAt,
       _updatedAt,
+      "viewCount": coalesce(viewCount, 0),      // PERBAIKAN DI SINI
+      "likeCount": coalesce(likeCount, 0),      // PERBAIKAN DI SINI
       "categories": categories[]->{ _id, title, slug },
       "estimatedReadingTime": round(length(pt::text(body)) / 5 / 180),
       "author": author->{
@@ -215,6 +219,35 @@ export async function getGalleryItemBySlug(slug: string) {
     tags, // PERBAIKAN: Diambil sebagai array of string
     "categories": categories[]->{ _id, title, "slug": slug.current }
   }`,
+    { slug }
+  );
+}
+
+export async function getAllShort() {
+  return client.fetch(
+    groq`*[_type == "short" && !(_id in path("drafts.**"))] | order(publishedAt desc) {
+      _id,
+      title,
+      slug,
+      body,
+      publishedAt,
+      "categories": categories[]->{ _id, title, "slug": slug.current },
+      tags
+    }`
+  );
+}
+
+export async function getShortBySlug(slug: string) {
+  return client.fetch(
+    groq`*[_type == "short" && slug.current == $slug && !(_id in path("drafts.**"))][0] {
+      _id,
+      title,
+      slug,
+      body,
+      publishedAt,
+      "categories": categories[]->{ _id, title, "slug": slug.current },
+      tags
+    }`,
     { slug }
   );
 }
