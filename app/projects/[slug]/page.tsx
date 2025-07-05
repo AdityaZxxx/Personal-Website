@@ -1,93 +1,96 @@
-import { ArrowLeft, Calendar, ExternalLink, Github } from "lucide-react";
-import type { Metadata } from "next";
-import Image from "next/image"; // Diimpor dari next/image
+import { Calendar, ExternalLink, Github } from "lucide-react";
+import { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { PortableText } from "@/components/portable-text";
+import { TagList } from "@/components/common/TagList";
+import { PortableText } from "@/components/sanity/PortableText";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getAllProjectSlugs, getProjectBySlug } from "@/lib/sanity/queries";
-import { cn, formatDate } from "@/lib/utils"; // cn ditambahkan jika belum ada
-import { Geist } from "next/font/google"; // Menggunakan next/font/google
-import { urlFor } from "../../../lib/sanity/image"; // Pastikan path ini benar
+import { Separator } from "@/components/ui/separator";
+import { urlFor } from "@/lib/sanity/image";
+import { getProjectBySlug } from "@/lib/sanity/queries";
+import { cn, formatDate } from "@/lib/utils";
 
-const GeistSans = Geist({ subsets: ["latin"] });
+import { Category, SanityImage, Technology } from "@/types";
 
-// Constants
-const APP_NAME = "Aditya"; // Atau nama aplikasi/situs Anda
-const NOT_FOUND_TITLE = "Project Not Found";
-const DEFAULT_IMAGE_PLACEHOLDER = "/placeholder.svg"; // Pastikan file ini ada di folder /public
-const NEXT_PUBLIC_SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://example.com"; // Fallback URL
+type ProjectDetailPageProps = {
+  params: Promise<{ slug: string }>;
+};
 
 export async function generateMetadata({
-  params: promiseParams, // Nama variabel promiseParams sudah baik
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const { slug } = await promiseParams; // Menggunakan await pada promiseParams
-
-  if (!slug) {
-    // Jika slug tidak ada di params (seharusnya tidak terjadi jika rute terdefinisi)
-    return { title: `${NOT_FOUND_TITLE} | ${APP_NAME}` };
-  }
-
+  params,
+}: ProjectDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
   const project = await getProjectBySlug(slug);
 
   if (!project) {
-    return { title: `${NOT_FOUND_TITLE} | ${APP_NAME}` };
+    return {
+      title: "Project Not Found",
+      description: "The project you are looking for does not exist.",
+    };
   }
 
-  const metadata: Metadata = {
-    title: `${project.title} | ${APP_NAME}`,
-    description: project.excerpt,
+  const mainImageUrl = project.mainImage?.asset
+    ? urlFor(project.mainImage).url()
+    : null;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const canonicalUrl = `${siteUrl}/projects/${project.slug}`;
+
+  const keywords = [
+    ...(project.technologies?.map((tech: Technology) => tech.title) || []),
+    ...(project.categories?.map((cat: Category) => cat.title) || []),
+    project.title,
+    "Aditya Rahmad",
+    "Project",
+    "Portfolio",
+  ];
+
+  return {
+    title: project.title,
+    description:
+      project.excerpt || project.description?.[0]?.children?.[0]?.text || "",
+    keywords: keywords,
+    authors: [{ name: "Aditya Rahmad", url: siteUrl }],
     alternates: {
-      // Menambahkan canonical URL
-      canonical: `${NEXT_PUBLIC_SITE_URL}/projects/${slug}`,
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: project.title,
+      description:
+        project.excerpt || project.description?.[0]?.children?.[0]?.text || "",
+      url: canonicalUrl,
+      siteName: "Aditya Rahmad - Projects",
+      images: mainImageUrl
+        ? [
+            {
+              url: mainImageUrl,
+              width: project.mainImage.asset.width,
+              height: project.mainImage.asset.height,
+              alt: project.mainImage.alt || project.title,
+            },
+          ]
+        : [],
+      locale: "en_US",
+      type: "article",
+      publishedTime: project.completedAt,
+      modifiedTime: project._updatedAt,
+      section: project.categories?.[0]?.title,
+      tags: project.technologies?.map((tech: Technology) => tech.title) || [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description:
+        project.excerpt || project.description?.[0]?.children?.[0]?.text || "",
+      site: "@adxxya30",
+      creator: "@adxxya30",
+      images: mainImageUrl ? [mainImageUrl] : [],
     },
   };
-
-  // Hanya tambahkan OpenGraph images jika mainImage ada dan URL valid
-  if (project.mainImage) {
-    const imageUrl = urlFor(project.mainImage)?.width(1200)?.height(630)?.url(); // .url() mengembalikan string | null
-
-    if (imageUrl) {
-      // Pastikan imageUrl adalah string valid
-      metadata.openGraph = {
-        images: [{ url: imageUrl, width: 1200, height: 630 }],
-        title: project.title,
-        description: project.excerpt,
-        url: `${NEXT_PUBLIC_SITE_URL}/projects/${slug}`,
-        siteName: APP_NAME,
-        type: "article", // Atau 'website' jika lebih sesuai
-      };
-      metadata.twitter = {
-        // Menambahkan Twitter card metadata
-        card: "summary_large_image",
-        title: project.title,
-        description: project.excerpt,
-        images: [imageUrl],
-      };
-    }
-  }
-
-  return metadata;
 }
 
-export async function generateStaticParams() {
-  const projectSlugs = await getAllProjectSlugs(); // Fungsi ini mengembalikan string[]
-  return projectSlugs
-    .filter(
-      (slug: string | null | undefined): slug is string =>
-        typeof slug === "string" && slug.length > 0
-    ) // Memastikan slug adalah string valid
-    .map((slug: string) => ({
-      slug: slug,
-    }));
-}
-
-// Komponen kecil untuk tombol link proyek
 const ProjectLinkButton = ({
   href,
   icon: Icon,
@@ -104,61 +107,52 @@ const ProjectLinkButton = ({
     | "ghost"
     | "link"
     | null
-    | undefined; // Menggunakan tipe ButtonProps['variant'] jika tersedia
+    | undefined;
 }) => (
-  <Link
-    href={href}
-    target="_blank"
-    rel="noopener noreferrer"
-    passHref
-    legacyBehavior
-  >
+  <Link href={href} target="_blank" rel="noopener noreferrer" passHref>
     <Button variant={variant} asChild={false}>
-      {" "}
-      {/* asChild={false} jika Link adalah parent langsung */}
       <Icon className="mr-2 h-4 w-4" />
       {children}
     </Button>
   </Link>
 );
 
-// Komponen kecil untuk galeri proyek
 const ProjectGallery = ({
   images,
-  projectTitle, // Mengganti 'title' menjadi 'projectTitle' agar lebih spesifik
+  projectTitle,
 }: {
-  images: any[]; // Sebaiknya ganti 'any' dengan tipe spesifik untuk image Sanity
+  images: SanityImage[];
   projectTitle: string;
 }) => {
   if (!images || images.length === 0) {
-    return null; // Tidak render apa-apa jika tidak ada gambar
+    return null;
   }
 
   return (
     <div className="space-y-6 pt-6">
-      <h2 className="text-2xl font-semibold tracking-tight text-slate-100">
+      <h2 className="text-2xl font-semibold tracking-tight text-primary">
         Project Gallery
       </h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
         {images.map((image, index) => {
           const imageUrl = image.asset
-            ? urlFor(image.asset).url()
+            ? urlFor(image.asset).width(1080).url()
             : typeof image === "string"
               ? image
-              : DEFAULT_IMAGE_PLACEHOLDER;
+              : "/images/default-placeholder.png";
 
           return (
             <div
               key={index}
-              className="relative aspect-video overflow-hidden rounded-lg border border-slate-700 shadow-md group"
+              className="relative aspect-video overflow-hidden rounded-lg"
             >
-              {imageUrl && imageUrl !== DEFAULT_IMAGE_PLACEHOLDER ? (
+              {imageUrl && imageUrl !== "/images/default-placeholder.png" ? (
                 <Image
                   src={imageUrl}
                   alt={`${projectTitle} - Gallery Image ${index + 1}`}
                   fill
-                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover"
+                  sizes="100vw"
                 />
               ) : (
                 <div className="w-full h-full bg-slate-700 flex items-center justify-center">
@@ -176,11 +170,9 @@ const ProjectGallery = ({
 };
 
 export default async function ProjectDetailPage({
-  params: promiseParams,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await promiseParams;
+  params,
+}: ProjectDetailPageProps) {
+  const { slug } = await params;
 
   if (!slug) {
     notFound();
@@ -197,14 +189,14 @@ export default async function ProjectDetailPage({
     categories,
     completedAt,
     mainImage,
-    technologies,
+    technologies = [],
     demoUrl,
     repoUrl,
     description,
     images,
   } = project;
 
-  const mainImageUrl = mainImage ? urlFor(mainImage).url() : null;
+  const mainImageUrl = mainImage ? urlFor(mainImage).width(1200).url() : null;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -225,52 +217,46 @@ export default async function ProjectDetailPage({
       />
       <main
         className={cn(
-          "container text-slate-100 px-4 py-12 md:px-6 md:py-16 lg:py-24",
-          GeistSans.className
+          "container bg-background  px-4 py-12 md:px-6 md:py-16 lg:py-24"
         )}
       >
-        <div className="mx-auto max-w-3xl">
-          <Link href="/projects" legacyBehavior>
-            <a className="inline-flex items-center text-sky-400 hover:text-sky-300 mb-8 group">
-              <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
-              Back to Projects
-            </a>
-          </Link>
-
+        <div className="mx-auto max-w-5xl">
           <div className="space-y-8">
             <header className="space-y-3">
               {categories && categories.length > 0 && (
                 <div className="flex flex-wrap gap-2">
-                  {categories.map((category: any, index: number) => (
-                    <Link
-                      key={index}
-                      href={`/projects?category=${category.slug?.current || category.slug}`}
-                      passHref
-                      legacyBehavior
-                    >
-                      <Badge
+                  {categories.map((category: Category, index: number) => {
+                    const categorySlug = category.slug;
+                    return (
+                      <Link
                         key={index}
-                        variant="secondary"
-                        className="bg-slate-700 text-sky-300 border-sky-700 hover:bg-slate-600"
+                        href={`/projects?category=${categorySlug}`}
+                        passHref
                       >
-                        {category.title}
-                      </Badge>
-                    </Link>
-                  ))}
+                        <Badge
+                          className="text-xs text-muted-foreground"
+                          key={category._id}
+                          variant="secondary"
+                        >
+                          {category.title}
+                        </Badge>
+                      </Link>
+                    );
+                  })}
                 </div>
               )}
-              <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl text-slate-50">
+              <h1 className="text-3xl font-rethink-sans font-semibold hyphens-auto tracking-tight text-primary sm:text-4xl md:text-5xl !leading-tight">
                 {title}
               </h1>
               {completedAt && (
-                <div className="flex items-center gap-1.5 text-sm text-slate-400">
+                <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                   <Calendar className="h-4 w-4" />
                   <time dateTime={completedAt}>{formatDate(completedAt)}</time>
                 </div>
               )}
             </header>
 
-            {mainImageUrl && ( // Render hanya jika mainImageUrl valid
+            {mainImageUrl && (
               <figure className="relative aspect-video overflow-hidden rounded-xl border border-slate-700 shadow-lg">
                 <Image
                   src={mainImageUrl}
@@ -281,20 +267,6 @@ export default async function ProjectDetailPage({
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 70vw"
                 />
               </figure>
-            )}
-
-            {technologies && technologies.length > 0 && (
-              <div className="flex flex-wrap gap-2 pt-2">
-                {technologies.map((tech: string, index: number) => (
-                  <Badge
-                    key={index}
-                    variant="outline"
-                    className="border-slate-600 text-slate-300 bg-slate-700/50"
-                  >
-                    {tech}
-                  </Badge>
-                ))}
-              </div>
             )}
 
             <div className="flex flex-wrap gap-3 pt-2">
@@ -319,20 +291,25 @@ export default async function ProjectDetailPage({
             </div>
 
             {description && description.length > 0 && (
-              <div
-                className="prose prose-lg prose-slate dark:prose-invert max-w-none 
-                              prose-headings:text-slate-100 prose-a:text-sky-400 hover:prose-a:text-sky-300
-                              prose-strong:text-slate-100 prose-code:text-pink-400 
-                              prose-blockquote:border-sky-400 prose-blockquote:text-slate-300"
-              >
+              <article className="">
                 <PortableText value={description} />
-              </div>
+              </article>
             )}
 
             {images && images.length > 0 && (
               <ProjectGallery images={images} projectTitle={title} />
             )}
           </div>
+          <Separator className="my-8" />
+          {technologies && technologies.length > 0 && (
+            <div className="flex flex-wrap gap-2 pt-2">
+              {technologies.tags && technologies.tags.length > 0 && (
+                <div className="max-w-3xl pt-6">
+                  <TagList tags={technologies.tags} content="project" />
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </main>
     </>

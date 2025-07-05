@@ -1,27 +1,19 @@
 export type PostType = {
   _id: string;
   title: string;
-  slug: {
-    current: string;
-    _type: "slug";
-  };
+  slug: string;
   excerpt: string;
-  mainImage: {
-    _type: "image";
-    asset: {
-      _ref: string;
-      _type: "reference";
-    };
-  };
+  mainImage?: any;
   author: string;
-  publishedAt: string; // ISO string, bisa kamu parse ke Date kalau perlu
+  publishedAt: string;
+  _updatedAt: string;
   categories: {
     _id: string;
     title: string;
-    slug: {
-      current: string;
-      _type: "slug";
-    };
+    slug: string;
   }[];
   estimatedReadingTime: number;
+  tags: string[];
+  viewCount: number;
+  likeCount: number;
 };

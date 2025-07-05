@@ -1,6 +1,6 @@
 import { defineField, defineType } from "sanity";
 
-const galleryCategory = defineType({
+export default defineType({
   name: "galleryCategory",
   title: "Gallery Category",
   type: "document",
@@ -28,5 +28,3 @@ const galleryCategory = defineType({
     }),
   ],
 });
-
-export default galleryCategory;

@@ -1,77 +1,71 @@
-import AnimatedSection from "@/components/animated-section";
-import { Card, CardContent } from "@/components/ui/card";
-import { DatabaseIcon, GitBranch } from "lucide-react";
-import * as motion from "motion/react-client";
-import { AiFillApi } from "react-icons/ai";
-import { DiVisualstudio } from "react-icons/di";
-import {
-  FaAws,
-  FaCss3,
-  FaDocker,
-  FaGithub,
-  FaHtml5,
-  FaNodeJs,
-  FaReact,
-} from "react-icons/fa";
-import {
-  RiFirebaseFill,
-  RiJavascriptFill,
-  RiNextjsFill,
-  RiSupabaseFill,
-  RiTailwindCssFill,
-} from "react-icons/ri";
-import {
-  SiExpress,
-  SiGraphql,
-  SiMongodb,
-  SiPostgresql,
-  SiTypescript,
-  SiVercel,
-} from "react-icons/si";
-import AboutSoftSkill from "../../components/about/AboutSoftSkill";
-import AboutHero from "../../components/about/Hero";
-import { Timeline } from "../../components/about/TimelineJourney";
+import Stack from "@/components/about/ProfileStackCard";
+import { TechStackSection } from "@/components/about/TechStack";
+import PageHero from "@/components/hero/PageHero";
+import { Spotlight } from "@/components/hero/Spotlight";
+import { Timeline } from "@/components/sections/TimelineJourney";
+import { HelpCircle, UserCircle2 } from "lucide-react";
+import { Metadata } from "next";
 
-// Tech stack data with icons
-const techStack = {
-  frontend: [
-    { name: "React", icon: <FaReact className="w-5 h-5" /> },
-    { name: "Next.js", icon: <RiNextjsFill className="w-5 h-5" /> },
-    { name: "TypeScript", icon: <SiTypescript className="w-5 h-5" /> },
-    { name: "JavaScript", icon: <RiJavascriptFill className="w-5 h-5" /> },
-    { name: "Tailwind CSS", icon: <RiTailwindCssFill className="w-5 h-5" /> },
-    { name: "CSS/SCSS", icon: <FaCss3 className="w-5 h-5" /> },
-    { name: "HTML5", icon: <FaHtml5 className="w-5 h-5" /> },
+export const metadata: Metadata = {
+  title: "About Me",
+  description:
+    "Learn more about Aditya Rahmad, a software developer passionate about building beautiful and functional digital experiences.",
+  keywords: [
+    "Aditya Rahmad",
+    "About Me",
+    "Software Developer",
+    "Web Developer",
+    "Tech Journey",
+    "Career Path",
   ],
-  backend: [
-    { name: "Node.js", icon: <FaNodeJs className="w-5 h-5" /> },
-    { name: "Express", icon: <SiExpress className="w-5 h-5" /> },
-    { name: "GraphQL", icon: <SiGraphql className="w-5 h-5" /> },
-    { name: "REST API", icon: <AiFillApi className="w-5 h-5" /> },
-  ],
-  database: [
-    { name: "MongoDB", icon: <SiMongodb className="w-5 h-5" /> },
-    { name: "PostgreSQL", icon: <SiPostgresql className="w-5 h-5" /> },
-    { name: "MySQL", icon: <DatabaseIcon className="w-5 h-5" /> },
-    { name: "Firebase", icon: <RiFirebaseFill className="w-5 h-5" /> },
-    { name: "Supabase", icon: <RiSupabaseFill className="w-5 h-5" /> },
-  ],
-  tools: [
-    { name: "Git", icon: <GitBranch className="w-5 h-5" /> },
-    { name: "GitHub", icon: <FaGithub className="w-5 h-5" /> },
-    { name: "VS Code", icon: <DiVisualstudio className="w-5 h-5" /> },
-    { name: "Docker", icon: <FaDocker className="w-5 h-5" /> },
-    { name: "Vercel", icon: <SiVercel className="w-5 h-5" /> },
-    { name: "AWS", icon: <FaAws className="w-5 h-5" /> },
-  ],
+  openGraph: {
+    title: "About Aditya Rahmad - Software Developer",
+    description:
+      "Learn more about Aditya Rahmad, a software developer passionate about building beautiful and functional digital experiences.",
+    url: `${process.env.NEXT_PUBLIC_SITE_URL}/about`,
+    images: [
+      {
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-about.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "About Aditya Rahmad",
+      },
+    ],
+    type: "profile",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Aditya Rahmad - Software Developer",
+    description:
+      "Learn more about Aditya Rahmad, a software developer passionate about building beautiful and functional digital experiences.",
+    creator: "@adxxya30",
+    images: [
+      {
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-about.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "About Aditya Rahmad",
+      },
+    ],
+  },
 };
 
-// Timeline data
+const images = [
+  {
+    id: 1,
+    img: "https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?q=80&w=500&auto=format",
+  },
+  {
+    id: 2,
+    img: "https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=500&auto=format",
+  },
+];
+
 const timelineData = [
   {
     title: "2020",
     content: (
-      <p className="text-neutral-600 dark:text-neutral-400">
+      <p className="text-neutral-600 dark:text-muted-foreground">
         Started learning web development basics (HTML, CSS, JavaScript) through
         online resources.
       </p>
@@ -80,7 +74,7 @@ const timelineData = [
   {
     title: "2021",
     content: (
-      <p className="text-neutral-600 dark:text-neutral-400">
+      <p className="text-neutral-600 dark:text-muted-foreground">
         Built first projects and discovered React. Began contributing to open
         source.
       </p>
@@ -89,7 +83,7 @@ const timelineData = [
   {
     title: "2022",
     content: (
-      <p className="text-neutral-600 dark:text-neutral-400">
+      <p className="text-neutral-600 dark:text-muted-foreground">
         Deepened knowledge in full-stack development. Learned Node.js, Express,
         and databases.
       </p>
@@ -98,7 +92,7 @@ const timelineData = [
   {
     title: "2023",
     content: (
-      <p className="text-neutral-600 dark:text-neutral-400">
+      <p className="text-neutral-600 dark:text-muted-foreground">
         Mastered TypeScript and Next.js. Started building complex applications
         with modern tooling.
       </p>
@@ -107,7 +101,7 @@ const timelineData = [
   {
     title: "2024",
     content: (
-      <p className="text-neutral-600 dark:text-neutral-400">
+      <p className="text-neutral-600 dark:text-muted-foreground">
         Focused on performance optimization, accessibility, and advanced React
         patterns.
       </p>
@@ -115,120 +109,128 @@ const timelineData = [
   },
 ];
 
-export default function AboutPage() {
+const AboutPage = () => {
   return (
-    <main className="relative flex flex-col items-center overflow-hidden bg-transparent text-white">
-      {/* Hero Section */}
-      <AboutHero />
+    <section>
+      <header>
+        <Spotlight
+          className="-top-40 left-0 md:-top-20 md:left-60"
+          fill="oklch(74.6% 0.16 232.661)"
+        />
+        <Spotlight
+          className="-top-40 left-[-10rem] md:-top-20 md:left-[-20rem]"
+          fill="oklch(74.6% 0.16 232.661)"
+        />
+        <div className="text-center justify-center flex flex-col items-center pt-30 space-y-1">
+          <PageHero
+            icon={<UserCircle2 />}
+            title="About"
+            coloredTitle="Me"
+            description="A little bit about my journey, my passion for technology, and the
+            things that drive me."
+          />
+        </div>
+      </header>
+      <main className="flex flex-col max-w-5xl mx-auto px-4 py-16 md:py-24 gap-16 overflow-hidden">
+        {/* Section: Bio with Image Stack */}
+        <section className="max-w-5xl w-full mx-auto px-4 py-16 md:py-24">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+            {/* Image Stack */}
+            <div className="flex justify-center pr-2 items-center min-h-[200px] md:min-h-[400px]">
+              <Stack
+                randomRotation={true}
+                sensitivity={180}
+                sendToBackOnClick={false}
+                cardDimensions={{ width: 300, height: 450 }}
+                cardsData={images}
+              />
+            </div>
 
-      {/* What I Do Section */}
-      <AnimatedSection className="my-16" delay={200}>
-        <section className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold tracking-tighter mb-8 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            What I Do
-          </h2>
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              {
-                title: "Web Development",
-                description:
-                  "Building responsive, accessible, and performant web applications using modern frameworks and best practices.",
-                icon: (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-6 w-6"
-                  >
-                    <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"></path>
-                  </svg>
-                ),
-              },
-              {
-                title: "UI/UX Design",
-                description:
-                  "Creating intuitive and visually appealing user interfaces with a focus on user experience and accessibility.",
-                icon: (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-6 w-6"
-                  >
-                    <path d="M12 3v14"></path>
-                    <path d="m17 8-5-5-5 5"></path>
-                    <path d="M8 21h8"></path>
-                    <path d="M12 17v4"></path>
-                  </svg>
-                ),
-              },
-              {
-                title: "Full-Stack Development",
-                description:
-                  "Developing end-to-end solutions with robust backend systems and seamless frontend experiences.",
-                icon: (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-6 w-6"
-                  >
-                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                    <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
-                    <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
-                    <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
-                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                  </svg>
-                ),
-              },
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Card className="h-full group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-border/50">
-                  <CardContent className="p-6 h-full">
-                    <div className="mb-4 rounded-full bg-primary/10 p-3 w-12 h-12 flex items-center justify-center text-primary group-hover:bg-primary/20 group-hover:text-primary/90 transition-all duration-300">
-                      {item.icon}
-                    </div>
-                    <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                    <p className="text-muted-foreground">{item.description}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+            {/* Text Content */}
+            <div className="flex flex-col space-y-6 text-muted-foreground">
+              <h2 className="text-3xl font-semibold text-foreground">
+                Aditya Rahmad
+              </h2>
+              <p className="text-base leading-relaxed">
+                Hey, I'm Adit — a software developer with a deep curiosity for
+                how things work, and why people build them the way they do. My
+                journey into tech started out of curiosity, but quickly turned
+                into a medium of self-expression and continuous exploration. I’m
+                most fluent in JavaScript, and I enjoy working across the full
+                stack — from backend logic to crafting front-end experiences.
+              </p>
+              <p className="text-base leading-relaxed">
+                As an introvert, writing and coding are how I process the world.
+                I care about more than just syntax — I’m interested in the human
+                layer of tech: how we work together, what we value in software,
+                and how digital tools shape our social behavior. I'm not here to
+                teach — I'm here to explore, connect dots, and share what I find
+                along the way.
+              </p>
+              <p className="text-base leading-relaxed">
+                Right now, I’m focused on growing as a builder — building tools,
+                ideas, and connections through thoughtful code and writing. This
+                site is my digital journal: a mix of side projects, reflections,
+                and ideas still in the making. If you're into intentional tech
+                and the questions behind it, stick around — we might think
+                alike.
+              </p>
+            </div>
           </div>
         </section>
-      </AnimatedSection>
 
-      {/* Soft Skills Section */}
-      <AnimatedSection className="mb-16" delay={400}>
-        <AboutSoftSkill />
-      </AnimatedSection>
+        {/* Section: What I&apos;m up to now */}
+        <section className="max-w-5xl w-full mx-auto px-4 py-16 md:py-24">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+            {/* Title */}
+            <div className="md:col-span-1 flex items-start gap-3">
+              <HelpCircle className="h-8 w-8 text-muted-foreground mt-1" />
+              <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
+                What I&apos;m up to now
+              </h2>
+            </div>
 
-      {/* Timeline Section */}
-      <Timeline data={timelineData} />
-    </main>
+            {/* Content */}
+            <div className="md:col-span-2">
+              <ul className="space-y-4 text-muted-foreground list-disc list-inside">
+                <li>
+                  <span className="font-semibold text-foreground">
+                    Exploring Advanced AI:
+                  </span>{" "}
+                  Diving deep into machine learning models and building
+                  applications with the OpenAI API.
+                </li>
+                <li>
+                  <span className="font-semibold text-foreground">
+                    Mastering Go (Golang):
+                  </span>{" "}
+                  Expanding my backend skills by building high-performance
+                  concurrent systems.
+                </li>
+                <li>
+                  <span className="font-semibold text-foreground">
+                    Contributing to Open Source:
+                  </span>{" "}
+                  Actively maintaining and contributing to several projects in
+                  the web development community.
+                </li>
+                <li>
+                  <span className="font-semibold text-foreground">
+                    Writing a Technical Blog:
+                  </span>{" "}
+                  Sharing my knowledge and experiences with the broader
+                  developer community through regular articles.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+        <TechStackSection />
+
+        <Timeline data={timelineData} />
+      </main>
+    </section>
   );
-}
+};
+
+export default AboutPage;

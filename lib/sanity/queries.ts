@@ -1,6 +1,5 @@
 import { groq } from "next-sanity";
-import { client } from "./client";
-
+import { readClient } from "./client";
 // ============================================================================
 // FRAGMENTS (untuk kode yang lebih bersih dan reusable)
 // ============================================================================
@@ -20,20 +19,21 @@ const imageFields = groq`
 const postCardFields = groq`
   _id,
   title,
-  slug,
+  "slug": slug.current,
   excerpt,
   "estimatedReadingTime": round(length(pt::text(body)) / 5 / 180),
   publishedAt,
-  viewCount,
-  likeCount,
+  "viewCount": coalesce(viewCount, 0),
+  "likeCount": coalesce(likeCount, 0),
   "categories": categories[]->{ _id, title, "slug": slug.current },
+  "author": author->{ name, "image": image.asset->url },
   "mainImage": mainImage { ${imageFields} }
 `;
 
 const projectCardFields = groq`
   _id,
   title,
-  slug,
+  "slug": slug.current,
   excerpt,
   "mainImage": mainImage { ${imageFields} },
   technologies,
@@ -49,12 +49,24 @@ const galleryCardFields = groq`
   "thumbnail": coalesce(videoThumbnail, image) { ${imageFields} }
 `;
 
+const shortCardFields = groq`
+  _id,
+  title,
+  "slug": slug.current,
+  body,
+  publishedAt,
+  "categories": categories[]->{ _id, title, "slug": slug.current },
+  tags,
+  "viewCount": coalesce(viewCount, 0),
+  "likeCount": coalesce(likeCount, 0)
+`;
+
 // ============================================================================
 // POST QUERIES
 // ============================================================================
 
 export async function getLatestPosts(limit = 3) {
-  return client.fetch(
+  return readClient.fetch(
     groq`*[_type == "post" && publishedAt < now() && !(_id in path("drafts.**"))] | order(publishedAt desc)[0...${limit}] {
       ${postCardFields}
     }`
@@ -62,14 +74,18 @@ export async function getLatestPosts(limit = 3) {
 }
 
 export async function getFeaturedPosts(limit = 4) {
-  return client.fetch(
+  return readClient.fetch(
     groq`*[_type == "post" && featured == true && publishedAt < now() && !(_id in path("drafts.**"))] | order(publishedAt desc)[0...${limit}] {
       ${postCardFields}
     }`
   );
 }
 
-export async function getAllPosts(category?: string, searchQuery?: string) {
+export async function getAllPosts(
+  category?: string,
+  searchQuery?: string,
+  tag?: string
+) {
   const query = groq`*[_type == "post" && publishedAt < now() && !(_id in path("drafts.**"))
     && (!defined($category) || $category in categories[]->slug.current)
     && (!defined($searchQuery) || (
@@ -87,15 +103,15 @@ export async function getAllPosts(category?: string, searchQuery?: string) {
     searchPattern: searchQuery ? `*${searchQuery}*` : null,
   };
 
-  return client.fetch(query, params);
+  return readClient.fetch(query, params);
 }
 
 export async function getPostBySlug(slug: string) {
-  return client.fetch(
+  return readClient.fetch(
     groq`*[_type == "post" && slug.current == $slug && !(_id in path("drafts.**"))][0] {
       _id,
       title,
-      slug,
+      "slug": slug.current,
       excerpt,
       "mainImage": mainImage { ${imageFields} },
       body[]{
@@ -104,16 +120,16 @@ export async function getPostBySlug(slug: string) {
       },
       publishedAt,
       _updatedAt,
-      "viewCount": coalesce(viewCount, 0),      // PERBAIKAN DI SINI
-      "likeCount": coalesce(likeCount, 0),      // PERBAIKAN DI SINI
-      "categories": categories[]->{ _id, title, slug },
+      "viewCount": coalesce(viewCount, 0),
+      "likeCount": coalesce(likeCount, 0),
+      "categories": categories[]->{ _id, title, "slug": slug.current },
       "estimatedReadingTime": round(length(pt::text(body)) / 5 / 180),
       "author": author->{
         _id,
         name,
         "image": image { ${imageFields} },
         bio,
-        slug,
+        "slug": slug.current,
         socialLinks
       },
       tags
@@ -123,7 +139,7 @@ export async function getPostBySlug(slug: string) {
 }
 
 export async function getAllPostSlugs() {
-  return client.fetch<string[]>(
+  return readClient.fetch<string[]>(
     groq`*[_type == "post" && defined(slug.current) && !(_id in path("drafts.**"))].slug.current`
   );
 }
@@ -139,11 +155,11 @@ export async function getAllProjects(category?: string) {
     ${projectCardFields}
   }`;
 
-  return client.fetch(query, { category: category || null });
+  return readClient.fetch(query, { category: category || null });
 }
 
 export async function getFeaturedProjects(limit = 3) {
-  return client.fetch(
+  return readClient.fetch(
     groq`*[_type == "project" && featured == true && !(_id in path("drafts.**"))] | order(completedAt desc)[0...${limit}] {
       ${projectCardFields}
     }`
@@ -151,11 +167,11 @@ export async function getFeaturedProjects(limit = 3) {
 }
 
 export async function getProjectBySlug(slug: string) {
-  return client.fetch(
+  return readClient.fetch(
     groq`*[_type == "project" && slug.current == $slug && !(_id in path("drafts.**"))][0] {
       _id,
       title,
-      slug,
+      "slug": slug.current,
       excerpt,
       "mainImage": mainImage { ${imageFields} },
       description[]{
@@ -177,7 +193,7 @@ export async function getProjectBySlug(slug: string) {
 }
 
 export async function getAllProjectSlugs() {
-  return client.fetch<string[]>(
+  return readClient.fetch<string[]>(
     groq`*[_type == "project" && defined(slug.current) && !(_id in path("drafts.**"))].slug.current`
   );
 }
@@ -193,11 +209,11 @@ export async function getAllGalleryItems(category?: string) {
   ${galleryCardFields}
 }`;
 
-  return client.fetch(query, { category: category || null });
+  return readClient.fetch(query, { category: category || null });
 }
 
 export async function getFeaturedGalleryItems(limit = 6) {
-  return client.fetch(
+  return readClient.fetch(
     groq`*[_type == "galleryItem" && featured == true && !(_id in path("drafts.**"))] | order(date desc)[0...${limit}] {
     ${galleryCardFields}
   }`
@@ -205,48 +221,73 @@ export async function getFeaturedGalleryItems(limit = 6) {
 }
 
 export async function getGalleryItemBySlug(slug: string) {
-  return client.fetch(
+  return readClient.fetch(
     groq`*[_type == "galleryItem" && slug.current == $slug && !(_id in path("drafts.**"))][0] {
     _id,
     title,
-    slug,
+    "slug": slug.current,
     description,
     mediaType,
     "image": image { ${imageFields} },
     "videoUrl": video.asset->url,
     "videoThumbnail": videoThumbnail { ${imageFields} },
     date,
-    tags, // PERBAIKAN: Diambil sebagai array of string
+    tags,
     "categories": categories[]->{ _id, title, "slug": slug.current }
   }`,
     { slug }
   );
 }
 
-export async function getAllShort() {
-  return client.fetch(
-    groq`*[_type == "short" && !(_id in path("drafts.**"))] | order(publishedAt desc) {
-      _id,
-      title,
-      slug,
-      body,
-      publishedAt,
-      "categories": categories[]->{ _id, title, "slug": slug.current },
-      tags
-    }`
+// ============================================================================
+// SHORT QUERIES
+// ============================================================================
+
+export async function getAllShort(
+  category?: string,
+  searchQuery?: string,
+  tag?: string
+) {
+  const query = groq`*[_type == "short" && publishedAt < now() && !(_id in path("drafts.**"))
+    && (!defined($category) || $category in categories[]->slug.current)
+    && (!defined($searchQuery) || (
+        title match $searchPattern ||
+        pt::text(body) match $searchPattern
+      ))
+    && (!defined($tag) || $tag == null || $tag in tags)
+  ] | order(publishedAt desc) {
+    ${shortCardFields}
+  }`;
+
+  const params = {
+    category: category || null,
+    searchQuery: searchQuery || null,
+    searchPattern: searchQuery ? `*${searchQuery}*` : null,
+    tag: tag || null,
+  };
+
+  return readClient.fetch(query, params);
+}
+
+export async function getAllShortTags() {
+  return readClient.fetch(
+    groq`array::unique(*[_type == "short" && defined(tags)].tags[])`
   );
 }
 
 export async function getShortBySlug(slug: string) {
-  return client.fetch(
+  return readClient.fetch(
     groq`*[_type == "short" && slug.current == $slug && !(_id in path("drafts.**"))][0] {
       _id,
       title,
-      slug,
+      "slug": slug.current,
       body,
       publishedAt,
       "categories": categories[]->{ _id, title, "slug": slug.current },
-      tags
+      tags,
+      "viewCount": coalesce(viewCount, 0),
+      "likeCount": coalesce(likeCount, 0),
+      "estimatedReadingTime": round(length(pt::text(body)) / 5 / 180)
     }`,
     { slug }
   );
@@ -257,19 +298,19 @@ export async function getShortBySlug(slug: string) {
 // ============================================================================
 
 export async function getAllPostCategories() {
-  return client.fetch(
+  return readClient.fetch(
     groq`*[_type == "category"] | order(title asc) { _id, title, "slug": slug.current }`
   );
 }
 
 export async function getAllProjectCategories() {
-  return client.fetch(
+  return readClient.fetch(
     groq`*[_type == "projectCategory"] | order(title asc) { _id, title, "slug": slug.current }`
   );
 }
 
 export async function getAllGalleryCategories() {
-  return client.fetch(
+  return readClient.fetch(
     groq`*[_type == "galleryCategory"] | order(title asc) {
       _id,
       title,

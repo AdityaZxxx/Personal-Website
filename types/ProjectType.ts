@@ -1,10 +1,7 @@
 export type ProjectType = {
   _id: string;
   title: string;
-  slug: {
-    _type: string;
-    current: string;
-  };
+  slug: string;
   excerpt?: string;
   mainImage?: any;
   categories?: Array<{
@@ -13,4 +10,6 @@ export type ProjectType = {
     slug: string;
   }>;
   technologies?: string[];
+  repoUrl?: string;
+  demoUrl?: string;
 };

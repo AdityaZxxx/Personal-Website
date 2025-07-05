@@ -1,112 +1,110 @@
-import { PostListServer } from "@/components/blogPost/PostListServer";
+import { BlogListServer } from "@/components/blog/BlogListServer";
+import { SearchContent } from "@/components/common/SearchContent";
+import PageHero from "@/components/hero/PageHero";
+import { Spotlight } from "@/components/hero/Spotlight";
+import { BlogListSkeleton } from "@/components/skeletons/BlogListSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getAllPostCategories } from "@/lib/sanity/queries";
-import type { Metadata } from "next";
+import { BookText } from "lucide-react";
+import { Metadata } from "next";
 import { Suspense } from "react";
-import { BlogSearch } from "../../components/blog-search";
-import { CategoryFilter } from "../../components/category-filter";
 
 export const metadata: Metadata = {
   title: "Blog",
   description:
     "Read my thoughts on web development, design, and technology. I also write about random things such as current trends, politics and the economy",
+  keywords: [
+    "Aditya Rahmad Blog",
+    "Web Development Blog",
+    "Tech Blog",
+    "Programming Articles",
+    "Design Blog",
+    "Technology Trends",
+    "Personal Blog",
+  ],
+  openGraph: {
+    title: "Aditya Rahmad - Blog",
+    description:
+      "Read my thoughts on web development, design, and technology. I also write about random things such as current trends, politics and the economy",
+    url: `${process.env.NEXT_PUBLIC_SITE_URL}/blog`,
+    images: [
+      {
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-blog.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "Aditya Rahmad Blog Posts",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Aditya Rahmad - Blog",
+    description:
+      "Read my thoughts on web development, design, and technology. I also write about random things such as current trends, politics and the economy",
+    creator: "@adxxya30",
+    images: [
+      {
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-blog.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "Aditya Rahmad Blog Posts",
+      },
+    ],
+  },
 };
-
 type ResolvedPageSearchParams = {
-  category?: string;
   search?: string;
+  category?: string;
 };
 
-export default async function BlogPage({
+const BlogPage = async ({
   searchParams: searchParamsPromise,
 }: {
   searchParams: Promise<ResolvedPageSearchParams>;
-}) {
+}) => {
   const resolvedSearchParams = (await searchParamsPromise) || {};
-  const category = resolvedSearchParams.category;
+  // TODO: Fix this search to use s=value
   const search = resolvedSearchParams.search;
+  const category = resolvedSearchParams.category;
   const allCategories = await getAllPostCategories();
 
   return (
-    <main className="container mx-auto px-4 pt-12 pb-20 md:px-6 md:pt-16 lg:pt-20">
-      {/* === Hero Section === */}
-      <section className="flex flex-col items-center text-center mb-16 md:mb-20 lg:mb-24">
-        <div className="max-w-4xl mx-auto space-y-6">
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-            <span className="bg-gradient-to-r from-primary via-accent to-primary dark:from-primary dark:via-accent/80 dark:to-primary bg-clip-text text-transparent">
-              My Blog
-            </span>
-          </h1>
-
-          <p className="text-lg text-muted-foreground md:text-xl lg:text-2xl leading-relaxed max-w-3xl mx-auto">
-            Exploring web development, design, tech trends, and occasionally,
-            life's random musings.
-          </p>
-
-          {/* Search and Filter Section */}
-          <div className="flex flex-col items-center gap-4 pt-4 w-full max-w-2xl mx-auto">
-            <Suspense fallback={<Skeleton className="h-10 w-48 rounded-md" />}>
-              <div className="mb-2">
-                <BlogSearch />
-              </div>
-            </Suspense>
-            <div className="w-full flex justify-center flex-row">
-              <Suspense
-                fallback={<Skeleton className="h-10 w-48 rounded-md" />}
-              >
-                <div>
-                  <CategoryFilter
-                    categories={allCategories}
-                    activeCategory={category}
-                  />
-                </div>
-              </Suspense>
+    <section className="flex flex-col min-h-screen">
+      <header>
+        <Spotlight
+          className="-top-40 left-0 md:-top-20 md:left-60"
+          fill="oklch(74.6% 0.16 232.661)"
+        />
+        <Spotlight
+          className="-top-40 left-[-10rem] md:-top-20 md:left-[-20rem]"
+          fill="oklch(74.6% 0.16 232.661)"
+        />
+        <div className="text-center justify-center flex flex-col items-center pt-30 space-y-1">
+          <PageHero
+            icon={<BookText />}
+            title="Blog"
+            coloredTitle="Posts"
+            description="Not just about code — I write to make sense of the things I don’t fully understand yet."
+          />
+          <Suspense fallback={<Skeleton className="h-16 w-full rounded-md" />}>
+            <div className="h-16 max-w-[300px] md:max-w-full flex items-center justify-center px-4">
+              <SearchContent placeholder="Search something..." />
             </div>
-          </div>
+          </Suspense>
         </div>
-      </section>
-
-      {/* === Blog Post List === */}
-      <section className="mt-8 md:mt-12 max-w-6xl mx-auto">
-        <Suspense fallback={<PostListSkeleton />}>
-          <PostListServer category={category} searchQuery={search} />
+      </header>
+      <main className="flex flex-col max-w-5xl mx-auto px-4 py-12 md:py-20 gap-16">
+        <Suspense fallback={<BlogListSkeleton />}>
+          <BlogListServer
+            category={category}
+            searchQuery={search}
+            allCategories={allCategories}
+          />
         </Suspense>
-      </section>
-    </main>
+      </main>
+    </section>
   );
-}
+};
 
-function PostListSkeleton() {
-  return (
-    <div className="grid grid-cols-1 gap-8 md:gap-10">
-      {Array(3)
-        .fill(0)
-        .map((_, i) => (
-          <article
-            key={i}
-            className="group flex flex-col md:flex-row md:items-start gap-6 p-5 rounded-xl border border-border/30 bg-card hover:shadow-md transition-shadow duration-200"
-          >
-            <div className="w-full md:w-64 lg:w-80 aspect-video shrink-0">
-              <Skeleton className="h-full w-full rounded-lg bg-muted/50" />
-            </div>
-            <div className="flex-1 space-y-3">
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-                <Skeleton className="h-5 w-24 rounded-full bg-muted/40" />
-                <span className="text-muted-foreground/30">•</span>
-                <Skeleton className="h-5 w-28 rounded-full bg-muted/40" />
-              </div>
-              <Skeleton className="h-8 w-full max-w-md rounded bg-muted/60" />
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-full rounded bg-muted/40" />
-                <Skeleton className="h-4 w-11/12 rounded bg-muted/40" />
-                <Skeleton className="h-4 w-4/5 rounded bg-muted/40" />
-              </div>
-              <div className="pt-2">
-                <Skeleton className="h-6 w-32 rounded-md bg-muted/30" />
-              </div>
-            </div>
-          </article>
-        ))}
-    </div>
-  );
-}
+export default BlogPage;

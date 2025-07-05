@@ -1,106 +1,72 @@
-import AnimatedSection from "@/components/animated-section";
-import { BlogPostsSection } from "@/components/blogPost/PostCard";
-import ContactSection from "@/components/contact/ContactSection";
-import GithubSection from "@/components/gitgraph/GithubSection";
-import AboutPage from "@/components/pages/AboutPage";
-import BentoShowcase from "@/components/pages/BentoPage";
-import HeroPage from "@/components/pages/HeroPage";
-import { FeaturedProjectsSection } from "@/components/project/ProjectCard";
-import { Metadata } from "next";
+import HomeHero from "@/components/hero/HomeHero";
+import FeaturedBlog from "@/components/sections/FeaturedBlog";
+import { FeaturedProjectsSection } from "@/components/sections/FeaturedProject";
+import { GithubSection } from "@/components/sections/GithubSection";
+import { TestimonialsSection } from "@/components/sections/Testimonials";
+import { TopicsSection } from "@/components/sections/TopicSection";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Aditya Rahmad |  Software Engineer & Tech Enthusiast",
+  title: "Aditya Rahmad - Software Developer, Writer, and Tech Enthusiast",
   description:
-    "Explore the portfolio of Aditya Rahmad, a Software Engineer from Indonesia who is passionate about building modern and scalable web applications. See latest projects, read technical writings, and let's collaborate.",
-
+    "The official website of Aditya Rahmad, a software developer, writer, and tech enthusiast. Explore my projects, read my blog, and connect with me.",
   keywords: [
     "Aditya Rahmad",
-    "Tech Enthusiast",
-    "Software Engineer",
+    "Software Developer",
     "Web Developer",
-    "Next.js",
-    "React",
-    "TypeScript",
-    "Portfolio",
-    "Blog Teknologi",
-    "Developer Indonesia",
+    "Tech Blog",
+    "Personal Website",
+    "Programming",
+    "Frontend",
+    "Backend",
+    "Fullstack",
   ],
-
-  authors: [{ name: "Aditya Rahmad", url: "https://adxxya30.vercel.app" }],
-  creator: "Aditya Rahmad",
-
-  metadataBase: new URL("https://adxxya30.vercel.app"),
-
   openGraph: {
-    title: "Aditya Rahmad | Tech Enthusiast & Software Engineer",
+    title: "Aditya Rahmad - Software Developer, Writer, and Tech Enthusiast",
     description:
-      "Explore the portfolio of Aditya Rahmad, a Software Engineer & Tech Enthusiast from Indonesia who is passionate about building modern and scalable web applications.",
-    url: "https://adxxya30.vercel.app",
-    siteName: "Aditya Rahmad Portfolio",
+      "The official website of Aditya Rahmad, a software developer, writer, and tech enthusiast. Explore my projects, read my blog, and connect with me.",
+    url: process.env.NEXT_PUBLIC_SITE_URL,
+    siteName: "Aditya Rahmad",
     images: [
       {
-        url: "/og-image.avif",
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-home.png`,
         width: 1200,
         height: 630,
-        alt: "Aditya Rahmad - Homepage Portfolio",
+        alt: "Aditya Rahmad Personal Website",
       },
     ],
-    locale: "id_ID",
+    locale: "en_US",
     type: "website",
   },
-
   twitter: {
     card: "summary_large_image",
-    title: "Aditya Rahmad | Software Engineer & Tech Enthusiast",
+    title: "Aditya Rahmad - Software Developer, Writer, and Tech Enthusiast",
     description:
-      "Explore the portfolio of Aditya Rahmad, a Software Engineer & Tech Enthusiast from Indonesia who is passionate about building modern and scalable web applications.",
+      "The official website of Aditya Rahmad, a software developer, writer, and tech enthusiast. Explore my projects, read my blog, and connect with me.",
     creator: "@adxxya30",
-    images: ["og-image.avif"],
+    images: [
+      {
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-home.png`,
+        width: 1200,
+        height: 630,
+        alt: "Aditya Rahmad Personal Website",
+      },
+    ],
   },
-
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+  alternates: {
+    canonical: process.env.NEXT_PUBLIC_SITE_URL,
   },
 };
 
 export default function Home() {
   return (
-    <main className="relative flex flex-col items-center overflow-hidden bg-transparent text-white">
-      <HeroPage />
-
-      <AboutPage />
-
-      <BentoShowcase />
-
-      <AnimatedSection delay={100}>
-        <GithubSection />
-      </AnimatedSection>
-
-      <AnimatedSection>
-        <FeaturedProjectsSection />
-      </AnimatedSection>
-
-      <AnimatedSection delay={100}>
-        <BlogPostsSection />
-      </AnimatedSection>
-
-      <AnimatedSection delay={100}>
-        <ContactSection />
-      </AnimatedSection>
+    <main>
+      <HomeHero />
+      <TopicsSection />
+      <FeaturedBlog />
+      <GithubSection />
+      <FeaturedProjectsSection />
+      <TestimonialsSection />
     </main>
   );
 }

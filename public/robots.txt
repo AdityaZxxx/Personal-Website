@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://adxxya30.vercel.app/sitemap.xml

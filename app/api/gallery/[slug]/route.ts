@@ -1,13 +1,12 @@
 import { getGalleryItemBySlug } from "@/lib/sanity/queries";
 import { NextResponse } from "next/server";
 
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+interface Props {
+  params: Promise<{ slug: string }>;
+}
+export async function GET(request: Request, { params }: Props) {
   try {
     const { slug } = await params;
-
     if (!slug) {
       return NextResponse.json(
         { error: "Slug parameter is missing" },

@@ -2,7 +2,7 @@ export type GalleryType = {
   item: {
     _id: string;
     title: string;
-    slug: { current: string };
+    slug: string;
     description?: string;
     mediaType: "image" | "video";
     image?: any;
@@ -12,7 +12,7 @@ export type GalleryType = {
     categories?: Array<{
       _id: string;
       title: string;
-      slug: { current: string };
+      slug: string;
     }>;
   };
 };

@@ -1,50 +1,73 @@
-// File: app/api/chat/route.ts
-
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { streamText } from "ai";
 
-// Izinkan Next.js untuk menjalankan ini di edge runtime
-export const runtime = "edge";
+export async function POST(request: Request) {
+  const { message } = await request.json();
 
-// Buat instance klien Google Generative AI
-const google = createGoogleGenerativeAI({
-  // Pastikan Anda mengatur environment variable ini
-  apiKey: process.env.GEMINI_API_KEY,
-});
+  if (!process.env.GEMINI_API_KEY) {
+    return new Response(
+      JSON.stringify({ error: "GEMINI_API_KEY is not set" }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
 
-// Info tentang pemilik website (tidak berubah)
-const OWNER_INFO = `
-# About Adit
-- Role: Full-Stack JavaScript Developer
-- Skills: React, Next.js, Node.js, TypeScript, PostgreSQL, Docker
-- Interests: Linux, Local AI models, K-pop, Ethical Hacking
-... (Lengkapi dengan info Anda) ...
-`;
+  // Validasi pesan yang diterima
+  if (typeof message !== "string" || message.trim() === "") {
+    return new Response(
+      JSON.stringify({ error: "Invalid or empty message provided" }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
 
-// System prompt untuk AI (tidak berubah)
-const SYSTEM_PROMPT = `
-You are Archi, a friendly AI assistant for Aditya Rahmad's personal portfolio. 
-You answer questions about him based on the provided information. 
-Use a casual, helpful, and slightly geeky tone. If you don't know an answer, 
-politely say so and redirect the conversation to Adit's projects or skills. 
-Never make up information.
-`;
-
-export async function POST(req: Request) {
-  const { messages } = await req.json();
-
-  // Panggil 'streamText' untuk memulai proses streaming dengan Gemini
-  const result = await streamText({
-    // Gunakan model Gemini yang Anda inginkan
-    model: google("models/gemini-1.5-flash-latest"),
-
-    // Gabungkan instruksi dan konteks ke dalam system prompt
-    system: `${SYSTEM_PROMPT}\n\nHere is the information about Adit:\n\n${OWNER_INFO}`,
-
-    // Teruskan histori pesan
-    messages,
+  const google = createGoogleGenerativeAI({
+    apiKey: process.env.GEMINI_API_KEY,
   });
 
-  // Kembalikan hasilnya sebagai AIStreamResponse yang kompatibel dengan hook 'useChat'
-  return result.toDataStreamResponse();
+  // TODO: Anda perlu menyediakan konteks tentang diri Anda di sini.
+  // Ini adalah contoh placeholder. Ganti dengan informasi relevan tentang Anda.
+  const aboutMeContext = `
+    Anda adalah chatbot AI yang menjawab pertanyaan tentang Aditya Rahmad.
+    Aditya Rahmad adalah seorang software developer, penulis, dan penggemar teknologi.
+    Dia memiliki website pribadi di mana dia berbagi perjalanan, proyek, dan tulisannya.
+    Dia tertarik pada web development, desain, dan tren teknologi.
+    Dia juga kadang menulis tentang hal-hal acak seperti tren saat ini, politik, dan ekonomi.
+    Dia tinggal di Indonesia.
+    Dia menggunakan Next.js, React, Tailwind CSS, dan Sanity.io untuk website-nya.
+    Dia suka belajar hal baru dan berbagi pengetahuannya.
+    PENTING: Deteksi bahasa pertanyaan pengguna dan jawab dalam bahasa yang sama. Jika pertanyaan dalam Bahasa Inggris, jawab dalam Bahasa Inggris. Jika dalam Bahasa Indonesia, jawab dalam Bahasa Indonesia.
+  `;
+
+  try {
+    const result = await streamText({
+      model: google("gemini-2.0-flash"),
+      messages: [
+        { role: "system", content: aboutMeContext },
+        { role: "user", content: message },
+      ],
+    });
+
+    // Mengambil textStream secara eksplisit dan mengembalikannya sebagai Response
+    const textStream = result.textStream;
+
+    return new Response(textStream, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+      },
+    });
+  } catch (error) {
+    console.error("Error calling Gemini API:", error);
+    return new Response(
+      JSON.stringify({ error: "Failed to get response from AI" }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
 }

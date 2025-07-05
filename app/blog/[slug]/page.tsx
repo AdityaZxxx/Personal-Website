@@ -1,72 +1,64 @@
-import { Calendar, ChevronDown, Clock } from "lucide-react";
-import type { Metadata } from "next";
+import { EnjoyingPostCTA } from "@/components/blog/CTAPostBlog";
+import RelatedPostsSection from "@/components/blog/RelatedPostsSection";
+import { LikeButton } from "@/components/buttons/LikeButton";
+import { ShareButtons } from "@/components/buttons/ShareButtons";
+import { TagList } from "@/components/common/TagList";
+import { ViewTracker } from "@/components/common/ViewTracker";
+import { GiscusComments } from "@/components/forms/GiscusComments";
+import { PortableText } from "@/components/sanity/PortableText";
+import RelatedPostsSkeleton from "@/components/skeletons/RelatedPostsSkeleton";
+import { DesktopTOC } from "@/components/toc/DesktopTOC";
+import { MobileTOC } from "@/components/toc/MobileTOC";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { urlFor } from "@/lib/sanity/image";
+import { getPostBySlug } from "@/lib/sanity/queries";
+import { formatDate } from "@/lib/utils";
+import { Category } from "@/types";
+import { ArrowLeft, BookOpen, EyeIcon } from "lucide-react";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
-import { AuthorProfile } from "@/components/author-profile";
-import { FeaturedPosts } from "@/components/blogPost/FeaturedPosts";
-import { ReadingProgress } from "@/components/blogPost/ReadingProgress";
-import { ScrollToTopButton } from "@/components/blogPost/ScrollToTopButton";
-import { ShareButtons } from "@/components/blogPost/ShareButtons";
-import { TableOfContents } from "@/components/blogPost/TableOfContents";
-import { TagList } from "@/components/blogPost/TagList";
-import { PortableText } from "@/components/portable-text";
-import { Badge } from "@/components/ui/badge";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-import {
-  GiscusComments,
-  TrakteerSupport,
-} from "@/components/blogPost/DinamicImport";
-import { urlFor } from "@/lib/sanity/image";
-import {
-  getAllPostSlugs,
-  getFeaturedPosts,
-  getPostBySlug,
-} from "@/lib/sanity/queries";
-import { cn, formatDate } from "@/lib/utils";
-
-const NEXT_PUBLIC_SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://adxxya30.vercel.app";
-const SITE_NAME = "Aditya Rahmad";
-const DEFAULT_OG_IMAGE = `${NEXT_PUBLIC_SITE_URL}/og-image.avif`;
+type BlogDetailPageProps = {
+  params: Promise<{ slug: string }>;
+};
 
 export async function generateMetadata({
-  params: promiseParams,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const { slug } = await promiseParams;
+  params,
+}: BlogDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
   const post = await getPostBySlug(slug);
 
   if (!post) {
     return {
-      title: "Post Not Found",
-      robots: { index: false },
+      title: "Not Found",
+      description: "The page you are looking for does not exist.",
     };
   }
 
-  const imageUrl = post.mainImage
-    ? urlFor(post.mainImage).width(1200).height(630).url()
-    : DEFAULT_OG_IMAGE;
+  const mainImageUrl = post.mainImage?.asset
+    ? urlFor(post.mainImage).url()
+    : null;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const canonicalUrl = `${siteUrl}/blog/${post.slug}`;
 
-  const canonicalUrl = `${NEXT_PUBLIC_SITE_URL}/blog/${slug}`;
-  const postKeywords =
-    post.tags?.map((tag: { title: string }) => tag.title) || [];
+  const keywords = [
+    ...(post.tags || []),
+    ...(post.categories?.map((c: Category) => c.title) || []),
+    "Aditya Rahmad",
+    "Aditya",
+    "Blog",
+    "software developer",
+    "Portfolio",
+  ];
 
   return {
     title: post.title,
     description: post.excerpt,
-    keywords: ["Aditya Rahmad", post.categories?.[0]?.title, ...postKeywords],
+    keywords: keywords,
+    authors: [{ name: post.author?.name || "Aditya Rahmad", url: siteUrl }],
     alternates: {
       canonical: canonicalUrl,
     },
@@ -74,356 +66,274 @@ export async function generateMetadata({
       title: post.title,
       description: post.excerpt,
       url: canonicalUrl,
-      siteName: SITE_NAME,
-      images: [{ url: imageUrl, width: 1200, height: 630 }],
-      locale: "id_ID",
+      siteName: "Aditya Rahmad - software developer",
+      images: mainImageUrl
+        ? [
+            {
+              url: mainImageUrl,
+              width: post.mainImage.asset.width,
+              height: post.mainImage.asset.height,
+              alt: post.mainImage.alt || post.title,
+            },
+          ]
+        : [],
+      locale: "en_US",
       type: "article",
       publishedTime: post.publishedAt,
-      modifiedTime: post._updatedAt || post.publishedAt,
-      authors: post.author?.slug?.current
-        ? [`${NEXT_PUBLIC_SITE_URL}/author/${post.author.slug.current}`]
-        : undefined,
+      modifiedTime: post._updatedAt,
+      authors: post.author?.name ? [post.author.name] : ["Aditya Rahmad"],
       section: post.categories?.[0]?.title,
-      tags: postKeywords,
+      tags: post.tags,
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.excerpt,
-      images: [imageUrl],
+      site: "@adxxya30",
       creator: "@adxxya30",
+      images: mainImageUrl ? [mainImageUrl] : [],
     },
   };
 }
 
-export async function generateStaticParams() {
-  const posts = await getAllPostSlugs();
-  return posts
-    .map((slug: any) => slug?.current || slug)
-    .filter(
-      (slugString: string | null | undefined): slugString is string =>
-        typeof slugString === "string" && slugString.length > 0
-    )
-    .map((slugString: string) => ({ slug: slugString }));
-}
-
-const categoryColors = [
-  "border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-400 hover:bg-red-500/20",
-  "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400 hover:bg-green-500/20",
-  "border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-400 hover:bg-blue-500/20",
-  "border-yellow-500/30 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 hover:bg-yellow-500/20",
-  "border-purple-500/30 bg-purple-500/10 text-purple-700 dark:text-purple-400 hover:bg-purple-500/20",
-  "border-pink-500/30 bg-pink-500/10 text-pink-700 dark:text-pink-400 hover:bg-pink-500/20",
-  "border-orange-500/30 bg-orange-500/10 text-orange-700 dark:text-orange-400 hover:bg-orange-500/20",
-  "border-teal-500/30 bg-teal-500/10 text-teal-700 dark:text-teal-400 hover:bg-teal-500/20",
-  "border-indigo-500/30 bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 hover:bg-indigo-500/20",
-];
-
-function getColorClass(slug: string | undefined) {
-  if (!slug) return categoryColors[0];
-  const index =
-    slug.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) %
-    categoryColors.length;
-  return categoryColors[index];
-}
-
-export default async function PostPage({
-  params: promiseParams,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await promiseParams;
-
-  const [post, featuredPostsData] = await Promise.all([
-    getPostBySlug(slug),
-    getFeaturedPosts(4),
-  ]);
-
-  if (!post) {
-    notFound();
-  }
-
-  const filteredFeaturedPosts = featuredPostsData
-    .filter((p: any) => p.slug?.current !== slug)
-    .slice(0, 3);
-
-  const jsonLdImages: string[] = [];
-  if (post.mainImage) {
-    const imgUrl1200x630 = urlFor(post.mainImage).width(1200).height(630).url();
-    if (imgUrl1200x630) jsonLdImages.push(imgUrl1200x630);
-    const imgUrl1200x1200 = urlFor(post.mainImage)
-      .width(1200)
-      .height(1200)
-      .url();
-    if (imgUrl1200x1200) jsonLdImages.push(imgUrl1200x1200);
-  }
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `${NEXT_PUBLIC_SITE_URL}/blog/${slug}`,
-    },
-    headline: post.title,
-    description: post.excerpt,
-    image: jsonLdImages.length > 0 ? jsonLdImages : undefined,
-    datePublished: post.publishedAt,
-    dateModified: post._updatedAt || post.publishedAt,
-    author: {
-      "@type": "Person",
-      name: post.author?.name,
-      url: post.author?.slug?.current
-        ? `${NEXT_PUBLIC_SITE_URL}/author/${post.author.slug.current}`
-        : undefined,
-    },
-    publisher: {
-      "@type": "Personal",
-      name: SITE_NAME,
-      logo: { "@type": "ImageObject", url: "/logo.avif" },
-    },
-  };
-
-  const mainImageUrl = post.mainImage ? urlFor(post.mainImage).url() : null;
+const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+  const mainImageUrl = post.mainImage?.asset
+    ? urlFor(post.mainImage).url()
+    : null;
   const authorImageUrl = post.author?.image
     ? urlFor(post.author.image).url()
     : null;
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const canonicalUrl = `${siteUrl}/blog/${post.slug}`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    image: mainImageUrl,
+    author: [
+      {
+        "@type": "Person",
+        name: post.author?.name || "Aditya Rahmad",
+        url: siteUrl,
+      },
+    ],
+    publisher: {
+      "@type": "Organization",
+      name: "Aditya Rahmad",
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}/logo.avif`,
+      },
+    },
+    datePublished: post.publishedAt,
+    dateModified: post._updatedAt,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": canonicalUrl,
+    },
+  };
+
   return (
-    <>
-      <ReadingProgress />
+    <div className={`bg-background text-primary`}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-
-      <main
-        className={cn(
-          "container bg-[#0A0A0A] px-4 py-10 md:px-6 md:py-16 lg:py-20 backdrop-blur-sm"
-        )}
-      >
-        <div className="mx-auto max-w-screen-xl">
-          <div className="mb-8 md:mb-10">
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink
-                    href="/"
-                    className="transition-colors hover:text-slate-50"
+      <ViewTracker key={post._id} contentId={post._id} docType="post" />
+      {/* ==================================== */}
+      {/* 1. HERO SECTION                      */}
+      {/* ==================================== */}
+      {mainImageUrl && (
+        <figure className="relative w-full h-[30vh] md:h-[40vh]">
+          <Image
+            src={mainImageUrl}
+            alt={post.mainImage?.alt || `Cover image for ${post.title}`}
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+            placeholder={post.mainImage.lqip ? "blur" : "empty"}
+            blurDataURL={post.mainImage.lqip}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/5 to-background" />
+        </figure>
+      )}
+      {/* ================================================================== */}
+      {/* 2. KONTEN UTAMA                                                    */}
+      {/* ================================================================== */}
+      <main className="relative z-10 mx-auto max-w-5xl px-6 pb-24 pt-24 md:pt-30">
+        <div className="transform -translate-y-16 md:-translate-y-24 space-y-6">
+          {/* Kategori & Judul */}
+          <div className="space-y-2">
+            {post.categories && post.categories.length > 0 && (
+              <div className="flex flex-wrap items-center gap-2 mb-4">
+                {post.categories.map((category: Category) => (
+                  <Badge
+                    className="text-xs text-muted-foreground"
+                    key={category._id}
+                    variant="secondary"
                   >
-                    Home
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbLink
-                    href="/blog"
-                    className="transition-colors hover:text-slate-50"
-                  >
-                    Blog
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="truncate max-w-[150px] sm:max-w-xs md:max-w-sm">
-                    {post.title}
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+                    {category.title}
+                  </Badge>
+                ))}
+              </div>
+            )}
+            <h1 className="text-3xl font-rethink-sans font-semibold hyphens-auto text-primary sm:text-4xl md:text-5xl">
+              {post.title}
+            </h1>
+            {post.excerpt && (
+              <p className="text-muted-foreground max-w-3xl font-normal hyphens-auto text-base">
+                {post.excerpt}
+              </p>
+            )}
           </div>
 
-          <div className="lg:hidden sticky top-16 z-30 mb-6">
-            <details className="group overflow-hidden rounded-lg bg-black/50 backdrop-blur-md border border-slate-700 shadow-lg">
-              <summary className="flex items-center justify-between p-4 font-medium cursor-pointer list-none text-sm text-slate-100 hover:bg-slate-800/50 transition-colors">
-                <span>Table of Contents</span>
-                <ChevronDown className="h-5 w-5 transition-transform duration-300 group-open:rotate-180 text-slate-400" />
-              </summary>
-              <div className="mt-2 p-4 pt-0">
-                <div className="border-t border-slate-600 pt-4">
-                  <TableOfContents />
-                </div>
-              </div>
-            </details>
-          </div>
+          <div className="flex items-center space-x-4 text-muted-foreground mt-12">
+            <div className="flex items-center space-x-2">
+              {authorImageUrl && (
+                <Image
+                  src={authorImageUrl}
+                  alt={post.author?.name || "Author image"}
+                  width={32}
+                  height={32}
+                  className="w-10 h-10 rounded-full object-cover "
+                  priority={true}
+                />
+              )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[300px_minmax(0,1fr)] xl:gap-12">
-            <aside className="hidden lg:block sticky top-24 self-start h-[calc(100vh-7rem)] overflow-y-auto pb-10 pr-3 space-y-6 scrollbar-thin scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500 scrollbar-track-transparent">
-              <div className="p-5 rounded-lg border border-slate-700 bg-black/50 shadow-sm">
-                <h2 className="text-lg font-semibold mb-4 text-slate-100">
-                  In this article
-                </h2>
-                <TableOfContents />
-              </div>
-            </aside>
+              <div className="flex flex-col">
+                <span className="font-normal font-inter text-primary">
+                  {post.author?.name || "Unknown Author"}
+                </span>
 
-            <div className="min-w-0">
-              <div className="space-y-8 md:space-y-10">
-                <header className="space-y-4 md:space-y-6">
-                  {post.categories?.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {post.categories.map((category: any) => (
-                        <Link
-                          key={category.slug?.current}
-                          href={`/blog?category=${category.slug?.current}`}
-                          aria-label={`View posts in ${category.title}`}
-                        >
-                          <Badge
-                            variant="outline"
-                            className={cn(
-                              "px-3 py-1 text-xs font-medium rounded-full border transition-all duration-300", //
-                              getColorClass(category.slug?.current)
-                            )}
-                          >
-                            {category.title}
-                          </Badge>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                  <h1 className="text-3xl font-extrabold tracking-tight text-slate-50 sm:text-4xl md:text-5xl lg:text-6xl !leading-tight">
-                    {post.title}
-                  </h1>
-                  <p className="text-lg text-slate-300 sm:text-xl">
-                    {post.excerpt}
-                  </p>
-
-                  <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-400 border-t border-b border-slate-700 py-4">
-                    {post.author && (
-                      <Link
-                        href={
-                          post.author.slug?.current
-                            ? `/author/${post.author.slug.current}`
-                            : `/blog`
-                        }
-                        className="flex items-center gap-2 hover:text-sky-400 transition-colors group"
-                      >
-                        {authorImageUrl && (
-                          <Image
-                            src={authorImageUrl}
-                            alt={post.author.name || "Author image"}
-                            width={32}
-                            height={32}
-                            className="w-8 h-8 rounded-full object-cover border-2 border-slate-600 group-hover:border-sky-400 transition-colors"
-                          />
-                        )}
-                        <span className="font-medium text-slate-200 group-hover:text-sky-400 transition-colors">
-                          {post.author.name}
-                        </span>
-                      </Link>
-                    )}
-                    <div className="flex items-center gap-1.5">
-                      <Calendar className="h-4 w-4" />
-                      <time dateTime={post.publishedAt}>
-                        {formatDate(post.publishedAt)}
+                <div className="flex items-center gap-1.5 text-xs">
+                  <time dateTime={post.publishedAt}>
+                    {formatDate(post.publishedAt)}
+                  </time>
+                  {post._updatedAt && (
+                    <>
+                      <span className="text-muted-foreground">|</span>
+                      <time dateTime={post._updatedAt}>
+                        Last updated {formatDate(post._updatedAt)}
                       </time>
-                    </div>
-                    {post.estimatedReadingTime && (
-                      <div className="flex items-center gap-1.5">
-                        <Clock className="h-4 w-4" />
-                        <span>{post.estimatedReadingTime} min read</span>
-                      </div>
-                    )}
-                  </div>
-                </header>
-
-                {mainImageUrl && (
-                  <figure className="relative w-full overflow-hidden rounded-lg md:rounded-xl border border-slate-700 shadow-md">
-                    <Image
-                      src={mainImageUrl}
-                      alt={`Main image for ${post.title}`}
-                      width={1600}
-                      height={900}
-                      className="object-cover aspect-[16/9]"
-                      priority
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1600px"
-                    />
-                  </figure>
-                )}
-
-                <article className="prose prose-p:font-light prose-lg max-w-none prose-p:text-gray-400 prose-headings:text-gray-100 prose-headings:tracking-tight prose-li:text-gray-400 prose-headings:scroll-mt-24 prose-a:text-sky-400 hover:prose-a:text-sky-300 prose-strong:text-gray-300 prose-blockquote:border-sky-400 prose-blockquote:text-slate-300 prose-code:text-gray-300 prose-code:bg-slate-800/80 prose-code:p-1 prose-code:rounded-md prose-img:rounded-lg prose-img:shadow-md prose-code:font-mono">
-                  <PortableText value={post.body} />
-                </article>
-
-                {post.tags && post.tags.length > 0 && (
-                  <div className="max-w-3xl pt-6">
-                    <TagList tags={post.tags} />
-                  </div>
-                )}
-
-                <div className="max-w-3xl border-t border-slate-700 pt-8">
-                  <ShareButtons
-                    title={post.title}
-                    imageUrl={mainImageUrl || undefined}
-                    description={post.excerpt}
-                  />
-                </div>
-
-                <div className="max-w-3xl space-y-12 pt-8 border-t border-slate-700 mt-10">
-                  <div className="lg:hidden">
-                    <Tabs defaultValue="author" className="w-full">
-                      <TabsList className="grid w-full grid-cols-2 bg-slate-800 text-slate-300">
-                        <TabsTrigger
-                          value="author"
-                          className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-50"
-                        >
-                          About Author
-                        </TabsTrigger>
-                        <TabsTrigger
-                          value="related"
-                          className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-50"
-                        >
-                          Related Posts
-                        </TabsTrigger>
-                      </TabsList>
-                      <TabsContent
-                        value="author"
-                        className="mt-6 rounded-lg border border-slate-700 bg-slate-800/50 p-6 shadow"
-                      >
-                        {post.author && <AuthorProfile author={post.author} />}
-                      </TabsContent>
-                      <TabsContent
-                        value="related"
-                        className="mt-6 rounded-lg border border-slate-700 bg-slate-800/50 p-6 shadow"
-                      >
-                        <FeaturedPosts posts={filteredFeaturedPosts} />
-                      </TabsContent>
-                    </Tabs>
-                  </div>
-
-                  <div className="hidden lg:block space-y-10">
-                    {post.author && (
-                      <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6 shadow">
-                        <h2 className="text-xl font-semibold mb-4 text-slate-100">
-                          About the Author
-                        </h2>
-                        <AuthorProfile author={post.author} />
-                      </div>
-                    )}
-                    {filteredFeaturedPosts.length > 0 && (
-                      <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6 shadow">
-                        <h2 className="text-xl font-semibold mb-4 text-slate-100">
-                          Featured Posts
-                        </h2>
-                        <FeaturedPosts posts={filteredFeaturedPosts} />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="p-4 border border-slate-700 rounded-lg bg-slate-800/50 shadow">
-                    <TrakteerSupport username="adxxya30" />
-                  </div>
-                </div>
-
-                <div className="max-w-3xl pt-8">
-                  <GiscusComments />
+                    </>
+                  )}
                 </div>
               </div>
             </div>
           </div>
+
+          <Separator className="my-4" />
+
+          {/* Container Utama dengan Flexbox */}
+          <div className="flex items-center justify-between text-xs ">
+            {/* GRUP KIRI: Read time */}
+            {typeof post.estimatedReadingTime === "number" && (
+              <div className="flex items-center gap-1.5" title="Read time">
+                <BookOpen className="h-4 w-4 text-[#525252]" />
+                <span className="text-muted-foreground">
+                  {Math.max(post.estimatedReadingTime, 1)} min read
+                </span>
+              </div>
+            )}
+
+            <div className="flex items-center space-x-5">
+              {typeof post.viewCount === "number" && (
+                <div
+                  className="flex items-center gap-1.5"
+                  title={`${new Intl.NumberFormat("id-ID").format(
+                    post.viewCount
+                  )} views`}
+                >
+                  <EyeIcon className="h-4 w-4 text-[#525252]" />
+                  <span className="text-muted-foreground">
+                    {new Intl.NumberFormat("id-ID").format(post.viewCount)}{" "}
+                    views
+                  </span>
+                </div>
+              )}
+              <LikeButton
+                contentId={post._id}
+                initialLikes={post.likeCount || 0}
+              />
+            </div>
+          </div>
+          <Separator className="my-4" />
+        </div>
+
+        <div className="grid grid-cols-12 gap-x-8">
+          <article className="col-span-12 lg:col-span-8">
+            <PortableText value={post.body} />
+            {post.tags && post.tags.length > 0 && (
+              <div className="max-w-3xl pt-6">
+                <TagList tags={post.tags} content="blog" />
+              </div>
+            )}
+          </article>
+
+          <aside className="hidden lg:block lg:col-span-4">
+            <div className="sticky top-32 self-start rounded-lg bg-background border p-4">
+              <DesktopTOC />
+            </div>
+          </aside>
+        </div>
+        <Separator className="my-4" />
+        <div className="max-w-5xl pt-8">
+          <ShareButtons title={post.title} description={post.excerpt} />
+        </div>
+
+        <div className="max-w-5xl pt-16">
+          <GiscusComments />
+        </div>
+
+        {/* Related Posts */}
+        <div className="max-w-5xl pt-30">
+          <EnjoyingPostCTA />
+        </div>
+
+        <Separator className="my-8" />
+
+        <Suspense fallback={<RelatedPostsSkeleton />}>
+          <RelatedPostsSection currentPostSlug={post.slug} />
+        </Suspense>
+        <div className="flex items-center justify-start col-span-12 mt-10">
+          <Link
+            href="/blog"
+            className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span className="relative">
+              <span className="text-sm text-muted-foreground  hover:text-primary transition-colors">
+                Back to blog
+              </span>
+              <svg
+                className="absolute right-0 z-[-1] -bottom-1 w-[90px] sm:w-[110px] "
+                width="200"
+                height="10"
+                viewBox="0 0 224 6"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M0.500244 1.63051C8.87551 2.3919 17.451 1.9251 25.8672 1.9251C68.0427 1.9251 110.216 1.63051 152.391 1.63051C171.006 1.63051 189.616 1.33593 208.231 1.33593C212.099 1.33593 215.967 1.36279 219.835 1.33593C220.447 1.33168 222.926 0.77558 223.206 1.33593"
+                  stroke="#F5F5F5"
+                  strokeWidth="0.5"
+                  strokeLinecap="round"
+                ></path>
+              </svg>
+            </span>
+          </Link>
         </div>
       </main>
-      <ScrollToTopButton />
-    </>
+      <MobileTOC />
+    </div>
   );
-}
+};
+
+export default BlogDetailPage;
