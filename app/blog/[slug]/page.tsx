@@ -230,9 +230,7 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
 
           <Separator className="my-4" />
 
-          {/* Container Utama dengan Flexbox */}
           <div className="flex items-center justify-between text-xs ">
-            {/* GRUP KIRI: Read time */}
             {typeof post.estimatedReadingTime === "number" && (
               <div className="flex items-center gap-1.5" title="Read time">
                 <BookOpen className="h-4 w-4 text-[#525252]" />
@@ -291,7 +289,6 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
           <GiscusComments />
         </div>
 
-        {/* Related Posts */}
         <div className="max-w-5xl pt-30">
           <EnjoyingPostCTA />
         </div>

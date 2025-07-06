@@ -1,7 +1,6 @@
-// components/LikeButton.tsx
 "use client";
 
-import { likePost, unlikePost } from "@/app/actions/like-post"; // ⬅️ server actions
+import { likePost, unlikePost } from "@/app/actions/like-post";
 
 import { Heart } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
@@ -29,11 +28,9 @@ export function LikeButton({
       const newIsLiked = !isLiked;
       const newLikes = newIsLiked ? likes + 1 : likes - 1;
 
-      // Optimistic UI
       setIsLiked(newIsLiked);
       setLikes(newLikes);
 
-      // LocalStorage update
       const likedPosts = JSON.parse(localStorage.getItem("likedPosts") || "[]");
       if (newIsLiked) {
         localStorage.setItem(
@@ -47,13 +44,11 @@ export function LikeButton({
         );
       }
 
-      // Call server action langsung
       try {
         const data = newIsLiked
           ? await likePost(contentId)
           : await unlikePost(contentId);
 
-        // Sinkronin likes real-time dari server
         setLikes(data.likeCount);
       } catch (error) {
         console.error("Failed to toggle like:", error);
@@ -69,11 +64,11 @@ export function LikeButton({
     <button
       onClick={handleLikeToggle}
       disabled={isPending}
-      className="flex items-center space-x-1 text-sm text-gray-600 dark:text-gray-400"
+      className="flex items-center space-x-1 text-sm text-muted-foreground"
     >
       <div className="transition-all duration-200 ease-in-out transform">
         <Heart
-          className={`h-4 w-4 ${isLiked ? "fill-red-500 text-red-500 scale-110" : "fill-none text-gray-600 dark:text-gray-400"} transition-all duration-200 ease-in-out`}
+          className={`h-4 w-4 cursor-pointer ${isLiked ? "fill-red-500 text-red-500 scale-110" : "fill-none text-muted-foreground"} transition-all duration-200 ease-in-out`}
         />
       </div>
       <span>{formattedLikes}</span>

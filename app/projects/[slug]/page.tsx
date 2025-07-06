@@ -222,7 +222,7 @@ export default async function ProjectDetailPage({
       >
         <div className="mx-auto max-w-5xl">
           <div className="space-y-8">
-            <header className="space-y-3">
+            <header className="space-y-3 mt-8 md:mt-5">
               {categories && categories.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {categories.map((category: Category, index: number) => {

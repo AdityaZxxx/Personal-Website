@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   FaFacebook,
+  FaInstagram,
   FaLinkedin,
   FaReddit,
   FaTelegram,
@@ -17,14 +18,11 @@ import {
 import { RiTwitterXFill } from "react-icons/ri";
 import { toast } from "sonner";
 
-// --- PROPS ---
 interface ShareButtonsProps {
   title: string;
   description?: string;
 }
 
-// --- KONFIGURASI ---
-// PERBAIKAN: hoverClass sekarang juga mengontrol border untuk tampilan yang lebih bersih
 const brandConfig = {
   X: {
     icon: RiTwitterXFill,
@@ -68,30 +66,37 @@ const brandConfig = {
     getUrl: (url: string, title: string) =>
       `https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`,
   },
+  Instagram: {
+    icon: FaInstagram,
+    hoverClass: "hover:bg-[#E4405F] hover:text-white hover:border-[#E4405F]",
+    getUrl: (url: string, title: string) => "#",
+  },
 };
 
-// --- Komponen Tombol Share Individual (Telah Diperbaiki) ---
 const ShareButton = ({
   name,
   url,
   title,
+  onClick,
 }: {
   name: keyof typeof brandConfig;
   url: string;
   title: string;
+  onClick?: () => void;
 }) => {
   const config = brandConfig[name];
   return (
     <a
-      href={config.getUrl(url, title)}
-      target="_blank"
-      rel="noopener noreferrer"
+      href={onClick ? undefined : config.getUrl(url, title)}
+      target={onClick ? undefined : "_blank"}
+      rel={onClick ? undefined : "noopener noreferrer"}
       aria-label={`Share on ${name}`}
+      onClick={onClick}
     >
       <button
         className={cn(
           "p-2 rounded-full border transition-colors duration-300",
-          "text-foreground",
+          "text-foreground cursor-pointer",
           config.hoverClass
         )}
       >
@@ -101,7 +106,6 @@ const ShareButton = ({
   );
 };
 
-// --- KOMPONEN UTAMA ---
 export function ShareButtons({ title, description }: ShareButtonsProps) {
   const pathname = usePathname();
   const [url, setUrl] = useState("");
@@ -135,6 +139,11 @@ export function ShareButtons({ title, description }: ShareButtonsProps) {
       console.error("Error using Web Share API:", error);
       await copyToClipboard();
     }
+  };
+
+  const handleInstagramShare = async () => {
+    await copyToClipboard();
+    toast.info("Link copied! Paste it in your Instagram story or post.");
   };
 
   if (!isMounted) {
@@ -187,6 +196,7 @@ export function ShareButtons({ title, description }: ShareButtonsProps) {
               name={name as keyof typeof brandConfig}
               url={url}
               title={title}
+              onClick={name === "Instagram" ? handleInstagramShare : undefined}
             />
           ))}
           <Button
@@ -194,6 +204,7 @@ export function ShareButtons({ title, description }: ShareButtonsProps) {
             size="icon"
             onClick={copyToClipboard}
             aria-label="Copy link"
+            className="cursor-pointer"
           >
             <AnimatePresence mode="wait" initial={false}>
               <motion.span
