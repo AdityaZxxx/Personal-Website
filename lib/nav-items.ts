@@ -9,7 +9,6 @@ import {
   NotebookTabsIcon,
   PaintBucket,
   Sparkles,
-  Wrench,
 } from "lucide-react";
 
 export const allNavItems = [

@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/components/common/ThemeProvider";
 import { Footer } from "@/components/layouts/Footer";
 import { Navbar } from "@/components/layouts/Navbar";
 import { Toaster } from "@/components/ui/sonner";
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import {
   Geist_Mono,
@@ -141,6 +142,7 @@ export default function RootLayout({
           </Suspense>
           <Toaster position="bottom-right" />
           {children}
+          <Analytics />
           <Footer />
         </ThemeProvider>
       </body>

@@ -45,6 +45,7 @@
     "@sanity/table": "^1.1.3",
     "@sanity/vision": "^3.94.2",
     "@types/nprogress": "^0.2.3",
+    "@vercel/analytics": "^1.5.0",
     "ai": "^4.3.16",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
