@@ -1,11 +1,10 @@
 import { getGalleryItemBySlug } from "@/lib/sanity/queries";
 import { NextResponse } from "next/server";
 
-interface Props {
-  params: Promise<{ slug: string }>;
-  request: Request;
-}
-export async function GET({ params, request }: Props) {
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ slug: string }> }
+) {
   try {
     const { slug } = await params;
     if (!slug) {
