@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic"; // or use 'auto' with revalidation
+export const dynamic = "force-dynamic";
 
 export async function GET(
   request: Request,
@@ -21,7 +21,7 @@ export async function GET(
     const cacheKey = `github_contrib_${username}`;
     const cached = await fetch(apiUrl, {
       next: {
-        revalidate: 60 * 60 * 6, // cache 6 jam
+        revalidate: 60 * 60 * 6,
         tags: [cacheKey],
       },
     });

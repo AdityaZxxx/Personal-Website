@@ -1,15 +1,24 @@
-// app/api/notify/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const renderEmailTemplate = (newPost: any) => {
+  return `
+  <html>
+  <body>
+    <h1>New Blog Post</h1>
+    <p>This is a test email to notify subscribers about a new blog post.</p>
+  </body>
+  </html>
+  `;
+};
+
+// This API is currently not functional as it requires domain registration.
 export async function POST(request: NextRequest) {
   try {
-    // 1. Terima data post yang baru dipublikasikan dari Sanity
     const newPost = await request.json();
 
-    // 2. Ambil semua email subscriber dari Sanity
     const subscribers = "adityaofficial714@gmail.com";
     //  await client.fetch<string[]>(
     //   `*[_type == "subscriber"].email`
@@ -19,16 +28,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "No subscribers to notify." });
     }
 
-    // 3. Kirim email ke semua subscriber
     await resend.emails.send({
-      from: "Your Name <onboarding@resend.dev>", // Ganti dengan domain terverifikasi di Resend
-      to: subscribers, // Resend bisa mengirim ke array email
+      from: "Your Name <onboarding@resend.dev>",
+      to: subscribers,
       subject: `New Blog Post: ${newPost.title}`,
-      html: `
-        <h1>${newPost.title}</h1>
-        <p>A new post has been published on my blog. Check it out!</p>
-            <a href={`${process.env.NEXT_PUBLIC_SITE_URL}/blog/${newPost.slug.current}`}>Read Now</a>
-      `,
+      html: renderEmailTemplate(newPost),
     });
 
     return NextResponse.json({ message: "Notifications sent successfully!" });

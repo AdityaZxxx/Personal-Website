@@ -3,8 +3,9 @@ import { NextResponse } from "next/server";
 
 interface Props {
   params: Promise<{ slug: string }>;
+  request: Request;
 }
-export async function GET(request: Request, { params }: Props) {
+export async function GET({ params, request }: Props) {
   try {
     const { slug } = await params;
     if (!slug) {

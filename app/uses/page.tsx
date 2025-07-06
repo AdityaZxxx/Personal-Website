@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     url: `${process.env.NEXT_PUBLIC_SITE_URL}/uses`,
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-uses.jpg`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-uses.png`,
         width: 1200,
         height: 630,
         alt: "Uses Page Under Construction",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     creator: "@adxxya30",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-uses.jpg`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-uses.png`,
         width: 1200,
         height: 630,
         alt: "Uses Page Under Construction",

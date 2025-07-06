@@ -12,7 +12,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Buat dokumen baru di Sanity
     const newSubscriber = await writeClient.create({
       _type: "subscriber",
       email: email,
@@ -24,7 +23,12 @@ export async function POST(request: NextRequest) {
       subscriber: newSubscriber,
     });
   } catch (error) {
-    if (typeof error === 'object' && error !== null && 'statusCode' in error && (error as { statusCode: number }).statusCode === 409) {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "statusCode" in error &&
+      (error as { statusCode: number }).statusCode === 409
+    ) {
       return NextResponse.json(
         { message: "This email is already subscribed." },
         { status: 409 }

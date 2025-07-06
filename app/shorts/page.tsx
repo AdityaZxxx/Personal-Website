@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     url: `${process.env.NEXT_PUBLIC_SITE_URL}/shorts`,
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-shorts.jpg`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-shorts.png`,
         width: 1200,
         height: 630,
         alt: "Aditya Rahmad Shorts",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     creator: "@adxxya30",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-shorts.jpg`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-shorts.png`,
         width: 1200,
         height: 630,
         alt: "Aditya Rahmad Shorts",
@@ -139,7 +139,7 @@ const ShortsPage = async ({
           icon={<NotebookText />}
           title="Shorts"
           coloredTitle="Snippets"
-          description=" My personal notes that's not long enough to be a blog post"
+          description="My personal notes that's not long enough to be a blog post"
         />
         <Suspense fallback={<Skeleton className="h-16 w-full rounded-md" />}>
           <div className="h-16 w-full flex items-center justify-center">
