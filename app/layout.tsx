@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     siteName: "Aditya Rahmad - Personal Website",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-home.png`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image/og-image-home.png`,
         width: 1200,
         height: 630,
         alt: "Aditya Rahmad Personal Website",
@@ -92,7 +92,7 @@ export const metadata: Metadata = {
     description:
       "Welcome to my personal website, where I share my journey as a software developer, writer, and tech enthusiast. Explore my projects, read my blog, and connect with me.",
     creator: "@adxxya30",
-    images: [`${process.env.NEXT_PUBLIC_SITE_URL}/og-image-home.png`],
+    images: [`${process.env.NEXT_PUBLIC_SITE_URL}/og-image/og-image-home.png`],
   },
   robots: {
     index: true,

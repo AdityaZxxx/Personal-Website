@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     url: `${process.env.NEXT_PUBLIC_SITE_URL}/projects`,
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-projects.png`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image/og-image-projects.png`,
         width: 1200,
         height: 630,
         alt: "Aditya Rahmad Projects Portfolio",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     creator: "@adxxya30",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image-projects.png`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image/og-image-projects.png`,
         width: 1200,
         height: 630,
         alt: "Aditya Rahmad Projects Portfolio",
