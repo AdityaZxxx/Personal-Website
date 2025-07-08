@@ -145,9 +145,7 @@ const components: PortableTextComponents = {
     ),
   },
   marks: {
-    em: ({ children }) => (
-      <em className="text-muted-foreground font-semibold">{children}</em>
-    ),
+    em: ({ children }) => <em className="text-muted-foreground">{children}</em>,
     strong: ({ children }) => (
       <strong className="text-muted-foreground font-semibold">
         {children}
