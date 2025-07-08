@@ -50,16 +50,15 @@ const HeadingRenderer = ({
   children,
   className,
 }: {
-  value: PortableTextBlock; // Changed type to PortableTextBlock
+  value: PortableTextBlock;
   children?: React.ReactNode;
   className?: string;
 }) => {
-  const level = value.style as string; // Assert style as string
+  const level = value.style as string;
   const Tag = level as keyof HTMLElementTagNameMap;
   const textContent =
     value.children
       ?.map((child) => {
-        // Safely access text property
         if ("text" in child && typeof child.text === "string") {
           return child.text;
         }
@@ -147,10 +146,12 @@ const components: PortableTextComponents = {
   },
   marks: {
     em: ({ children }) => (
-      <em className="text-primary font-semibold">{children}</em>
+      <em className="text-muted-foreground font-semibold">{children}</em>
     ),
     strong: ({ children }) => (
-      <strong className="text-primary font-semibold">{children}</strong>
+      <strong className="text-muted-foreground font-semibold">
+        {children}
+      </strong>
     ),
     code: ({ children }) => (
       <code className="font-mono font-semibold px-1">{children}</code>

@@ -86,7 +86,7 @@ const topicsData = [
     title: "Build",
     subtitle:
       "From ideas to actual products — I build tools that help me learn and (hopefully) help others too.",
-    href: "/blog/flexbox",
+    href: "#",
     pattern: FlexboxPattern,
     rotation: "lg:rotate-[5deg]",
     zIndex: "z-30",
@@ -96,7 +96,7 @@ const topicsData = [
     title: "Reflect",
     subtitle:
       "Writing helps me slow down and process what I’m learning, both in tech and life.",
-    href: "/blog/data-fetching",
+    href: "#",
     pattern: FetchingPattern,
     rotation: "lg:rotate-[-3deg]",
     zIndex: "z-20",

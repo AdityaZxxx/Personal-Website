@@ -19,6 +19,7 @@ import { ArrowLeft, BookOpen, EyeIcon } from "lucide-react";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 type BlogDetailPageProps = {
@@ -99,6 +100,10 @@ export async function generateMetadata({
 const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
+
+  if (!post) {
+    notFound();
+  }
   const mainImageUrl = post.mainImage?.asset
     ? urlFor(post.mainImage).url()
     : null;
