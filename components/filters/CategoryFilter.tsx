@@ -46,7 +46,7 @@ export function CategoryFilter({
               size="sm"
               onClick={() => handleCategoryChange(categoryItem.slug)}
               className={cn(
-                "rounded-full px-2 py-0.5 h-8 text-xs font-medium transition-all",
+                "rounded-full px-2 py-0.5 h-8 text-xs font-medium transition-all cursor-pointer",
                 "border border-border hover:border-primary/50",
                 "hover:bg-primary/5 hover:text-primary",
                 "dark:hover:bg-primary/10 dark:hover:text-primary",

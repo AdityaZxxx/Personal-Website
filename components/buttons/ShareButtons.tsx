@@ -4,9 +4,9 @@ import ShareButtonsSkeleton from "@/components/skeletons/ShareButtonsSkeleton";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, Link2, Mail, Share2 } from "lucide-react";
+import { CheckIcon, Link2Icon, MailIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   FaFacebook,
   FaInstagram,
@@ -20,7 +20,6 @@ import { toast } from "sonner";
 
 interface ShareButtonsProps {
   title: string;
-  description?: string;
 }
 
 const brandConfig = {
@@ -55,7 +54,7 @@ const brandConfig = {
       `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
   },
   Email: {
-    icon: Mail,
+    icon: MailIcon,
     hoverClass: "hover:bg-[#7f7f7f] hover:text-white hover:border-[#7f7f7f]",
     getUrl: (url: string, title: string) =>
       `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`Check out this article:\n\n${url}`)}`,
@@ -106,20 +105,11 @@ const ShareButton = ({
   );
 };
 
-export function ShareButtons({ title, description }: ShareButtonsProps) {
+export function ShareButtons({ title }: ShareButtonsProps) {
   const pathname = usePathname();
   const [url, setUrl] = useState("");
   const [copied, setCopied] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [isShareApiAvailable, setIsShareApiAvailable] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-    if (typeof navigator !== "undefined" && "share" in navigator) {
-      setIsShareApiAvailable(true);
-    }
-    setUrl(window.location.origin + pathname);
-  }, [pathname]);
 
   const copyToClipboard = async () => {
     try {
@@ -129,15 +119,6 @@ export function ShareButtons({ title, description }: ShareButtonsProps) {
       setTimeout(() => setCopied(false), 2000);
     } catch {
       toast.error("Could not copy the link.");
-    }
-  };
-
-  const handleNativeShare = async () => {
-    try {
-      await navigator.share({ title, text: description, url });
-    } catch (error) {
-      console.error("Error using Web Share API:", error);
-      await copyToClipboard();
     }
   };
 
@@ -151,79 +132,43 @@ export function ShareButtons({ title, description }: ShareButtonsProps) {
   }
 
   return (
-    <div className="space-y-4 bg-transparent">
+    <div className="space-y-4 bg-transparent overflow-hidden">
       <h3 className="text-lg font-semibold text-primary">Share this post</h3>
 
-      {isShareApiAvailable ? (
-        <div className="flex gap-2">
-          <Button
-            onClick={handleNativeShare}
-            className="w-full"
-            variant="outline"
-          >
-            <Share2 className="mr-2 h-4 w-4" />
-            Share via...
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-foreground"
-            onClick={copyToClipboard}
-            aria-label="Copy link"
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={copied ? "check" : "link"}
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 20, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                {copied ? (
-                  <Check className="h-4 w-4 text-green-500" />
-                ) : (
-                  <Link2 className="h-4 w-4" />
-                )}
-              </motion.span>
-            </AnimatePresence>
-          </Button>
-        </div>
-      ) : (
-        <div className="flex flex-wrap gap-2">
-          {Object.keys(brandConfig).map((name) => (
-            <ShareButton
-              key={name}
-              name={name as keyof typeof brandConfig}
-              url={url}
-              title={title}
-              onClick={name === "Instagram" ? handleInstagramShare : undefined}
-            />
-          ))}
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={copyToClipboard}
-            aria-label="Copy link"
-            className="cursor-pointer"
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={copied ? "check" : "link"}
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 20, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                {copied ? (
-                  <Check className="h-4 w-4 text-green-500" />
-                ) : (
-                  <Link2 className="h-4 w-4" />
-                )}
-              </motion.span>
-            </AnimatePresence>
-          </Button>
-        </div>
-      )}
+      <div className="flex flex-wrap gap-2">
+        {Object.keys(brandConfig).map((name) => (
+          <ShareButton
+            key={name}
+            name={name as keyof typeof brandConfig}
+            url={url}
+            title={title}
+            onClick={name === "Instagram" ? handleInstagramShare : undefined}
+          />
+        ))}
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={copyToClipboard}
+          aria-label="Copy link"
+          className="cursor-pointer"
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={copied ? "check" : "link"}
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 20, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {copied ? (
+                <CheckIcon className="h-4 w-4 text-green-500" />
+              ) : (
+                <Link2Icon className="h-4 w-4" />
+              )}
+            </motion.span>
+          </AnimatePresence>
+        </Button>
+      </div>
     </div>
   );
 }

@@ -188,11 +188,11 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
                 ))}
               </div>
             )}
-            <h1 className="text-3xl font-rethink-sans font-semibold hyphens-auto text-primary sm:text-4xl md:text-5xl">
+            <h1 className="text-3xl font-rethink-sans font-semibold  text-primary sm:text-4xl md:text-5xl">
               {post.title}
             </h1>
             {post.excerpt && (
-              <p className="text-muted-foreground max-w-3xl font-normal hyphens-auto text-base">
+              <p className="text-muted-foreground max-w-3xl font-normal text-base">
                 {post.excerpt}
               </p>
             )}

@@ -25,10 +25,10 @@ export function BlogPostCard({
                   {formatDate(post.publishedAt)}
                 </time>
               </div>
-              <h3 className="font-bold font-rethink-sans text-base md:text-xl line-clamp-2 text-primary hyphens-auto tracking-tight">
+              <h3 className="font-bold font-rethink-sans text-base md:text-xl line-clamp-2 text-primary  tracking-tight">
                 {post.title}
               </h3>
-              <p className="font-normal font-inter line-clamp-2 text-muted-foreground hyphens-auto tracking-tight text-sm mt-1 ">
+              <p className="font-normal font-inter line-clamp-2 text-muted-foreground  tracking-tight text-sm mt-1 ">
                 {post.excerpt}
               </p>
               <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between text-xs pt-6">

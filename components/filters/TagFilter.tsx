@@ -9,10 +9,7 @@ interface TagFilterProps {
   activeTag?: string;
 }
 
-export function TagFilter({
-  tags,
-  activeTag,
-}: TagFilterProps) {
+export function TagFilter({ tags, activeTag }: TagFilterProps) {
   const router = useRouter();
   const pathname = usePathname();
   const currentUrlSearchParams = useSearchParams();
@@ -21,10 +18,8 @@ export function TagFilter({
     const params = new URLSearchParams(currentUrlSearchParams.toString());
 
     if (activeTag === clickedTag) {
-      // Jika tag yang diklik sudah aktif, nonaktifkan (hapus dari URL)
       params.delete("tag");
     } else {
-      // Jika tag yang diklik tidak aktif, aktifkan (set di URL)
       params.set("tag", clickedTag);
     }
 
@@ -33,9 +28,7 @@ export function TagFilter({
 
   return (
     <div className="w-full">
-      <p className="text-sm text-primary font-normal mt-2 mb-1">
-        Choose tags
-      </p>
+      <p className="text-sm text-primary font-normal mt-2 mb-1">Choose tags</p>
       <div className="flex flex-wrap items-baseline justify-start gap-2 sm:gap-3 mt-6">
         {tags.map((tagItem) => {
           const isActive = activeTag === tagItem;
@@ -47,7 +40,7 @@ export function TagFilter({
               size="sm"
               onClick={() => handleTagChange(tagItem)}
               className={cn(
-                "rounded-lg px-2 text-xs transition-all duration-200 ease-out",
+                "rounded-lg px-2 text-xs transition-all duration-200 ease-out cursor-pointer",
                 isActive
                   ? "bg-primary text-primary-foreground shadow-md hover:bg-primary/90 dark:bg-sky-500 dark:hover:bg-sky-600 dark:text-primary"
                   : "border-card text-foreground hover:bg-foreground hover:border-foreground-foreground dark:border-slate-700 dark:text-muted-foreground dark:hover:bg-zinc-700 dark:hover:text-slate-100 dark:hover:border-slate-500"

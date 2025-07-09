@@ -23,7 +23,10 @@ export function SortFilter({
 }: SortFilterProps) {
   return (
     <Select onValueChange={onValueChange} defaultValue={defaultValue ?? ""}>
-      <SelectTrigger className="w-[180px] text-primary z-20" aria-label="Sort filter">
+      <SelectTrigger
+        className="w-[180px] text-primary z-20 cursor-pointer"
+        aria-label="Sort filter"
+      >
         <SelectValue placeholder="Sort By" className="text-primary" />
       </SelectTrigger>
       <SelectContent>
@@ -38,6 +41,7 @@ export function SortFilter({
                 aria-activedescendant={option.value}
                 key={option.value}
                 value={option.value}
+                className="cursor-pointer"
               >
                 {option.icon && <span className="mr-2">{option.icon}</span>}
                 {option.label}

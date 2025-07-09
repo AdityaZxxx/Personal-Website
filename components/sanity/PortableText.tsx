@@ -120,7 +120,7 @@ const components: PortableTextComponents = {
     h2: (props) => (
       <HeadingRenderer
         {...props}
-        className="text-2xl py-2 font-semibold text-primary transition-colors duration-200 hover:underline no-underline"
+        className="text-2xl pb-4 pt-8 font-semibold text-primary transition-colors duration-200 hover:underline no-underline"
       />
     ),
     h3: (props) => (
@@ -200,7 +200,7 @@ export function PortableText({
   return (
     <div
       className={cn(
-        "font-light hyphens-auto text-base/7 bg-background text-muted-foreground ",
+        "font-light  text-base/7 bg-background text-muted-foreground ",
         className
       )}
     >

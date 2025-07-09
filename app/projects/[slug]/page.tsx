@@ -245,7 +245,7 @@ export default async function ProjectDetailPage({
                   })}
                 </div>
               )}
-              <h1 className="text-3xl font-rethink-sans font-semibold hyphens-auto tracking-tight text-primary sm:text-4xl md:text-5xl !leading-tight">
+              <h1 className="text-3xl font-rethink-sans font-semibold  tracking-tight text-primary sm:text-4xl md:text-5xl !leading-tight">
                 {title}
               </h1>
               {completedAt && (

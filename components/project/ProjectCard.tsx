@@ -54,7 +54,7 @@ export function ProjectCard({
             "md:row-start-1" // Ensure it stays on the same row on desktop
           )}
         >
-          <h3 className="font-bold font-rethink-sans text-base md:text-4xl line-clamp-2 text-primary hyphens-auto tracking-tight">
+          <h3 className="font-bold font-rethink-sans text-base md:text-4xl line-clamp-2 text-primary  tracking-tight">
             {project.title}
           </h3>
 
