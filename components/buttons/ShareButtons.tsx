@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckIcon, Link2Icon, MailIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaFacebook,
   FaInstagram,
@@ -110,6 +110,13 @@ export function ShareButtons({ title }: ShareButtonsProps) {
   const [url, setUrl] = useState("");
   const [copied, setCopied] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setUrl(window.location.origin + pathname);
+      setIsMounted(true);
+    }
+  }, [pathname]);
 
   const copyToClipboard = async () => {
     try {
