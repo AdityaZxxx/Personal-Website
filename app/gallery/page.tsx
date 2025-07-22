@@ -56,7 +56,7 @@ interface GalleryPageProps {
 
 export default async function GalleryPage({ searchParams }: GalleryPageProps) {
   return (
-    <Suspense fallback={<div>Loading Gallery...</div>}>
+    <Suspense fallback={null}>
       <GalleryContent searchParams={searchParams} />
     </Suspense>
   );
@@ -67,29 +67,34 @@ async function GalleryContent({ searchParams }: GalleryPageProps) {
   const categories = await getAllGalleryCategories();
 
   return (
-    <main className="flex flex-col max-w-5xl mx-auto px-4 py-16 md:py-24 gap-16">
-      <Spotlight
-        className="-top-40 left-0 md:-top-20 md:left-60"
-        fill="oklch(74.6% 0.16 232.661)"
-      />
-      <Spotlight
-        className="-top-40 left-[-10rem] md:-top-20 md:left-[-20rem]"
-        fill="oklch(74.6% 0.16 232.661)"
-      />
-      <PageHero
-        icon={<ImagesIcon className="h-8 w-8" />}
-        title="Capture"
-        coloredTitle="Memory"
-        description="Here's my gallery memes, screenshots, terminal chaos, and the occasional K-pop bias. No context, no rules — just the stuff that makes me pause and save."
-      />
+    <section className="overflow-hidden">
+      <header>
+        <Spotlight
+          className="-top-40 left-0 md:-top-20 md:left-60"
+          fill="oklch(74.6% 0.16 232.661)"
+        />
+        <Spotlight
+          className="-top-40 left-[-10rem] md:-top-20 md:left-[-20rem]"
+          fill="oklch(74.6% 0.16 232.661)"
+        />
+        <div className="text-center justify-center flex flex-col items-center pt-30 space-y-1 z-50 px-4">
+          <PageHero
+            icon={<ImagesIcon className="h-8 w-8" />}
+            title="Capture"
+            coloredTitle="Memory"
+            description="No context, no rules — just the stuff that makes me pause and save."
+          />
+        </div>
+      </header>
 
-      <CategoryFilter categories={categories} activeCategory={category} />
-
-      <div className="mt-8">
+      <main className="flex flex-col max-w-5xl mx-auto px-4 py-16 md:py-24 gap-16">
+        <div className="flex justify-center">
+          <CategoryFilter categories={categories} activeCategory={category} />
+        </div>
         <Suspense fallback={<Skeleton className="h-10 w-48 rounded-md" />}>
           <GalleryGrid category={category} />
         </Suspense>
-      </div>
-    </main>
+      </main>
+    </section>
   );
 }

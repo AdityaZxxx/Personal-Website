@@ -65,7 +65,7 @@ const ProjectsPage = async ({
   const allCategories = await getAllProjectCategories();
 
   return (
-    <section>
+    <section className="overflow-hidden">
       <header>
         <Spotlight
           className="-top-40 left-0 md:-top-20 md:left-60"
@@ -75,12 +75,12 @@ const ProjectsPage = async ({
           className="-top-40 left-[-10rem] md:-top-20 md:left-[-20rem]"
           fill="oklch(74.6% 0.16 232.661)"
         />
-        <div className="text-center justify-center flex flex-col items-center pt-30 space-y-1">
+        <div className="text-center justify-center flex flex-col items-center pt-30 space-y-1 z-50 px-4">
           <PageHero
-            icon={<FolderOpen />}
+            icon={<FolderOpen className="h-8 w-8" />}
             title="Current "
             coloredTitle="Projects"
-            description="Here are some things I’ve built — not just to sharpen my skills, but to explore ideas and solve problems I actually care about."
+            description="Here are some things I've built — not just to sharpen my skills, but to explore ideas and solve problems I actually care about."
           />
         </div>
       </header>

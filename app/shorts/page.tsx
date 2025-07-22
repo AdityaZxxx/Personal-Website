@@ -134,15 +134,16 @@ const ShortsPage = async ({
           <hr className="border-neutral-600" />
         </div>
       </header>
-      <div className="text-center justify-center flex flex-col items-center pt-30 space-y-1 z-50">
+
+      <div className="text-center justify-center flex flex-col items-center pt-30 space-y-1 z-50 px-4">
         <PageHero
-          icon={<NotebookText />}
+          icon={<NotebookText className="h-8 w-8" />}
           title="Shorts"
           coloredTitle="Snippets"
           description="My personal notes that's not long enough to be a blog post"
         />
         <Suspense fallback={<Skeleton className="h-16 w-full rounded-md" />}>
-          <div className="h-16 w-full flex items-center justify-center">
+          <div className="h-16 max-w-[300px] md:max-w-full flex items-center justify-center px-4">
             <SearchContent placeholder="Search something..." />
           </div>
         </Suspense>

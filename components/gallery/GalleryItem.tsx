@@ -105,7 +105,7 @@ export function GalleryItem({ item }: { item: GalleryItemType }) {
             alt={thumbnail.alt || `Thumbnail for ${item.title}`}
             fill
             className="object-cover transition-all duration-300 ease-in-out group-hover:scale-105 group-hover:brightness-90"
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, (max-width: 1279px) 33vw, 25vw"
             placeholder="blur"
             blurDataURL={thumbnail.lqip}
           />

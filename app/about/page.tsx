@@ -111,7 +111,7 @@ const timelineData = [
 
 const AboutPage = () => {
   return (
-    <section>
+    <section className="overflow-hidden">
       <header>
         <Spotlight
           className="-top-40 left-0 md:-top-20 md:left-60"
@@ -121,9 +121,9 @@ const AboutPage = () => {
           className="-top-40 left-[-10rem] md:-top-20 md:left-[-20rem]"
           fill="oklch(74.6% 0.16 232.661)"
         />
-        <div className="text-center justify-center flex flex-col items-center pt-30 space-y-1">
+        <div className="text-center justify-center flex flex-col items-center pt-30 space-y-1 z-50 px-4">
           <PageHero
-            icon={<UserCircle2 />}
+            icon={<UserCircle2 className="h-8 w-8" />}
             title="About"
             coloredTitle="Me"
             description="A little bit about my journey, my passion for technology, and the
@@ -132,10 +132,8 @@ const AboutPage = () => {
         </div>
       </header>
       <main className="flex flex-col max-w-5xl mx-auto px-4 py-16 md:py-24 gap-16 overflow-hidden">
-        {/* Section: Bio with Image Stack */}
         <section className="max-w-5xl w-full mx-auto px-4 py-16 md:py-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-            {/* Image Stack */}
             <div className="flex justify-center pr-2 items-center min-h-[200px] md:min-h-[400px]">
               <Stack
                 randomRotation={true}
@@ -146,7 +144,6 @@ const AboutPage = () => {
               />
             </div>
 
-            {/* Text Content */}
             <div className="flex flex-col space-y-6 text-muted-foreground">
               <h2 className="text-3xl font-semibold text-foreground">
                 Aditya Rahmad
@@ -179,10 +176,8 @@ const AboutPage = () => {
           </div>
         </section>
 
-        {/* Section: What I&apos;m up to now */}
         <section className="max-w-5xl w-full mx-auto px-4 py-16 md:py-24">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-            {/* Title */}
             <div className="md:col-span-1 flex items-start gap-3">
               <HelpCircle className="h-8 w-8 text-muted-foreground mt-1" />
               <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
@@ -190,7 +185,6 @@ const AboutPage = () => {
               </h2>
             </div>
 
-            {/* Content */}
             <div className="md:col-span-2">
               <ul className="space-y-4 text-muted-foreground list-disc list-inside">
                 <li>

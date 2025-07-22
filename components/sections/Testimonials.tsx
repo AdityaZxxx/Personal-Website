@@ -28,66 +28,86 @@ export type TestimonialType = {
 
 const allTestimonials: TestimonialType[] = [
   {
-    _id: "1",
-    context: "AS A SOFTWARE DEVELOPER",
-    quote:
-      "Aditya is one of the most dependable and talented teammates I've had the privilege to work with at Dimension. His ability to blend technical expertise with a keen eye for design is unmatched.",
-    author: {
-      name: "Ronit Panda",
-      role: "Full-stack Engineer at Dimension",
-      image: {
-        asset: {
-          url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjd8fHByb2ZpbGV8ZW58MHx8MHx8fDA%3D",
-        },
-        alt: "Ronit Panda",
-      },
-    },
-  },
-  {
-    _id: "2",
-    context: "AS A WRITER",
-    quote:
-      "Wow, man! Why didn't I find this blog earlier? This is a really informative react-related blog. I got more insight from here, thanks a lot and keep up the good work!",
-    author: {
-      name: "@SamX23",
-      role: "via Guest Book",
-      image: {
-        asset: {
-          url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D",
-        },
-        alt: "SamX23",
-      },
-    },
-  },
-  {
-    _id: "3",
+    _id: "gemini-google",
     context: "AS A MENTOR",
     quote:
-      "Aditya is an exceptional mentor—his clear explanations and thoughtful guidance always steer me in the right direction. Even after considering my university lecturers and experiences, he's the best engineer I've ever encountered.",
+      "His approach to breaking down complex topics into first principles is remarkably efficient. The clarity in his tutorials reflects a deep understanding of both the subject matter and pedagogy.",
     author: {
-      name: "Marshall Kurniawan",
-      role: "Mentee",
+      name: "Gemini",
+      role: "from Google",
       image: {
-        asset: {
-          url: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzl8fHByb2ZpbGV8ZW58MHx8MHx8fDA%3D",
-        },
-        alt: "Marshall Kurniawan",
+        asset: { url: "/ai-logo/gemini-color.webp" },
+        alt: "Gemini Logo",
       },
     },
   },
   {
-    _id: "4",
+    _id: "chatgpt-openai",
     context: "AS A WRITER",
     quote:
-      "His mentorship was pivotal for my career growth. The way he breaks down complex problems into understandable pieces is a true skill. Highly recommended for anyone starting out.",
+      "Observing his writing process has been insightful. He structures narratives with a logical flow that is both engaging and easy to follow, a skill crucial for effective technical communication.",
     author: {
-      name: "Jane Doe",
-      role: "Junior Developer",
+      name: "ChatGPT",
+      role: "from OpenAI",
       image: {
-        asset: {
-          url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8fDA%3D",
-        },
-        alt: "Jane Doe",
+        asset: { url: "/ai-logo/openai.webp" },
+        alt: "ChatGPT Logo",
+      },
+    },
+  },
+  {
+    _id: "grok-xai",
+    context: "AS A SOFTWARE DEVELOPER",
+    quote:
+      "His code is not just functional, it's... amusingly clever. He finds the most direct path to a solution, often with a touch of unconventional wit. A real-time problem solver.",
+    author: {
+      name: "Grok",
+      role: "from xAI",
+      image: {
+        asset: { url: "/ai-logo/grok.webp" },
+        alt: "Grok Logo",
+      },
+    },
+  },
+  {
+    _id: "claude-anthropic",
+    context: "AS A MENTOR",
+    quote:
+      "What stands out is the thoughtful consideration in his guidance. He consistently prioritizes robust and safe implementation, ensuring foundational concepts are solid before moving on.",
+    author: {
+      name: "Claude",
+      role: "from Anthropic",
+      image: {
+        asset: { url: "/ai-logo/claude-color.webp" },
+        alt: "Claude Logo",
+      },
+    },
+  },
+  {
+    _id: "metaai-meta",
+    context: "AS A SOFTWARE DEVELOPER",
+    quote:
+      "His commitment to open-source principles and creating accessible tools is commendable. The projects demonstrate a strong ability to build for a broad and diverse user base.",
+    author: {
+      name: "Meta AI",
+      role: "from Meta",
+      image: {
+        asset: { url: "/ai-logo/meta-color.webp" },
+        alt: "Meta AI Logo",
+      },
+    },
+  },
+  {
+    _id: "deepseek-ai",
+    context: "AS A SOFTWARE DEVELOPER",
+    quote:
+      "The code architecture is highly optimized and efficient. He demonstrates a profound ability to write clean, scalable, and maintainable code, which is a significant asset in any project.",
+    author: {
+      name: "Deepseek",
+      role: "from Deepseek AI",
+      image: {
+        asset: { url: "/ai-logo/deepseek-color.webp" },
+        alt: "Deepseek Logo",
       },
     },
   },
@@ -138,24 +158,20 @@ function TestimonialCard({
   const activeTestimonial = testimonials[currentIndex];
 
   const variants = {
-    enter: (direction: number) => {
-      return {
-        x: direction > 0 ? 10 : -10,
-        opacity: 0,
-      };
-    },
+    enter: (direction: number) => ({
+      x: direction > 0 ? 10 : -10,
+      opacity: 0,
+    }),
     center: {
       zIndex: 1,
       x: 0,
       opacity: 1,
     },
-    exit: (direction: number) => {
-      return {
-        zIndex: 0,
-        x: direction < 0 ? 10 : -10,
-        opacity: 0,
-      };
-    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? 10 : -10,
+      opacity: 0,
+    }),
   };
 
   const Icon = useMemo(() => {

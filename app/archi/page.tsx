@@ -50,7 +50,7 @@ export const metadata: Metadata = {
 
 export default function ArchiPage() {
   return (
-    <section className="relative overflow-hidden bg-background py-20 md:py-28">
+    <section className="overflow-hidden">
       <header>
         <Spotlight
           className="-top-40 left-0 md:-top-20 md:left-60"
@@ -61,9 +61,9 @@ export default function ArchiPage() {
           fill="oklch(74.6% 0.16 232.661)"
         />
 
-        <div className="text-center justify-center flex flex-col items-center p-4 space-y-1 z-50">
+        <div className="text-center justify-center flex flex-col items-center pt-30 space-y-1 z-50 px-4">
           <PageHero
-            icon={<BotIcon />}
+            icon={<BotIcon className="h-8 w-8" />}
             title="Archi"
             coloredTitle="AI"
             description="Chat with Archi, an AI powered by Gemini, to learn more about Aditya Rahmad."
@@ -71,7 +71,7 @@ export default function ArchiPage() {
         </div>
       </header>
 
-      <main>
+      <main className="max-w-5xl mx-auto px-4 py-16 md:py-24 gap-16">
         <div className="p-4">
           <Suspense fallback={<div>Loading...</div>}>
             <ArchiChat />

@@ -86,7 +86,7 @@ const topicsData = [
     title: "Build",
     subtitle:
       "From ideas to actual products — I build tools that help me learn and (hopefully) help others too.",
-    href: "#",
+    href: "/projects",
     pattern: FlexboxPattern,
     rotation: "lg:rotate-[5deg]",
     zIndex: "z-30",
@@ -95,8 +95,8 @@ const topicsData = [
   {
     title: "Reflect",
     subtitle:
-      "Writing helps me slow down and process what I’m learning, both in tech and life.",
-    href: "#",
+      "Writing helps me slow down and process what I'm learning, both in tech and life.",
+    href: "/blog",
     pattern: FetchingPattern,
     rotation: "lg:rotate-[-3deg]",
     zIndex: "z-20",
@@ -105,7 +105,7 @@ const topicsData = [
   {
     title: "Explore",
     subtitle:
-      "I’m curious about how technology intersects with culture, society, and power — and I’m learning as I go.",
+      "I’m curious about how technology intersects with culture, society, and power — and I'm learning as I go.",
     href: "/blog",
     pattern: AndMorePattern,
     rotation: "lg:rotate-[4deg]",

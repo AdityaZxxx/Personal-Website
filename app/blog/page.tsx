@@ -70,7 +70,7 @@ const BlogPage = async ({
   const allCategories = await getAllPostCategories();
 
   return (
-    <section className="flex flex-col min-h-screen">
+    <section className="overflow-hidden">
       <header>
         <Spotlight
           className="-top-40 left-0 md:-top-20 md:left-60"
@@ -80,12 +80,12 @@ const BlogPage = async ({
           className="-top-40 left-[-10rem] md:-top-20 md:left-[-20rem]"
           fill="oklch(74.6% 0.16 232.661)"
         />
-        <div className="text-center justify-center flex flex-col items-center pt-30 space-y-1">
+        <div className="text-center justify-center flex flex-col items-center pt-30 space-y-1 z-50 px-4">
           <PageHero
-            icon={<BookText />}
+            icon={<BookText className="h-8 w-8" />}
             title="Blog"
             coloredTitle="Posts"
-            description="Not just about code — I write to make sense of the things I don’t fully understand yet."
+            description="Not just about code — I write to make sense of the things I don't fully understand yet."
           />
           <Suspense fallback={<Skeleton className="h-16 w-full rounded-md" />}>
             <div className="h-16 max-w-[300px] md:max-w-full flex items-center justify-center px-4">
