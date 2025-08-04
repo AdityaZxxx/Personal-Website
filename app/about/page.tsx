@@ -1,8 +1,10 @@
 import Stack from "@/components/about/ProfileStackCard";
 import { TechStackSection } from "@/components/about/TechStack";
+import { BuyMeCrypto } from "@/components/common/BuyMeCrypto";
 import PageHero from "@/components/hero/PageHero";
 import { Spotlight } from "@/components/hero/Spotlight";
 import { Timeline } from "@/components/sections/TimelineJourney";
+import { getAboutPageData } from "@/lib/sanity/queries";
 import { HelpCircle, UserCircle2 } from "lucide-react";
 import { Metadata } from "next";
 
@@ -53,63 +55,31 @@ export const metadata: Metadata = {
 const images = [
   {
     id: 1,
-    img: "https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?q=80&w=500&auto=format",
+    img: "/about/image-1.webp",
   },
   {
     id: 2,
-    img: "https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=500&auto=format",
+    img: "/about/image-2.webp",
+  },
+  {
+    id: 3,
+    img: "/about/image-3.webp",
   },
 ];
 
-const timelineData = [
-  {
-    title: "2020",
-    content: (
-      <p className="text-neutral-600 dark:text-muted-foreground">
-        Started learning web development basics (HTML, CSS, JavaScript) through
-        online resources.
-      </p>
-    ),
-  },
-  {
-    title: "2021",
-    content: (
-      <p className="text-neutral-600 dark:text-muted-foreground">
-        Built first projects and discovered React. Began contributing to open
-        source.
-      </p>
-    ),
-  },
-  {
-    title: "2022",
-    content: (
-      <p className="text-neutral-600 dark:text-muted-foreground">
-        Deepened knowledge in full-stack development. Learned Node.js, Express,
-        and databases.
-      </p>
-    ),
-  },
-  {
-    title: "2023",
-    content: (
-      <p className="text-neutral-600 dark:text-muted-foreground">
-        Mastered TypeScript and Next.js. Started building complex applications
-        with modern tooling.
-      </p>
-    ),
-  },
-  {
-    title: "2024",
-    content: (
-      <p className="text-neutral-600 dark:text-muted-foreground">
-        Focused on performance optimization, accessibility, and advanced React
-        patterns.
-      </p>
-    ),
-  },
-];
+const AboutPage = async () => {
+  const aboutData = await getAboutPageData();
 
-const AboutPage = () => {
+  const timelineData =
+    aboutData?.timelineEvents?.map((event: any) => ({
+      title: event.year,
+      content: (
+        <p className="text-neutral-600 dark:text-muted-foreground">
+          {event.description}
+        </p>
+      ),
+    })) || [];
+
   return (
     <section className="overflow-hidden">
       <header>
@@ -134,14 +104,17 @@ const AboutPage = () => {
       <main className="flex flex-col max-w-5xl mx-auto px-4 py-16 md:py-24 gap-16 overflow-hidden">
         <section className="max-w-5xl w-full mx-auto px-4 py-16 md:py-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-            <div className="flex justify-center pr-2 items-center min-h-[200px] md:min-h-[400px]">
+            <div className="flex flex-col justify-center pr-2 items-center min-h-[200px] md:min-h-[400px]">
               <Stack
                 randomRotation={true}
                 sensitivity={180}
-                sendToBackOnClick={false}
+                sendToBackOnClick={true}
                 cardDimensions={{ width: 300, height: 450 }}
                 cardsData={images}
               />
+              <p className="mt-4 text-center font-handwriting text-sm text-muted-foreground">
+                Try to swap or click the cards!
+              </p>
             </div>
 
             <div className="flex flex-col space-y-6 text-muted-foreground">
@@ -187,34 +160,14 @@ const AboutPage = () => {
 
             <div className="md:col-span-2">
               <ul className="space-y-4 text-muted-foreground list-disc list-inside">
-                <li>
-                  <span className="font-semibold text-foreground">
-                    Exploring Advanced AI:
-                  </span>{" "}
-                  Diving deep into machine learning models and building
-                  applications with the OpenAI API.
-                </li>
-                <li>
-                  <span className="font-semibold text-foreground">
-                    Mastering Go (Golang):
-                  </span>{" "}
-                  Expanding my backend skills by building high-performance
-                  concurrent systems.
-                </li>
-                <li>
-                  <span className="font-semibold text-foreground">
-                    Contributing to Open Source:
-                  </span>{" "}
-                  Actively maintaining and contributing to several projects in
-                  the web development community.
-                </li>
-                <li>
-                  <span className="font-semibold text-foreground">
-                    Writing a Technical Blog:
-                  </span>{" "}
-                  Sharing my knowledge and experiences with the broader
-                  developer community through regular articles.
-                </li>
+                {aboutData?.currentActivities?.map((activity: any) => (
+                  <li key={activity._key}>
+                    <span className="font-semibold text-foreground">
+                      {activity.title}:
+                    </span>{" "}
+                    {activity.description}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -222,6 +175,8 @@ const AboutPage = () => {
         <TechStackSection />
 
         <Timeline data={timelineData} />
+
+        <BuyMeCrypto />
       </main>
     </section>
   );

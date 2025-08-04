@@ -25,7 +25,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
   });
 
   return (
-    <section className="max-w-5xl w-full mx-auto px-4 py-16 md:py-24">
+    <section className="max-w-5xl w-full mx-auto px-4 py-8 md:py-12">
       <div className="w-full py-16 md:py-24" ref={containerRef}>
         <div className="container mx-auto max-w-3xl px-4">
           <div className="mb-12 text-start">

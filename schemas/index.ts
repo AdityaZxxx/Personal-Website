@@ -1,3 +1,4 @@
+import aboutPage from "./aboutPage";
 import author from "./author";
 import blockContent from "./blockContent";
 import category from "./category";
@@ -10,6 +11,7 @@ import short from "./short";
 import subsriber from "./subsriber";
 
 export const schemaTypes = [
+  aboutPage,
   post,
   subsriber,
   short,

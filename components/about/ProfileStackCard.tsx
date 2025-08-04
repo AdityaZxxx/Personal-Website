@@ -99,7 +99,7 @@ export default function Stack({
       style={{
         width: cardDimensions.width,
         height: cardDimensions.height,
-        perspective: 600,
+        perspective: 500,
       }}
     >
       {cards.map((card, index) => {
@@ -112,7 +112,7 @@ export default function Stack({
             sensitivity={sensitivity}
           >
             <motion.div
-              className="card"
+              className="border-4 border-neutral-800 rounded-lg shadow-xl overflow-hidden"
               onClick={() => sendToBackOnClick && sendToBack(card.id)}
               animate={{
                 rotateZ: (cards.length - index - 1) * 4 + randomRotate,

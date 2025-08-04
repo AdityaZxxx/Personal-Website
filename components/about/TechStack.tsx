@@ -154,7 +154,7 @@ export const TechStackMarquee = ({
 
 export function TechStackSection() {
   return (
-    <section className="py-16 md:py-24 bg-neutral-100 dark:bg-neutral-950">
+    <section className="md:py-6 bg-neutral-100 dark:bg-neutral-950">
       <div className="container mx-auto px-4">
         <h2 className="text-center text-2xl md:text-3xl font-semibold text-neutral-800 dark:text-neutral-200 mb-12">
           Technologies I Work With

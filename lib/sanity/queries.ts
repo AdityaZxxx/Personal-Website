@@ -1,7 +1,8 @@
 import { groq } from "next-sanity";
 import { readClient } from "./client";
+
 // ============================================================================
-// FRAGMENTS (untuk kode yang lebih bersih dan reusable)
+// FRAGMENTS (for more reusable code)
 // ============================================================================
 
 const imageFields = groq`
@@ -266,6 +267,7 @@ export async function getAllShort(
     tag: tag || null,
   };
 
+  // @ts-ignore
   return readClient.fetch(query, params);
 }
 
@@ -316,6 +318,26 @@ export async function getAllGalleryCategories() {
       title,
       "slug": slug.current,
       description
+    }`
+  );
+}
+
+// ============================================================================
+// ABOUT PAGE QUERIES
+// ============================================================================
+export async function getAboutPageData() {
+  return readClient.fetch(
+    groq`*[_type == "aboutPage"][0] {
+      currentActivities[]{
+        _key,
+        title,
+        description
+      },
+      timelineEvents[]{
+        _key,
+        year,
+        description
+      }
     }`
   );
 }
