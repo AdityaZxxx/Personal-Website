@@ -6,7 +6,7 @@ import {
   type PortableTextComponents,
   type PortableTextProps,
 } from "@portabletext/react";
-import { Hash } from "lucide-react";
+import { Hash, SquareArrowOutUpRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -157,26 +157,33 @@ const components: PortableTextComponents = {
 
     link: ({ children, value }) => {
       if (!value?.href) {
-        return (
-          <span className="text-red-500" title="Link URL is missing">
-            {children} (broken)
-          </span>
-        );
+        return <span>{children}</span>;
       }
+
       const isInternal =
         value.href.startsWith("/") || value.href.startsWith("#");
-      const rel = !isInternal ? "noreferrer noopener" : undefined;
-      const target = !isInternal ? "_blank" : undefined;
+
+      if (isInternal) {
+        return (
+          <Link
+            href={value.href}
+            className="text-[#D4D4D4] font-medium underline decoration-muted-foreground underline-offset-2 transition hover:decoration-[#D4D4D4]"
+          >
+            {children}
+          </Link>
+        );
+      }
 
       return (
-        <Link
+        <a
           href={value.href}
-          rel={rel}
-          target={target}
-          className="text-primary transition-colors duration-200 no-underline hover:underline font-semibold "
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-medium text-[#D4D4D4] underline decoration-muted-foreground underline-offset-2 transition hover:decoration-[#D4D4D4]"
         >
           {children}
-        </Link>
+          <SquareArrowOutUpRightIcon className="inline-block h-4 w-4 ml-0.5" />
+        </a>
       );
     },
   },
@@ -200,7 +207,7 @@ export function PortableText({
   return (
     <div
       className={cn(
-        "font-light  text-base/7 bg-background text-muted-foreground ",
+        "font-light text-base/7 bg-background text-muted-foreground ",
         className
       )}
     >

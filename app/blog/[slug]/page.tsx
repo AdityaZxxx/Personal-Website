@@ -287,7 +287,7 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
         </div>
         <Separator className="my-4" />
         <div className="max-w-5xl pt-8">
-          <ShareButtons title={post.title} description={post.excerpt} />
+          <ShareButtons title={post.title} />
         </div>
 
         <div className="max-w-5xl pt-16">
