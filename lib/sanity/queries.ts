@@ -341,3 +341,21 @@ export async function getAboutPageData() {
     }`
   );
 }
+
+// ============================================================================
+// USES PAGE QUERIES
+// ============================================================================
+export async function getUsesPageData() {
+  return readClient.fetch(
+    groq`*[_type == "usesPage"][0] {
+      uses[]{
+        _key,
+        name,
+        description,
+        category,
+        link,
+        image
+      },
+    }`
+  );
+}

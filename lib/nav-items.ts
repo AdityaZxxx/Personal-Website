@@ -43,7 +43,7 @@ export const allNavItems = [
   {
     href: "/shorts",
     title: "Shorts",
-    description: "Short stories and videos.",
+    description: "Notes and snippets of my thoughts.",
     icon: NotebookTabsIcon,
     type: "main",
   },

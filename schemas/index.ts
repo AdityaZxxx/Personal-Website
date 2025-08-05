@@ -9,9 +9,11 @@ import project from "./project";
 import projectCategory from "./projectCategory";
 import short from "./short";
 import subsriber from "./subsriber";
+import usesPage from "./usesPage";
 
 export const schemaTypes = [
   aboutPage,
+  usesPage,
   post,
   subsriber,
   short,
