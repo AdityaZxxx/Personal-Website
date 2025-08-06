@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { urlFor } from "@/lib/sanity/image";
 import { cn } from "@/lib/utils";
+import { ProjectType } from "@/types/ProjectType";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { ProjectType } from "../../types/ProjectType";
 
 export function ProjectCard({
   project,
@@ -20,7 +20,6 @@ export function ProjectCard({
   return (
     <Card className="bg-transparent border-x-0 border-t-0 border-b-2 rounded-b-none shadow-none">
       <CardContent className="grid md:grid-cols-2 gap-x-8 lg:gap-x-12 items-center p-0">
-        {/* Image - First in DOM for mobile */}
         <Link
           href={`/projects/${project.slug}`}
           className={cn(
@@ -46,12 +45,11 @@ export function ProjectCard({
           )}
         </Link>
 
-        {/* Text Content - Second in DOM for mobile */}
         <div
           className={cn(
             "flex flex-col mt-6 md:mt-0",
             isReversed ? "md:col-start-1" : "md:col-start-2",
-            "md:row-start-1" // Ensure it stays on the same row on desktop
+            "md:row-start-1"
           )}
         >
           <h3 className="font-bold font-rethink-sans text-base md:text-4xl line-clamp-2 text-primary  tracking-tight">
@@ -64,7 +62,6 @@ export function ProjectCard({
             </p>
           )}
 
-          {/* Technologies */}
           <div className="flex flex-wrap gap-2 mt-4">
             {project.technologies?.map((tech, index) => (
               <Badge
@@ -77,7 +74,6 @@ export function ProjectCard({
             ))}
           </div>
 
-          {/* Action Buttons */}
           <div className="flex items-center gap-4 mt-6">
             <Link href={`/projects/${project.slug}`}>
               <Button variant="outline" className="rounded-full">

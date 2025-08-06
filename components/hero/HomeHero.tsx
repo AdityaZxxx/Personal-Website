@@ -133,12 +133,16 @@ const HomeHero = ({ socialLinks = defaultSocialLinks }) => {
           className="my-8 flex flex-col items-center justify-center gap-4 sm:flex-row md:justify-start"
         >
           <Link href="#topics-heading" onClick={handleSmoothScroll}>
-            <Button size="lg" className="w-full sm:w-auto">
+            <Button size="lg" className="w-full sm:w-auto cursor-pointer">
               Learn How <ArrowDown className="ml-2 h-4 w-4" />
             </Button>
           </Link>
           <Link href="/about">
-            <Button size="lg" variant="outline" className="w-full sm:w-auto">
+            <Button
+              size="lg"
+              variant="outline"
+              className="w-full sm:w-auto cursor-pointer"
+            >
               More about me
             </Button>
           </Link>

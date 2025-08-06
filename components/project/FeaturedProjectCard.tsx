@@ -1,17 +1,13 @@
-// ============================================================================
-// CLIENT BOUNDARY - Kode di bawah ini akan dijalankan di browser
-// ============================================================================
 "use client";
 
+import { ProjectType } from "@/components/sections/FeaturedProject";
+import { Button } from "@/components/ui/button";
 import { urlFor } from "@/lib/sanity/image";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { ProjectType } from "../sections/FeaturedProject";
-import { Button } from "../ui/button";
 
-// --- KOMPONEN KARTU PROYEK (sekarang menjadi Client Component) ---
 function ProjectCard({ project }: { project: ProjectType }) {
   return (
     <motion.div
@@ -19,14 +15,13 @@ function ProjectCard({ project }: { project: ProjectType }) {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       viewport={{ once: true, amount: 0.3 }}
-      className="w-full flex flex-col group" // 'group' untuk efek hover
+      className="w-full flex flex-col group"
     >
       <Link
         href={`/projects/${project.slug}`}
         className="relative block w-full overflow-hidden rounded-2xl shadow-xl border border-zinc-800 bg-gradient-to-tr from-zinc-900/40 to-zinc-800/30 backdrop-blur-md transition-all duration-300 hover:scale-[1.02]"
         aria-label={`View project: ${project.title}`}
       >
-        {/* Gambar */}
         <div className="relative h-[300px] w-full">
           {project.mainImage?.asset?.url ? (
             <Image
@@ -43,14 +38,6 @@ function ProjectCard({ project }: { project: ProjectType }) {
           )}
         </div>
 
-        {/* Badge Diagonal */}
-        {/* <div className="absolute top-4 -left-10 transform -rotate-45">
-          <div className="px-3 py-0.5 text-xs font-bold shadow-md bg-sky-500 text-primary">
-            {badgeText}
-          </div>
-        </div> */}
-
-        {/* Kartu Konten Mengambang */}
         <div className="absolute bottom-4 left-4 right-4 group-hover:scale-[1.01] group-hover:translate-y-[-4px] transform transition-all duration-300 ease-out bg-zinc-900/80 backdrop-blur-md rounded-xl p-4 shadow-md border border-zinc-700">
           <div className="flex flex-col gap-1">
             <h3 className="text-base font-semibold text-primary">
@@ -72,7 +59,6 @@ function ProjectCard({ project }: { project: ProjectType }) {
   );
 }
 
-// --- KOMPONEN VIEW (Client Component baru yang menangani semua UI) ---
 export function FeaturedProjectsView({
   projects,
 }: {
@@ -117,14 +103,12 @@ export function FeaturedProjectsView({
           </p>
         </div>
 
-        {/* Grid untuk Kartu Proyek */}
         <div className="mx-auto mt-14 grid max-w-5xl grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (
             <ProjectCard key={project._id} project={project} />
           ))}
         </div>
 
-        {/* Tombol Aksi di Bawah */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -135,7 +119,7 @@ export function FeaturedProjectsView({
           <Link href="/projects" aria-label="View full portfolio">
             <Button
               variant="outline"
-              className="group rounded-full border-slate-700 bg-slate-800/50 px-6 py-3 text-base text-primary transition-all hover:border-slate-600 hover:bg-slate-800"
+              className="group rounded-full cursor-pointer border-slate-700 bg-slate-800/50 px-6 py-3 text-base text-primary transition-all hover:border-slate-600 hover:bg-slate-800"
             >
               Explore Full Portfolio
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />

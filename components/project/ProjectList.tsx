@@ -1,6 +1,6 @@
+import { ProjectNotFound } from "@/components/common/CustomNotFound";
 import { getAllProjects } from "@/lib/sanity/queries";
-import { ProjectType } from "../../types/ProjectType";
-import { ProjectNotFound } from "../common/CustomNotFound";
+import { ProjectType } from "@/types/ProjectType";
 import { ProjectCard } from "./ProjectCard";
 
 interface ProjectListProps {

@@ -1,4 +1,3 @@
-// app/actions/like-post.ts
 "use server";
 
 import { writeClient } from "@/lib/sanity/client";

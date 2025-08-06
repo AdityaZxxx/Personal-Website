@@ -36,9 +36,6 @@ web standards, and a clean user experience.
 - **SEO Friendly:** Built with Next.js for optimal search
   engine visibility.
 
-- **Dark/Light Mode:** Seamless theme switching for
-  comfortable viewing.
-
 ## Technologies Used
 
 This project is built using a modern web development stack:

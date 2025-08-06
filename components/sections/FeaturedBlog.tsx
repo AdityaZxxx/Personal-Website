@@ -70,7 +70,7 @@ const FeaturedBlog = async () => {
           <Link href="/blog">
             <Button
               variant="outline"
-              className="group rounded-full border-border bg-background hover:bg-accent px-6 py-3 text-base text-foreground transition-all hover:text-primary"
+              className="group rounded-full cursor-pointer border-border bg-background hover:bg-accent px-6 py-3 text-base text-foreground transition-all hover:text-primary"
             >
               View All Articles
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
