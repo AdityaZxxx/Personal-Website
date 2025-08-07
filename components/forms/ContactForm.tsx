@@ -6,6 +6,17 @@ import { Loader2, Send } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Button } from "../ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 
 const ContactFormSchema = z.object({
   name: z
@@ -39,13 +50,15 @@ export function ContactForm() {
   const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<ContactFormValues>({
+  const form = useForm<ContactFormValues>({
     resolver: zodResolver(ContactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+      honeypot: "",
+    },
   });
 
   const onSubmit = async (data: ContactFormValues) => {
@@ -74,7 +87,7 @@ export function ContactForm() {
       }
 
       setSubmitSuccess(true);
-      reset();
+      form.reset();
     } catch (error) {
       setSubmitError(
         error instanceof Error ? error.message : "Failed to send message"
@@ -87,114 +100,107 @@ export function ContactForm() {
   return (
     <div className="bg-background/80 border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
       <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-        <span>
-          <Send className="h-5 w-5 text-primary" />
-        </span>
         Send a Message
       </h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <input
-          type="text"
-          id="honeypot"
-          {...register("honeypot")}
-          className="hidden"
-          tabIndex={-1}
-          autoComplete="off"
-        />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <input
+            type="text"
+            id="honeypot"
+            {...form.register("honeypot")}
+            className="hidden"
+            tabIndex={-1}
+            autoComplete="off"
+          />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium mb-1">
-              Name
-            </label>
-            <input
-              id="name"
-              {...register("name")}
-              className="w-full px-3 py-2 border rounded-md focus:ring-primary focus:border-primary"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
-            )}
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
 
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              {...register("email")}
-              className="w-full px-3 py-2 border rounded-md focus:ring-primary focus:border-primary"
-            />
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.email.message}
+          <FormField
+            control={form.control}
+            name="subject"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Subject</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="message"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Message</FormLabel>
+                <FormControl>
+                  <Textarea rows={5} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <AnimatePresence>
+            {submitError && (
+              <p className="text-red-500 text-sm">{submitError}</p>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {submitSuccess && (
+              <p className="text-green-500 text-sm">
+                Thank you! Your message has been sent successfully.
               </p>
             )}
-          </div>
-        </div>
+          </AnimatePresence>
 
-        <div>
-          <label htmlFor="subject" className="block text-sm font-medium mb-1">
-            Subject
-          </label>
-          <input
-            id="subject"
-            {...register("subject")}
-            className="w-full px-3 py-2 border rounded-md focus:ring-primary focus:border-primary"
-          />
-          {errors.subject && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.subject.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium mb-1">
-            Message
-          </label>
-          <textarea
-            id="message"
-            rows={5}
-            {...register("message")}
-            className="w-full px-3 py-2 border rounded-md focus:ring-primary focus:border-primary"
-          />
-          {errors.message && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.message.message}
-            </p>
-          )}
-        </div>
-
-        <AnimatePresence>
-          {submitError && <p className="text-red-500 text-sm">{submitError}</p>}
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {submitSuccess && (
-            <p className="text-green-500 text-sm">
-              Thank you! Your message has been sent successfully.
-            </p>
-          )}
-        </AnimatePresence>
-
-        <button className="w-full bg-primary text-muted py-2 px-4 rounded-md hover:bg-primary/90 flex justify-center items-center gap-2">
-          {isSubmitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Sending...
-            </>
-          ) : (
-            <>
-              <Send className="h-4 w-4" />
-              Send Message
-            </>
-          )}
-        </button>
-      </form>
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              <>
+                <Send className="h-4 w-4" />
+                Send Message
+              </>
+            )}
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 }

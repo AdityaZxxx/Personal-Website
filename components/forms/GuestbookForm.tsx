@@ -18,19 +18,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-// Helper function for abbreviation (since it's not in your lib/utils)
-const getAbbreviation = (name: string) => {
-  if (!name) return "";
-  const words = name.split(" ");
-  if (words.length === 1) {
-    return words[0].charAt(0).toUpperCase();
-  }
-  return (
-    words[0].charAt(0).toUpperCase() +
-    words[words.length - 1].charAt(0).toUpperCase()
-  );
-};
-
 const guestbookFormSchema = z.object({
   message: z.string().min(1, {
     message: "Message cannot be empty.",
