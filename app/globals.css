@@ -384,9 +384,20 @@
   }
   @keyframes scroll {
     to {
-      transform: translate(
-        calc(-50% - 1.5rem)
-      ); /* 1.5rem adalah setengah dari gap */
+      transform: translate(calc(-50% - 1.5rem));
     }
   }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 10s linear infinite;
 }

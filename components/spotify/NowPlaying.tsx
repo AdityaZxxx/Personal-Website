@@ -9,7 +9,7 @@ export default async function NowPlaying() {
 
   if (!data.isPlaying || !data.songUrl) {
     return (
-      <div className="flex items-center gap-3 rounded-md border px-3 py-2">
+      <div className="flex items-center gap-3 rounded-md px-3 py-2">
         <SiSpotify className="text-green-500" />
         <p className="text-sm text-neutral-400">Not Listening - Spotify</p>
       </div>
@@ -21,7 +21,7 @@ export default async function NowPlaying() {
       href={data.songUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-3 rounded-md border px-3 py-2 transition-colors hover:bg-neutral-900"
+      className="flex items-center gap-3 rounded-md px-3 py-2 transition-colors hover:bg-neutral-900"
     >
       {data.albumImageUrl ? (
         <Image
@@ -41,7 +41,7 @@ export default async function NowPlaying() {
         <p className="truncate text-sm text-muted-foreground">{data.artist}</p>
       </div>
       <div className="ml-auto">
-        <SiSpotify className="text-green-500" />
+        <SiSpotify className="text-green-500 animate-spin-slow" />
       </div>
     </Link>
   );
