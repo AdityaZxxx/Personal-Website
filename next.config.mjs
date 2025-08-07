@@ -35,6 +35,12 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "i.scdn.co",
+        port: "",
+        pathname: "/image/**",
+      },
     ],
     minimumCacheTTL: 86400, // 1 day
     formats: ["image/avif", "image/webp"],

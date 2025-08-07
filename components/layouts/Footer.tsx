@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 import {
   RiFacebookFill,
   RiGithubFill,
@@ -8,6 +8,7 @@ import {
   RiTwitterXFill,
 } from "react-icons/ri";
 import Newsletter from "../forms/NewsletterForm";
+import NowPlaying from "../spotify/NowPlaying";
 import { Separator } from "../ui/separator";
 
 interface FooterProps {
@@ -47,6 +48,8 @@ const defaultSections = [
       { name: "Archi", href: "/archi" },
       { name: "Gallery", href: "/gallery" },
       { name: "Bucket List", href: "/bucket" },
+      { name: "Uses", href: "/uses" },
+      { name: "Statistics", href: "/statistics" },
     ],
   },
   {
@@ -123,6 +126,11 @@ export const Footer = ({
                   {React.cloneElement(link.icon)}
                 </a>
               ))}
+            </div>
+            <div className="mt-6 h-16 w-full sm:max-w-md rounded-md">
+              <Suspense fallback={<div className="h-16 w-full rounded-md" />}>
+                <NowPlaying />
+              </Suspense>
             </div>
           </div>
 
