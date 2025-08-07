@@ -375,3 +375,11 @@ export async function getDashboardStats() {
     }`
   );
 }
+
+
+export async function getGuestbookEntries(offset = 0, limit = 10) {
+  return readClient.fetch(
+    groq`*[_type == "guestbookEntry" && !(_id in path("drafts.**"))] | order(_createdAt desc) [${offset}...${offset + limit}]`
+  );
+}
+

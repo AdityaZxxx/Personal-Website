@@ -4,6 +4,7 @@ import blockContent from "./blockContent";
 import category from "./category";
 import galleryCategory from "./galleryCategory";
 import galleryItem from "./galleryItem";
+import guestbookEntry from "./guestbookEntry";
 import post from "./post";
 import project from "./project";
 import projectCategory from "./projectCategory";
@@ -14,6 +15,7 @@ import usesPage from "./usesPage";
 export const schemaTypes = [
   aboutPage,
   usesPage,
+  guestbookEntry,
   post,
   subsriber,
   short,

@@ -1,5 +1,6 @@
+
 import { ProgressBar } from "@/components/common/ProgressBar";
-import { ThemeProvider } from "@/components/common/ThemeProvider";
+import { Providers } from "@/components/common/Providers";
 import { Footer } from "@/components/layouts/Footer";
 import { Navbar } from "@/components/layouts/Navbar";
 import { Toaster } from "@/components/ui/sonner";
@@ -131,12 +132,7 @@ export default function RootLayout({
     >
       <meta name="apple-mobile-web-app-title" content="Aditya Rahmad" />
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <Providers>
           <Navbar />
           <Suspense fallback={null}>
             <ProgressBar />
@@ -146,8 +142,9 @@ export default function RootLayout({
           <UmamiAnalytics />
           <Analytics />
           <Footer />
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );
 }
+
