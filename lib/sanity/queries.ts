@@ -359,3 +359,19 @@ export async function getUsesPageData() {
     }`
   );
 }
+
+// ============================================================================
+// STATISTICS PAGE QUERIES
+// ============================================================================
+
+export async function getDashboardStats() {
+  // Query ini mengambil semua post dan short, lalu memproyeksikan data yang kita butuhkan
+  return readClient.fetch(
+    groq`{
+      "postCount": count(*[_type == "post" && !(_id in path("drafts.**"))]),
+      "shortCount": count(*[_type == "short" && !(_id in path("drafts.**"))]),
+      "totalViews": math::sum(*[_type in ["post", "short"] && !(_id in path("drafts.**"))].viewCount),
+      "totalLikes": math::sum(*[_type in ["post", "short"] && !(_id in path("drafts.**"))].likeCount)
+    }`
+  );
+}

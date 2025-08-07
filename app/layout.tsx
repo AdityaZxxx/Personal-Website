@@ -12,6 +12,7 @@ import {
   Shadows_Into_Light,
 } from "next/font/google";
 import { Suspense } from "react";
+import { UmamiAnalytics } from "../components/UmamiAnalitics";
 import "./globals.css";
 
 const rethinkSans = Rethink_Sans({
@@ -142,6 +143,7 @@ export default function RootLayout({
           </Suspense>
           <Toaster position="bottom-right" />
           {children}
+          <UmamiAnalytics />
           <Analytics />
           <Footer />
         </ThemeProvider>
