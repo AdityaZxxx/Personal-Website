@@ -14,7 +14,6 @@ export async function likePost(contentId: string) {
 
     return { likeCount: updatedPost.likeCount };
   } catch (error) {
-    console.error("Error updating like count:", error);
     throw new Error("Error updating like count");
   }
 }
@@ -31,7 +30,6 @@ export async function unlikePost(contentId: string) {
 
     return { likeCount: updatedPost.likeCount };
   } catch (error) {
-    console.error("Error updating unlike count:", error);
     throw new Error("Error updating unlike count");
   }
 }

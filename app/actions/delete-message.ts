@@ -1,7 +1,7 @@
 "use server";
 
+import { writeClient } from "@/lib/sanity/client";
 import { revalidatePath } from "next/cache";
-import { writeClient } from "../../lib/sanity/client";
 
 export async function deleteMessage(id: string) {
   try {

@@ -1,4 +1,3 @@
-// app/actions/update-view.ts
 "use server";
 
 import { writeClient } from "@/lib/sanity/client";
@@ -23,11 +22,9 @@ export async function updateViewCount(
       .commit();
 
     return {
-      message: `View count updated for ${docType}`,
       viewCount: updatedPost.viewCount,
     };
   } catch (err) {
-    console.error("updateViewCount() failed:", err);
     throw new Error("Failed to update view count");
   }
 }

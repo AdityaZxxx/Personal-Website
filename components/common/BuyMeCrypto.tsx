@@ -127,7 +127,7 @@ export function BuyMeCrypto() {
                 <TabsTrigger
                   key={coin.id}
                   value={coin.id}
-                  className="text-sm font-medium py-2 text-neutral-300 data-[state=active]:text-white data-[state=active]:bg-neutral-800/70 transition-colors"
+                  className="text-sm border-none font-medium py-2 text-neutral-300 data-[state=active]:text-white data-[state=active]:bg-neutral-800/70 transition-colors"
                 >
                   <coin.icon className={cn("mr-1 h-4 w-4", coin.color)} />
                   {coin.name}
