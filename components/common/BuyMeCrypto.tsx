@@ -11,9 +11,9 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, Copy, QrCode } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import { useState } from "react";
 import { SiBitcoin, SiEthereum, SiSolana } from "react-icons/si";
-import QRCode from "react-qr-code";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 
@@ -30,6 +30,7 @@ const coins = [
     icon: SiSolana,
     color: "text-[#9945FF]",
     address: WALLET_ADDRESSES.SOL,
+    logo: "/crypto/sol-logo.svg",
   },
   {
     id: "ETH",
@@ -37,6 +38,7 @@ const coins = [
     icon: SiEthereum,
     color: "text-[#627EEA]",
     address: WALLET_ADDRESSES.ETH,
+    logo: "/crypto/eth-logo.svg",
   },
   {
     id: "BTC",
@@ -44,6 +46,7 @@ const coins = [
     icon: SiBitcoin,
     color: "text-[#F7931A]",
     address: WALLET_ADDRESSES.BTC,
+    logo: "/crypto/btc-logo.svg",
   },
 ];
 
@@ -203,11 +206,16 @@ export function BuyMeCrypto() {
                       </DialogHeader>
                       <div className="mt-4 flex flex-col items-center gap-4">
                         <div className="p-4 bg-white rounded-lg shadow-lg">
-                          <QRCode
+                          <QRCodeSVG
                             value={activeCoinData.address}
                             size={200}
-                            bgColor="#FFFFFF"
-                            fgColor="#000000"
+                            level="H"
+                            imageSettings={{
+                              src: activeCoinData.logo,
+                              height: 40,
+                              width: 40,
+                              excavate: true,
+                            }}
                           />
                         </div>
                         <p className="text-xs text-neutral-400 break-all max-w-xs text-center">
