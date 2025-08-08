@@ -67,6 +67,8 @@ const UseCard = ({ item }: { item: UseItem }) => (
         fill
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         className="object-cover transition-transform duration-300 rounded-xl"
+        placeholder="blur"
+        blurDataURL={item.image.lqip}
       />
     </div>
 
@@ -148,6 +150,8 @@ const UsesPage = async () => {
                     height={256}
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     priority
+                    placeholder="blur"
+                    blurDataURL={laptopItem.image.lqip}
                   />
                 </div>
                 <div className="mt-4 text-center">

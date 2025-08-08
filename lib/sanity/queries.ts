@@ -354,7 +354,7 @@ export async function getUsesPageData() {
         description,
         category,
         link,
-        image
+        "image": image { ${imageFields} }
       },
     }`
   );
