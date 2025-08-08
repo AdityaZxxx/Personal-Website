@@ -1,6 +1,6 @@
 "use client";
 
-import { likePost, unlikePost } from "@/app/actions/like-post";
+import { likePost, unlikePost } from "@/app/(website)/actions/like-post";
 
 import { Heart } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";

@@ -1,6 +1,6 @@
 "use client";
 
-import { updateViewCount } from "@/app/actions/update-view";
+import { updateViewCount } from "@/app/(website)/actions/update-view";
 import { useEffect } from "react";
 
 export function ViewTracker({

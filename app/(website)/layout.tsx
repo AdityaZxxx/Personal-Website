@@ -1,4 +1,3 @@
-
 import { ProgressBar } from "@/components/common/ProgressBar";
 import { Providers } from "@/components/common/Providers";
 import { Footer } from "@/components/layouts/Footer";
@@ -13,7 +12,7 @@ import {
   Shadows_Into_Light,
 } from "next/font/google";
 import { Suspense } from "react";
-import { UmamiAnalytics } from "../components/UmamiAnalitics";
+import { UmamiAnalytics } from "../../components/UmamiAnalitics";
 import "./globals.css";
 
 const rethinkSans = Rethink_Sans({
@@ -147,4 +146,3 @@ export default function RootLayout({
     </html>
   );
 }
-

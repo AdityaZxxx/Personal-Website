@@ -1,6 +1,6 @@
 "use client";
 
-import { addGuestbookEntry } from "@/app/actions/guestbook";
+import { addGuestbookEntry } from "@/app/(website)/actions/guestbook";
 import { SignInDialog } from "@/components/auth/SignInDialog";
 import { Button } from "@/components/ui/button";
 import {

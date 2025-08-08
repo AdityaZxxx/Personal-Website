@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { deleteMessage } from "../../app/actions/delete-message";
+import { deleteMessage } from "../../app/(website)/actions/delete-message";
 import {
   AlertDialog,
   AlertDialogAction,
