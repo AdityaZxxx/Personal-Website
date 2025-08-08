@@ -3,7 +3,9 @@
 import { Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 import { deleteMessage } from "../../app/actions/delete-message";
 import {
   AlertDialog,
@@ -31,10 +33,17 @@ interface GuestbookEntryProps {
 export function GuestbookEntry({ entry }: GuestbookEntryProps) {
   const { data: session } = useSession();
   const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
 
   const handleDelete = async () => {
     setIsDeleting(true);
-    await deleteMessage(entry._id);
+    const result = await deleteMessage(entry._id);
+    if (result.success) {
+      toast.success("Message deleted successfully!");
+      router.refresh();
+    } else {
+      toast.error("Failed to delete message.");
+    }
     setIsDeleting(false);
   };
 

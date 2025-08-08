@@ -13,6 +13,10 @@ export function GuestbookList({ initialEntries }: { initialEntries: any[] }) {
   const [hasMore, setHasMore] = useState(true);
   const { ref, inView } = useInView();
 
+  useEffect(() => {
+    setEntries(initialEntries);
+  }, [initialEntries]);
+
   const loadMoreEntries = async () => {
     const newEntries = await getGuestbookEntries(offset, BATCH_SIZE);
     if (newEntries.length > 0) {

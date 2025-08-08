@@ -1,5 +1,5 @@
 import { groq } from "next-sanity";
-import { readClient } from "./client";
+import { readClient, writeClient } from "./client";
 
 // ============================================================================
 // FRAGMENTS (for more reusable code)
@@ -365,7 +365,6 @@ export async function getUsesPageData() {
 // ============================================================================
 
 export async function getDashboardStats() {
-  // Query ini mengambil semua post dan short, lalu memproyeksikan data yang kita butuhkan
   return readClient.fetch(
     groq`{
       "postCount": count(*[_type == "post" && !(_id in path("drafts.**"))]),
@@ -376,10 +375,10 @@ export async function getDashboardStats() {
   );
 }
 
-
 export async function getGuestbookEntries(offset = 0, limit = 10) {
-  return readClient.fetch(
-    groq`*[_type == "guestbookEntry" && !(_id in path("drafts.**"))] | order(_createdAt desc) [${offset}...${offset + limit}]`
+  return writeClient.fetch(
+    groq`*[_type == "guestbookEntry" && !(_id in path("drafts.**"))] | order(_createdAt desc) [${offset}...${offset + limit}]`,
+    {},
+    { cache: "no-store" }
   );
 }
-

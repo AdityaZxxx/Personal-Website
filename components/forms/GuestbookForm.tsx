@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -26,6 +27,7 @@ const guestbookFormSchema = z.object({
 });
 
 export function GuestbookForm({ session }: { session: any }) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof guestbookFormSchema>>({
     resolver: zodResolver(guestbookFormSchema),
     defaultValues: {
@@ -52,6 +54,7 @@ export function GuestbookForm({ session }: { session: any }) {
     if (result.success) {
       toast.success("Message signed successfully!");
       form.reset();
+      router.refresh();
     } else {
       toast.error(result.error || "Something went wrong.");
     }
