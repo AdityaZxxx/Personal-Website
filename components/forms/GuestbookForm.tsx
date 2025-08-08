@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -30,9 +31,19 @@ export function GuestbookForm({ session }: { session: any }) {
     defaultValues: {
       message: "",
     },
+    mode: "onSubmit",
   });
 
+  useEffect(() => {
+    form.reset();
+  }, [session, form]);
+
   const onSubmit = async (values: z.infer<typeof guestbookFormSchema>) => {
+    if (!session?.user?.email) {
+      toast.error("You must be signed in to leave a message.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("message", values.message);
     formData.append("authorEmail", session.user.email);
@@ -50,10 +61,12 @@ export function GuestbookForm({ session }: { session: any }) {
     const defaultImage = session.user.name.charAt(0).toUpperCase();
 
     return (
-      <>
-        <p className="text-sm text-neutral-400 mb-4">
-          Welcome, {session.user.name}! Leave a message below.
-        </p>
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-sm text-neutral-400">
+            Welcome, {session.user.name}! Leave a message below.
+          </p>
+        </div>
         <div className="flex gap-3">
           <div className="">
             <Image
@@ -79,11 +92,7 @@ export function GuestbookForm({ session }: { session: any }) {
                 )}
               />
               <div className="mt-4 flex justify-end gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => signOut()}
-                  disabled={form.formState.isSubmitting}
-                >
+                <Button type="reset" variant="ghost" onClick={() => signOut()}>
                   Sign Out
                 </Button>
                 <Button
@@ -97,7 +106,7 @@ export function GuestbookForm({ session }: { session: any }) {
             </form>
           </Form>
         </div>
-      </>
+      </div>
     );
   }
 
