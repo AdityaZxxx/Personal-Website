@@ -10,29 +10,21 @@ import { Hash, SquareArrowOutUpRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
 import { TableBlogContent } from "./TableBlogContent";
 
+// --- INTERFACES & TYPES ---
 interface SanityTableValue {
   _key: string;
   _type: "table";
-  rows: Array<{
-    _key: string;
-    _type: "row";
-    cells: string[];
-  }>;
+  rows: Array<{ _key: string; _type: "row"; cells: string[] }>;
 }
 
 interface SanityImageValue {
   _key: string;
   _type: "image";
-  asset: {
-    _ref: string;
-    _type: "reference";
-    metadata?: {
-      lqip?: string;
-    };
-  };
+  asset: { _ref: string; _type: "reference"; metadata?: { lqip?: string } };
   caption?: string;
   alt?: string;
 }
@@ -45,6 +37,7 @@ interface SanityCodeValue {
   filename?: string;
 }
 
+// --- HEADING RENDERER (FOR TOC) ---
 const HeadingRenderer = ({
   value,
   children,
@@ -58,15 +51,11 @@ const HeadingRenderer = ({
   const Tag = level as keyof HTMLElementTagNameMap;
   const textContent =
     value.children
-      ?.map((child) => {
-        if ("text" in child && typeof child.text === "string") {
-          return child.text;
-        }
-        return "";
-      })
+      ?.map((child) =>
+        typeof child === "object" && "text" in child ? child.text : ""
+      )
       .join("") || "";
-  const baseId = slugify(textContent);
-  const id = `${baseId}-${Math.random().toString(36).substring(2, 9)}`;
+  const id = `${slugify(textContent)}-${Math.random().toString(36).substring(2, 9)}`;
 
   return (
     <Tag id={id} className={cn("group relative scroll-mt-24", className)}>
@@ -82,12 +71,11 @@ const HeadingRenderer = ({
   );
 };
 
+// --- MAIN PORTABLE TEXT COMPONENTS ---
 const components: PortableTextComponents = {
   types: {
-    table: ({ value }: { value: SanityTableValue }) => {
-      if (!value?.rows) return null;
-      return <TableBlogContent value={value} />;
-    },
+    table: ({ value }: { value: SanityTableValue }) =>
+      value?.rows ? <TableBlogContent value={value} /> : null,
     image: ({ value }: { value: SanityImageValue }) => {
       if (!value?.asset?._ref) return null;
       const blurDataURL = value.asset.metadata?.lqip;
@@ -115,6 +103,19 @@ const components: PortableTextComponents = {
         filename={value.filename}
       />
     ),
+    callout: ({ value }) => {
+      const content =
+        value.content ||
+        (value.text
+          ? [
+              {
+                _type: "block",
+                children: [{ _type: "span", text: value.text }],
+              },
+            ]
+          : []);
+      return <Callout category={value.category} content={content} />;
+    },
   },
   block: {
     h2: (props) => (
@@ -126,7 +127,7 @@ const components: PortableTextComponents = {
     h3: (props) => (
       <HeadingRenderer
         {...props}
-        className="text-xl py-1 font-semibold text-primary  transition-colors duration-200 hover:underline no-underline"
+        className="text-xl py-1 font-semibold text-primary transition-colors duration-200 hover:underline no-underline"
       />
     ),
     h4: (props) => (
@@ -136,7 +137,7 @@ const components: PortableTextComponents = {
       />
     ),
     blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-sky-400 pl-4 my-4 italic text-primary font-medium">
+      <blockquote className="border-l-4 border-neutral-700 pl-4 my-4 text-neutral-400">
         {children}
       </blockquote>
     ),
@@ -154,15 +155,10 @@ const components: PortableTextComponents = {
     code: ({ children }) => (
       <code className="font-mono font-semibold px-1">{children}</code>
     ),
-
     link: ({ children, value }) => {
-      if (!value?.href) {
-        return <span>{children}</span>;
-      }
-
+      if (!value?.href) return <span>{children}</span>;
       const isInternal =
         value.href.startsWith("/") || value.href.startsWith("#");
-
       if (isInternal) {
         return (
           <Link
@@ -173,7 +169,6 @@ const components: PortableTextComponents = {
           </Link>
         );
       }
-
       return (
         <a
           href={value.href}
@@ -197,6 +192,7 @@ const components: PortableTextComponents = {
   },
 };
 
+// --- THE EXPORTED COMPONENT ---
 export function PortableText({
   value,
   className,
@@ -207,7 +203,7 @@ export function PortableText({
   return (
     <div
       className={cn(
-        "font-light text-base/7 bg-background text-muted-foreground ",
+        "font-light text-base/7 bg-background text-muted-foreground",
         className
       )}
     >

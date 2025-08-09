@@ -77,5 +77,64 @@ export default defineType({
       title: "Table",
       type: "table",
     }),
+    defineArrayMember({
+      name: "callout",
+      title: "Callout",
+      type: "object",
+      fields: [
+        {
+          name: "content",
+          title: "Content",
+          type: "array",
+          of: [
+            {
+              type: "block",
+              marks: {
+                decorators: [
+                  { title: "Strong", value: "strong" },
+                  { title: "Emphasis", value: "em" },
+                  { title: "Code", value: "code" },
+                ],
+                annotations: [
+                  {
+                    title: "URL",
+                    name: "link",
+                    type: "object",
+                    fields: [
+                      {
+                        title: "URL",
+                        name: "href",
+                        type: "url",
+                        validation: (Rule) =>
+                          Rule.uri({
+                            scheme: ["http", "https", "mailto", "tel"],
+                            allowRelative: true,
+                          }),
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          ],
+        },
+        {
+          name: "category",
+          title: "Category",
+          type: "string",
+          options: {
+            list: [
+              { title: "Success", value: "success" },
+              { title: "Tip", value: "tip" },
+              { title: "Warning", value: "warning" },
+              { title: "Note", value: "note" },
+            ],
+            layout: "radio",
+          },
+          initialValue: "note",
+          validation: (Rule) => Rule.required(),
+        },
+      ],
+    }),
   ],
 });

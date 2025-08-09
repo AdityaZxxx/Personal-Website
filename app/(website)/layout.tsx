@@ -113,7 +113,7 @@ export const metadata: Metadata = {
     shortcut: "/icon1.png",
     apple: "/apple-icon.png",
   },
-  manifest: "/site.webmanifest",
+  // manifest: "/site.webmanifest",
 };
 
 export const viewport = "width=device-width, initial-scale=1";
