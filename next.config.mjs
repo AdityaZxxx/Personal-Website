@@ -149,12 +149,12 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: `
       default-src 'self';
-      script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.app giscus.app;
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.app giscus.app cloud.umami.is;
       style-src 'self' 'unsafe-inline' giscus.app;
       img-src 'self' data: blob: cdn.sanity.io images.unsplash.com;
       media-src 'self' cdn.sanity.io;
       font-src 'self';
-      connect-src 'self' *.sanity.io vitals.vercel-insights.com github-contributions-api.jogruber.de;
+      connect-src 'self' *.sanity.io vitals.vercel-insights.com github-contributions-api.jogruber.de cloud.umami.is;
       frame-src 'self' *.youtube-nocookie.com giscus.app;
     `.replace(/\s+/g, " "),
   },
