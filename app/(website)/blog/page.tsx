@@ -87,7 +87,9 @@ const BlogPage = async ({
             coloredTitle="Posts"
             description="Not just about code — I write to make sense of the things I don't fully understand yet."
           />
-          <Suspense fallback={<Skeleton className="h-16 w-full rounded-md" />}>
+          <Suspense
+            fallback={<Skeleton className="h-16 max-w-[300px] rounded-md" />}
+          >
             <div className="h-16 max-w-[300px] md:max-w-full flex items-center justify-center px-4">
               <SearchContent placeholder="Search something..." />
             </div>

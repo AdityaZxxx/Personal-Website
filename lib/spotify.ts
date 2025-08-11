@@ -31,7 +31,9 @@ async function getAccessToken() {
       grant_type: "refresh_token",
       refresh_token,
     }),
-    cache: "no-store",
+    next: {
+      revalidate: 60,
+    },
   });
 
   if (!response.ok) {
@@ -58,7 +60,9 @@ export async function getNowPlaying(): Promise<NowPlayingData> {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
-      cache: "no-store",
+      next: {
+        revalidate: 60,
+      },
     });
 
     if (response.status === 204 || response.status > 400) {

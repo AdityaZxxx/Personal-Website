@@ -142,7 +142,9 @@ const ShortsPage = async ({
           coloredTitle="Snippets"
           description="My personal notes that's not long enough to be a blog post"
         />
-        <Suspense fallback={<Skeleton className="h-16 w-full rounded-md" />}>
+        <Suspense
+          fallback={<Skeleton className="h-16 max-w-[300px] rounded-md" />}
+        >
           <div className="h-16 max-w-[300px] md:max-w-full flex items-center justify-center px-4">
             <SearchContent placeholder="Search something..." />
           </div>
