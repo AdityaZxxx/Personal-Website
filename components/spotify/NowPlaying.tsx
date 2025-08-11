@@ -10,7 +10,7 @@ export default async function NowPlaying() {
 
   if (!data.isPlaying || !data.songUrl) {
     return (
-      <div className="mt-6 h-16 w-full sm:max-w-md flex items-center gap-3 rounded-md px-3 py-2">
+      <div className="mt-6 h-16 w-full sm:max-w-md flex items-center gap-3 rounded-md">
         <SiSpotify className="text-green-500" />
         <p className="text-sm text-neutral-400">Not Listening - Spotify</p>
       </div>

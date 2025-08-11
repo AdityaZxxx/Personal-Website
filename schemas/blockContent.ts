@@ -78,6 +78,9 @@ export default defineType({
       type: "table",
     }),
     defineArrayMember({
+      type: "videoEmbed",
+    }),
+    defineArrayMember({
       name: "callout",
       title: "Callout",
       type: "object",

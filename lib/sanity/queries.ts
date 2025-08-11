@@ -17,6 +17,19 @@ const imageFields = groq`
   }
 `;
 
+const videoFields = groq`
+  videoFile->{
+    asset->{
+      _id,
+      url,
+      "width": metadata.dimensions.width,
+      "height": metadata.dimensions.height
+    }
+  },
+  caption,
+  "lqip": asset->metadata.lqip,
+  `;
+
 const postCardFields = groq`
   _id,
   title,
@@ -117,7 +130,8 @@ export async function getPostBySlug(slug: string) {
       "mainImage": mainImage { ${imageFields} },
       body[]{
         ...,
-        _type == "image" => { ${imageFields} }
+        _type == "image" => { ${imageFields} },
+        _type == "video" => { ${videoFields} }
       },
       publishedAt,
       _updatedAt,

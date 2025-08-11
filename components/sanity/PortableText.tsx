@@ -13,6 +13,7 @@ import React from "react";
 import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
 import { TableBlogContent } from "./TableBlogContent";
+import { VideoPlayer } from "./VideoPlayer";
 
 // --- INTERFACES & TYPES ---
 interface SanityTableValue {
@@ -115,6 +116,9 @@ const components: PortableTextComponents = {
             ]
           : []);
       return <Callout category={value.category} content={content} />;
+    },
+    videoEmbed: ({ value }) => {
+      return <VideoPlayer value={value} />;
     },
   },
   block: {

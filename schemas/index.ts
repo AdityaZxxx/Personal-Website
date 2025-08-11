@@ -11,6 +11,7 @@ import projectCategory from "./projectCategory";
 import short from "./short";
 import subsriber from "./subsriber";
 import usesPage from "./usesPage";
+import videoEmbed from "./videoEmbed";
 
 export const schemaTypes = [
   aboutPage,
@@ -26,4 +27,5 @@ export const schemaTypes = [
   blockContent,
   galleryItem,
   galleryCategory,
+  videoEmbed,
 ];

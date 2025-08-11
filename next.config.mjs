@@ -1,4 +1,5 @@
 import withBundleAnalyzer from "@next/bundle-analyzer";
+import { withNextVideo } from "next-video/process";
 
 const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -160,4 +161,4 @@ const securityHeaders = [
   },
 ];
 
-export default bundleAnalyzer(nextConfig);
+export default bundleAnalyzer(withNextVideo(nextConfig));
