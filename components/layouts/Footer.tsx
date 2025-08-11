@@ -1,3 +1,6 @@
+import Newsletter from "@/components/forms/NewsletterForm";
+import NowPlaying from "@/components/spotify/NowPlaying";
+import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import React, { Suspense } from "react";
 import {
@@ -7,9 +10,6 @@ import {
   RiLinkedinFill,
   RiTwitterXFill,
 } from "react-icons/ri";
-import Newsletter from "../forms/NewsletterForm";
-import NowPlaying from "../spotify/NowPlaying";
-import { Separator } from "../ui/separator";
 
 interface FooterProps {
   logo?: {
@@ -59,6 +59,7 @@ const defaultSections = [
       { name: "Sales", href: "#" },
       { name: "Advertise", href: "#" },
       { name: "Privacy", href: "#" },
+      { name: "RSS", href: "/rss.xml" },
     ],
   },
 ];
@@ -127,11 +128,9 @@ export const Footer = ({
                 </a>
               ))}
             </div>
-            <div className="mt-6 h-16 w-full sm:max-w-md rounded-md">
-              <Suspense fallback={<div className="h-16 w-full rounded-md" />}>
-                <NowPlaying />
-              </Suspense>
-            </div>
+            <Suspense fallback={<div className="h-16 w-full rounded-md" />}>
+              <NowPlaying />
+            </Suspense>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-left">

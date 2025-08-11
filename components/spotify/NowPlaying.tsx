@@ -3,13 +3,14 @@ import { Music } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { SiSpotify } from "react-icons/si";
+import { MusicBar } from "./MusicBar";
 
 export default async function NowPlaying() {
   const data: NowPlayingData = await getNowPlaying();
 
   if (!data.isPlaying || !data.songUrl) {
     return (
-      <div className="flex items-center gap-3 rounded-md px-3 py-2">
+      <div className="mt-6 h-16 w-full sm:max-w-md flex items-center gap-3 rounded-md px-3 py-2">
         <SiSpotify className="text-green-500" />
         <p className="text-sm text-neutral-400">Not Listening - Spotify</p>
       </div>
@@ -21,7 +22,7 @@ export default async function NowPlaying() {
       href={data.songUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-3 rounded-md px-3 py-2 transition-colors hover:bg-neutral-900"
+      className="mt-6 h-16 w-full sm:max-w-md flex items-center gap-3 rounded-md transition-colors"
     >
       {data.albumImageUrl ? (
         <Image
@@ -40,8 +41,9 @@ export default async function NowPlaying() {
         </p>
         <p className="truncate text-sm text-muted-foreground">{data.artist}</p>
       </div>
-      <div className="ml-auto">
-        <SiSpotify className="text-green-500 animate-spin-slow" />
+      <div className="ml-auto z-20">
+        {/* <SiSpotify className="text-green-500 animate-spin-slow" /> */}
+        <MusicBar />
       </div>
     </Link>
   );
