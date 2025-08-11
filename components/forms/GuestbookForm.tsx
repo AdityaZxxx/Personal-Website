@@ -64,7 +64,7 @@ export function GuestbookForm({ session }: { session: any }) {
     const defaultImage = session.user.name.charAt(0).toUpperCase();
 
     return (
-      <div className="p-6">
+      <div className="">
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm text-neutral-400">
             Welcome, {session.user.name}! Leave a message below.
