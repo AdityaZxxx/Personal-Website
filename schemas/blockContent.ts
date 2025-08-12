@@ -81,6 +81,9 @@ export default defineType({
       type: "videoEmbed",
     }),
     defineArrayMember({
+      type: "tweetEmbed",
+    }),
+    defineArrayMember({
       name: "callout",
       title: "Callout",
       type: "object",

@@ -21,8 +21,8 @@ export function VideoPlayer({ value }: { value: VideoEmbedValue }) {
   const posterUrl = urlForFile(value.videoFile.asset);
 
   return (
-    <figure className="my-8 p-10">
-      <div className="overflow-hidden rounded-lg border border-zinc-800">
+    <figure className="my-8">
+      <div className="overflow-hidden rounded-lg border border-background">
         <Video src={videoUrl} className="w-full h-auto" poster={posterUrl} />
       </div>
       {value.caption && (

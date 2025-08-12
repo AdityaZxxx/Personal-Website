@@ -13,6 +13,7 @@ import React from "react";
 import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
 import { TableBlogContent } from "./TableBlogContent";
+import { TweetCardEmbed } from "./TweetCard";
 import { VideoPlayer } from "./VideoPlayer";
 
 // --- INTERFACES & TYPES ---
@@ -81,7 +82,7 @@ const components: PortableTextComponents = {
       if (!value?.asset?._ref) return null;
       const blurDataURL = value.asset.metadata?.lqip;
       return (
-        <figure>
+        <figure className="my-8">
           <div className="relative aspect-video overflow-hidden rounded-lg">
             <Image
               src={urlFor(value).width(1600).height(900).url()}
@@ -93,7 +94,11 @@ const components: PortableTextComponents = {
               blurDataURL={blurDataURL}
             />
           </div>
-          {value.caption && <figcaption>{value.caption}</figcaption>}
+          {value.caption && (
+            <figcaption className="mt-3 text-center text-sm text-muted-foreground">
+              {value.caption}
+            </figcaption>
+          )}
         </figure>
       );
     },
@@ -119,6 +124,9 @@ const components: PortableTextComponents = {
     },
     videoEmbed: ({ value }) => {
       return <VideoPlayer value={value} />;
+    },
+    tweetEmbed: ({ value }) => {
+      return <TweetCardEmbed value={value} />;
     },
   },
   block: {

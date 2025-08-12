@@ -10,6 +10,7 @@ import project from "./project";
 import projectCategory from "./projectCategory";
 import short from "./short";
 import subsriber from "./subsriber";
+import tweetEmbed from "./tweetEmbed";
 import usesPage from "./usesPage";
 import videoEmbed from "./videoEmbed";
 
@@ -28,4 +29,5 @@ export const schemaTypes = [
   galleryItem,
   galleryCategory,
   videoEmbed,
+  tweetEmbed,
 ];

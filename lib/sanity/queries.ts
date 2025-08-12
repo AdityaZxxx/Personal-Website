@@ -128,11 +128,7 @@ export async function getPostBySlug(slug: string) {
       "slug": slug.current,
       excerpt,
       "mainImage": mainImage { ${imageFields} },
-      body[]{
-        ...,
-        _type == "image" => { ${imageFields} },
-        _type == "video" => { ${videoFields} }
-      },
+      body,
       publishedAt,
       _updatedAt,
       "viewCount": coalesce(viewCount, 0),

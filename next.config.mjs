@@ -27,32 +27,32 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "cdn.sanity.io",
-        port: "",
         pathname: "/images/**",
       },
       {
         protocol: "https",
         hostname: "images.unsplash.com",
-        port: "",
         pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "i.scdn.co",
-        port: "",
         pathname: "/image/**",
       },
       {
         protocol: "https",
         hostname: "avatars.githubusercontent.com",
-        port: "",
         pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
-        port: "",
         pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "pbs.twimg.com",
+        pathname: "/profile_images/**",
       },
     ],
     minimumCacheTTL: 86400, // 1 day
@@ -152,7 +152,7 @@ const securityHeaders = [
       default-src 'self';
       script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.app giscus.app cloud.umami.is;
       style-src 'self' 'unsafe-inline' giscus.app;
-      img-src 'self' data: blob: cdn.sanity.io images.unsplash.com;
+      img-src 'self' data: blob: cdn.sanity.io images.unsplash.com pbs.twimg.com;
       media-src 'self' cdn.sanity.io;
       font-src 'self';
       connect-src 'self' *.sanity.io vitals.vercel-insights.com github-contributions-api.jogruber.de cloud.umami.is;

@@ -1,10 +1,10 @@
 "use client";
+import { PostNotFound } from "@/components/common/CustomNotFound";
+import { CategoryFilter } from "@/components/filters/CategoryFilter";
+import { SortFilter } from "@/components/filters/SortFilter";
 import { PostType } from "@/types";
 import { Calendar, EyeIcon } from "lucide-react";
 import { useMemo, useState } from "react";
-import { PostNotFound } from "../common/CustomNotFound";
-import { CategoryFilter } from "../filters/CategoryFilter";
-import { SortFilter } from "../filters/SortFilter";
 import { BlogPostCard } from "./BlogPostCard";
 
 interface PostListProps {
@@ -12,7 +12,7 @@ interface PostListProps {
   notFoundMessage?: string;
   allCategories: { _id: string; title: string; slug: string }[];
   activeCategory?: string;
-  showFilters?: boolean; // New prop
+  showFilters?: boolean;
 }
 
 export function BlogList({
@@ -20,7 +20,7 @@ export function BlogList({
   notFoundMessage,
   allCategories,
   activeCategory,
-  showFilters = true, // Default to true
+  showFilters = true,
 }: PostListProps) {
   const [sortBy, setSortBy] = useState<string>("date");
 
@@ -36,7 +36,6 @@ export function BlogList({
         sortablePosts.sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0));
         break;
       default:
-        // Default to sorting by publishedAt desc (latest)
         sortablePosts.sort(
           (a, b) =>
             new Date(b.publishedAt).getTime() -
