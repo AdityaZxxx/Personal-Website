@@ -10,6 +10,8 @@ interface VideoEmbedValue {
     };
   };
   caption?: string;
+  autoplay?: boolean;
+  loop?: boolean;
 }
 
 export function VideoPlayer({ value }: { value: VideoEmbedValue }) {
@@ -23,7 +25,14 @@ export function VideoPlayer({ value }: { value: VideoEmbedValue }) {
   return (
     <figure className="my-8">
       <div className="overflow-hidden rounded-lg border border-background">
-        <Video src={videoUrl} className="w-full h-auto" poster={posterUrl} />
+        <Video
+          src={videoUrl}
+          className="h-auto w-full"
+          poster={posterUrl}
+          autoPlay={value.autoplay}
+          loop={value.loop}
+          muted={value.autoplay}
+        />
       </div>
       {value.caption && (
         <figcaption className="mt-3 text-center text-sm text-muted-foreground">

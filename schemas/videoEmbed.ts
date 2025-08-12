@@ -22,6 +22,20 @@ export default defineType({
       type: "string",
       description: "Teks singkat yang akan muncul di bawah video.",
     }),
+    defineField({
+      name: 'autoplay',
+      title: 'Autoplay',
+      type: 'boolean',
+      description: 'Enable autoplay for the video.',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'loop',
+      title: 'Loop',
+      type: 'boolean',
+      description: 'Enable looping for the video.',
+      initialValue: false,
+    }),
   ],
   preview: {
     select: {
