@@ -7,6 +7,15 @@ interface VideoEmbedValue {
   videoFile: {
     asset: {
       _ref: string;
+      _type: "reference";
+      metadata?: {
+        lqip?: string;
+        dimensions?: {
+          width: number;
+          height: number;
+          aspectRatio: number;
+        };
+      };
     };
   };
   caption?: string;
@@ -15,20 +24,21 @@ interface VideoEmbedValue {
 }
 
 export function VideoPlayer({ value }: { value: VideoEmbedValue }) {
-  if (!value?.videoFile?.asset?._ref) {
-    return <p>Video not found.</p>;
-  }
+  if (!value?.videoFile.asset?._ref) return null;
 
   const videoUrl = urlForFile(value.videoFile);
-  const posterUrl = urlForFile(value.videoFile.asset);
+  const aspectRatio =
+    value.videoFile.asset.metadata?.dimensions?.aspectRatio || 16 / 9;
 
   return (
     <figure className="my-8">
-      <div className="overflow-hidden rounded-lg border border-background">
+      <div
+        className="relative w-full overflow-hidden rounded-lg border border-border"
+        style={{ aspectRatio: `${aspectRatio}` }}
+      >
         <Video
           src={videoUrl}
-          className="h-auto w-full"
-          poster={posterUrl}
+          className="h-full w-full object-contain"
           autoPlay={value.autoplay}
           loop={value.loop}
           muted={value.autoplay}

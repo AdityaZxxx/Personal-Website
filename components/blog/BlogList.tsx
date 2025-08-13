@@ -52,19 +52,21 @@ export function BlogList({
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-      {showFilters && (
-        <div className="lg:col-span-1 flex flex-col gap-4 lg:order-last lg:sticky lg:top-24 self-start">
-          <SortFilter
-            options={sortOptions}
-            defaultValue={sortBy}
-            onValueChange={setSortBy}
-          />
-          <CategoryFilter
-            categories={allCategories}
-            activeCategory={activeCategory}
-          />
-        </div>
-      )}
+      <div className="lg:col-span-1 flex flex-col gap-4 lg:order-last lg:sticky lg:top-24 self-start">
+        {showFilters && (
+          <>
+            <SortFilter
+              options={sortOptions}
+              defaultValue={sortBy}
+              onValueChange={setSortBy}
+            />
+            <CategoryFilter
+              categories={allCategories}
+              activeCategory={activeCategory}
+            />
+          </>
+        )}
+      </div>
       <div
         className={
           showFilters ? "lg:col-span-3 lg:order-first" : "lg:col-span-4"

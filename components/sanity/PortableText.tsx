@@ -1,4 +1,3 @@
-import { urlFor } from "@/lib/sanity/image";
 import { cn, slugify } from "@/lib/utils";
 import {
   PortableTextBlock,
@@ -7,11 +6,11 @@ import {
   type PortableTextProps,
 } from "@portabletext/react";
 import { Hash, SquareArrowOutUpRightIcon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
+import { ImageEmbed } from "./ImageEmbed";
 import { TableBlogContent } from "./TableBlogContent";
 import { TweetCardEmbed } from "./TweetCard";
 import { VideoPlayer } from "./VideoPlayer";
@@ -76,31 +75,11 @@ const HeadingRenderer = ({
 // --- MAIN PORTABLE TEXT COMPONENTS ---
 const components: PortableTextComponents = {
   types: {
-    table: ({ value }: { value: SanityTableValue }) =>
-      value?.rows ? <TableBlogContent value={value} /> : null,
-    image: ({ value }: { value: SanityImageValue }) => {
-      if (!value?.asset?._ref) return null;
-      const blurDataURL = value.asset.metadata?.lqip;
-      return (
-        <figure className="my-8">
-          <div className="relative aspect-video overflow-hidden rounded-lg">
-            <Image
-              src={urlFor(value).width(1600).height(900).url()}
-              alt={value.alt || "Blog post image"}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 800px"
-              placeholder={blurDataURL ? "blur" : "empty"}
-              blurDataURL={blurDataURL}
-            />
-          </div>
-          {value.caption && (
-            <figcaption className="mt-3 text-center text-sm text-muted-foreground">
-              {value.caption}
-            </figcaption>
-          )}
-        </figure>
-      );
+    table: ({ value }: { value: SanityTableValue }) => {
+      return <TableBlogContent value={value} />;
+    },
+    image: ({ value }) => {
+      return <ImageEmbed value={value} />;
     },
     code: ({ value }: { value: SanityCodeValue }) => (
       <CodeBlock

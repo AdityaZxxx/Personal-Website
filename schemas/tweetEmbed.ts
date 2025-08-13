@@ -12,7 +12,7 @@ export default defineType({
       title: "Tweet URL",
       type: "url",
       description:
-        "Salin dan tempel URL lengkap dari tweet yang ingin Anda tampilkan.",
+        "Copy and paste the full URL of the tweet you want to display.",
       validation: (Rule) =>
         Rule.required().uri({
           scheme: ["http", "https"],
@@ -26,7 +26,7 @@ export default defineType({
     prepare({ url }) {
       return {
         title: "Tweet Embed",
-        subtitle: url || "Tidak ada URL yang dimasukkan",
+        subtitle: url || "No URL entered",
       };
     },
   },
