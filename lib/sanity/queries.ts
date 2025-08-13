@@ -139,7 +139,6 @@ export async function getPostBySlug(slug: string) {
         _id,
         name,
         "image": image { ${imageFields} },
-        "video": video { ${videoFields} },
         bio,
         "slug": slug.current,
         socialLinks
