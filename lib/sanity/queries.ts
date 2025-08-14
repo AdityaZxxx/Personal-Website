@@ -117,7 +117,6 @@ export async function getPostBySlug(slug: string) {
       "mainImage": mainImage { ${imageFields} },
       body[]{
         ...,
-        _type == "image" => { ${imageFields} },
         _type == "videoEmbed" => {
           ...,
           video[]{
