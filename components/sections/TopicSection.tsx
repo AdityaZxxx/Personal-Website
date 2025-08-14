@@ -1,57 +1,96 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion, Variants } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
+import { Code2, Compass, Globe, PenTool, Sparkles, Zap } from "lucide-react";
 import Link from "next/link";
 
 const FlexboxPattern = () => {
   const bars = [
-    { height: "50%", initialY: 0 },
-    { height: "80%", initialY: 20 },
-    { height: "60%", initialY: -10 },
-    { height: "90%", initialY: 10 },
+    { height: "40%", delay: 0, color: "from-blue-400 to-blue-600" },
+    { height: "70%", delay: 0.1, color: "from-blue-500 to-blue-700" },
+    { height: "50%", delay: 0.2, color: "from-blue-300 to-blue-500" },
+    { height: "80%", delay: 0.3, color: "from-blue-600 to-blue-800" },
+    { height: "35%", delay: 0.4, color: "from-blue-400 to-blue-600" },
+    { height: "65%", delay: 0.5, color: "from-blue-500 to-blue-700" },
   ];
 
   return (
-    <div className="absolute inset-0 flex h-full w-full items-center justify-center opacity-15 [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)]">
+    <div className="absolute inset-0 flex h-full w-full items-center justify-center opacity-30">
       <motion.div
-        className="flex h-full w-3/4 items-center justify-center gap-3"
+        className="flex h-full w-4/5 items-end justify-center gap-1.5"
         initial="initial"
         whileHover="hover"
       >
         {bars.map((bar, i) => (
           <motion.div
             key={i}
-            className="w-8 relative bg-neutral-700"
+            className={cn(
+              "relative rounded-t-lg shadow-lg",
+              `bg-gradient-to-t ${bar.color}`
+            )}
             style={{
+              width: "14px",
               height: bar.height,
-              borderRadius: `${Math.random() * 20 + 10}px ${Math.random() * 20 + 10}px ${Math.random() * 20 + 10}px ${Math.random() * 20 + 10}px / ${Math.random() * 20 + 10}px ${Math.random() * 20 + 10}px ${Math.random() * 20 + 10}px ${Math.random() * 20 + 10}px`,
             }}
             variants={{
               initial: {
-                scaleY: 1,
-                y: bar.initialY,
+                scaleY: 0.6,
+                opacity: 0.7,
+                rotateX: 0,
               },
               hover: {
-                scaleY: 1.15,
-                y: 0,
+                scaleY: 1.4,
+                opacity: 1,
+                rotateX: -10,
                 transition: {
                   type: "spring",
-                  stiffness: 300,
-                  damping: 15,
-                  delay: i * 0.05,
+                  stiffness: 500,
+                  damping: 25,
+                  delay: bar.delay,
                 },
               },
             }}
+            animate={{
+              scaleY: [0.6, 1.1, 0.6],
+              opacity: [0.7, 1, 0.7],
+            }}
             transition={{
-              duration: 2 + i * 0.5,
-              repeat: Infinity,
-              repeatType: "mirror",
+              duration: 2.5 + i * 0.2,
+              repeat: Number.POSITIVE_INFINITY,
               ease: "easeInOut",
+              delay: i * 0.15,
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-neutral-600 via-neutral-800 to-neutral-900" />
-            <div className="absolute top-0 left-0 h-1/3 w-full rounded-t-full bg-white/5" />
+            <motion.div
+              className={cn(
+                "absolute inset-0 rounded-t-lg blur-sm",
+                `bg-gradient-to-t ${bar.color}`
+              )}
+              animate={{
+                opacity: [0.3, 0.8, 0.3],
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Number.POSITIVE_INFINITY,
+                delay: i * 0.1,
+              }}
+            />
+
+            <motion.div
+              className="absolute -top-2 left-1/2 w-1 h-1 bg-blue-300 rounded-full"
+              animate={{
+                y: [-5, -15, -5],
+                opacity: [0, 1, 0],
+                scale: [0.5, 1, 0.5],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Number.POSITIVE_INFINITY,
+                delay: i * 0.2,
+              }}
+            />
           </motion.div>
         ))}
       </motion.div>
@@ -61,55 +100,186 @@ const FlexboxPattern = () => {
 
 const FetchingPattern = () => {
   return (
-    <div className="absolute inset-0 h-full w-full">
-      <div className="absolute -top-1/4 left-1/2 h-[300px] w-[300px] -translate-x-1/4 -translate-y-1/2 transition-transform duration-700 ease-in-out group-hover:rotate-[-100deg] rotate-[50deg]">
-        {[...Array(3)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute inset-0"
-            style={{
-              scale: 1 - i * 0.2,
-              opacity: 1 - i * 0.4,
-            }}
-          >
-            {[...Array(9)].map((_, j) => (
-              <div
-                key={j}
-                className="absolute h-[50px] w-[50px] rounded-full bg-gradient-to-br from-neutral-800 to-neutral-900 opacity-90"
+    <div className="absolute inset-0 h-full w-full overflow-hidden">
+      <motion.div
+        className="absolute left-1/2 top-1/2 w-4 h-4 -translate-x-1/2 -translate-y-1/2 bg-blue-500 rounded-full shadow-lg"
+        animate={{
+          scale: [1, 1.5, 1],
+          opacity: [0.8, 1, 0.8],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Number.POSITIVE_INFINITY,
+        }}
+      />
+
+      {[...Array(4)].map((_, ring) => (
+        <motion.div
+          key={ring}
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          style={{
+            width: `${(ring + 2) * 20}px`,
+            height: `${(ring + 2) * 20}px`,
+          }}
+          animate={{
+            rotate: [0, 360],
+          }}
+          transition={{
+            duration: 8 + ring * 2,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "linear",
+          }}
+        >
+          <div className="relative w-full h-full rounded-full border border-blue-400/20">
+            {[...Array(ring + 3)].map((_, dot) => (
+              <motion.div
+                key={dot}
+                className="absolute w-2 h-2 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full shadow-sm"
                 style={{
                   top: "50%",
                   left: "50%",
-                  margin: "-25px",
-                  transform: `rotate(${j * 40}deg) translate(150px) rotate(-${j * 40}deg)`,
+                  transformOrigin: "1px 1px",
+                  transform: `rotate(${(dot * 360) / (ring + 3)}deg) translateY(-${(ring + 2) * 10}px)`,
+                }}
+                animate={{
+                  scale: [0.5, 1.2, 0.5],
+                  opacity: [0.4, 1, 0.4],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Number.POSITIVE_INFINITY,
+                  delay: dot * 0.1 + ring * 0.2,
                 }}
               />
             ))}
+
+            <motion.div
+              className="absolute inset-0 rounded-full border-2 border-blue-500/30"
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.3, 0.8, 0.3],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Number.POSITIVE_INFINITY,
+                delay: ring * 0.5,
+              }}
+            />
           </div>
-        ))}
-      </div>
+        </motion.div>
+      ))}
+
+      {[...Array(6)].map((_, stream) => (
+        <motion.div
+          key={stream}
+          className="absolute left-1/2 top-1/2 w-0.5 h-8 bg-gradient-to-t from-transparent via-blue-400 to-transparent"
+          style={{
+            transformOrigin: "center bottom",
+            transform: `rotate(${stream * 60}deg) translateY(-20px)`,
+          }}
+          animate={{
+            scaleY: [0, 1, 0],
+            opacity: [0, 1, 0],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Number.POSITIVE_INFINITY,
+            delay: stream * 0.3,
+          }}
+        />
+      ))}
     </div>
   );
 };
 
 const ExplorePattern = () => (
-  <motion.div
-    className="relative h-[7.5rem] grid grid-cols-2 gap-3 mb-auto w-1/2 mx-auto"
-    initial="hidden"
-    whileHover="visible"
-    transition={{ staggerChildren: 0.08 }}
-  >
-    {[...Array(4)].map((_, i) => (
+  <div className="absolute inset-0 flex items-center justify-center">
+    <motion.div
+      className="relative w-24 h-24"
+      initial="hidden"
+      whileHover="visible"
+    >
       <motion.div
-        key={i}
-        className="w-full h-full rounded-xl bg-neutral-700"
-        variants={{
-          hidden: { opacity: 0.6, scale: 0.9 },
-          visible: { opacity: 1, scale: 1 },
+        className="absolute left-1/2 top-1/2 w-6 h-6 -translate-x-1/2 -translate-y-1/2 bg-blue-500 rounded-full shadow-lg"
+        animate={{
+          rotate: [0, 360],
         }}
-        transition={{ duration: 0.2 }}
+        transition={{
+          duration: 10,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "linear",
+        }}
+      >
+        <div className="absolute inset-1 bg-blue-300 rounded-full" />
+        <div className="absolute top-0 left-1/2 w-0.5 h-2 bg-white -translate-x-1/2 -translate-y-1" />
+      </motion.div>
+
+      {[...Array(8)].map((_, path) => (
+        <motion.div
+          key={path}
+          className="absolute left-1/2 top-1/2 w-0.5 h-10 bg-gradient-to-t from-blue-500/50 to-transparent"
+          style={{
+            transformOrigin: "center bottom",
+            transform: `rotate(${path * 45}deg)`,
+          }}
+          animate={{
+            scaleY: [0.5, 1, 0.5],
+            opacity: [0.3, 0.8, 0.3],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Number.POSITIVE_INFINITY,
+            delay: path * 0.2,
+          }}
+        />
+      ))}
+
+      {[...Array(6)].map((_, node) => (
+        <motion.div
+          key={node}
+          className="absolute w-3 h-3 bg-blue-400 rounded-full shadow-sm"
+          style={{
+            top: "50%",
+            left: "50%",
+            transform: `rotate(${node * 60}deg) translateY(-35px) translateX(-6px)`,
+          }}
+          variants={{
+            hidden: {
+              scale: 0.6,
+              opacity: 0.4,
+            },
+            visible: {
+              scale: 1.2,
+              opacity: 1,
+            },
+          }}
+          animate={{
+            y: [0, -3, 0],
+            scale: [0.8, 1, 0.8],
+          }}
+          transition={{
+            duration: 2.5,
+            repeat: Number.POSITIVE_INFINITY,
+            delay: node * 0.3,
+          }}
+        >
+          <div className="absolute inset-0.5 bg-blue-200 rounded-full" />
+        </motion.div>
+      ))}
+
+      <motion.div
+        className="absolute inset-0 rounded-full border border-blue-400/20"
+        animate={{
+          scale: [1, 1.5, 1],
+          opacity: [0.5, 0, 0.5],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Number.POSITIVE_INFINITY,
+        }}
       />
-    ))}
-  </motion.div>
+    </motion.div>
+  </div>
 );
 
 const topicsData = [
@@ -119,9 +289,13 @@ const topicsData = [
       "From ideas to actual products — I build tools that help me learn and (hopefully) help others too.",
     href: "/projects",
     pattern: FlexboxPattern,
-    rotation: "lg:rotate-[5deg]",
+    icon: Code2,
+    rotation: "lg:rotate-[3deg]",
     zIndex: "z-30",
-    translateY: "lg:translate-y-0",
+    translateY: "lg:-translate-y-4",
+    translateX: "lg:translate-x-4",
+    gradient: "from-blue-500/20 via-blue-600/10 to-blue-700/5",
+    hoverGradient: "from-blue-400/30 via-blue-500/20 to-blue-600/10",
   },
   {
     title: "Reflect",
@@ -129,19 +303,27 @@ const topicsData = [
       "Writing helps me slow down and process what I'm learning, both in tech and life.",
     href: "/blog",
     pattern: FetchingPattern,
-    rotation: "lg:rotate-[-3deg]",
+    icon: PenTool,
+    rotation: "lg:rotate-[-2deg]",
     zIndex: "z-20",
-    translateY: "lg:translate-y-12",
+    translateY: "lg:translate-y-8",
+    translateX: "lg:-translate-x-2",
+    gradient: "from-blue-600/20 via-blue-700/10 to-blue-800/5",
+    hoverGradient: "from-blue-500/30 via-blue-600/20 to-blue-700/10",
   },
   {
     title: "Explore",
     subtitle:
-      "I’m curious about how technology intersects with culture, society, and power — and I'm learning as I go.",
-    href: "/blog",
+      "I'm curious about how technology intersects with culture, society, and power — and I'm learning as I go.",
+    href: "/about",
     pattern: ExplorePattern,
+    icon: Compass,
     rotation: "lg:rotate-[4deg]",
     zIndex: "z-10",
-    translateY: "lg:translate-y-0",
+    translateY: "lg:-translate-y-2",
+    translateX: "lg:translate-x-2",
+    gradient: "from-blue-400/20 via-blue-500/10 to-blue-600/5",
+    hoverGradient: "from-blue-300/30 via-blue-400/20 to-blue-500/10",
   },
 ];
 
@@ -150,38 +332,185 @@ const InteractiveCard = ({
   subtitle,
   href,
   pattern: Pattern,
+  icon: Icon,
   rotation,
   zIndex,
   translateY,
+  translateX,
+  gradient,
+  hoverGradient,
 }: (typeof topicsData)[0]) => {
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, y: 30 },
-        visible: { opacity: 1, y: 0 },
+        hidden: { opacity: 0, y: 60, scale: 0.8, rotateX: -15 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          rotateX: 0,
+          transition: {
+            type: "spring",
+            stiffness: 100,
+            damping: 20,
+            duration: 0.8,
+          },
+        },
       }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className={cn(" sm:w-80 w-100", rotation, zIndex, translateY)}
+      whileHover={{
+        y: -12,
+        scale: 1.05,
+        rotateX: 5,
+        rotateY: 5,
+        transition: {
+          type: "spring",
+          stiffness: 400,
+          damping: 25,
+        },
+      }}
+      className={cn("group w-80", rotation, zIndex, translateY, translateX)}
+      style={{ perspective: "1000px" }}
     >
       <Link
         href={href}
         className={cn(
-          "group aspect-square py-10 px-8 rounded-xl",
-          "bg-neutral-950 border border-neutral-900",
-          "text-left flex flex-col justify-end overflow-hidden",
-          "transition-all duration-300 hover:!border-zinc-700 hover:shadow-2xl hover:-translate-y-2"
+          "relative block aspect-square p-8 rounded-3xl overflow-hidden",
+          "bg-gradient-to-br from-neutral-900/90 via-neutral-950/95 to-black",
+          "border border-neutral-800/60 backdrop-blur-xl",
+          "text-left flex flex-col justify-end",
+          "transition-all duration-700 ease-out",
+          "hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/20",
+          "transform-gpu will-change-transform"
         )}
-        style={{
-          boxShadow: "0 0 60px 10px rgba(0, 0, 0, 0.1) inset",
-        }}
       >
-        <div className="relative sm:h-[7.5rem] h-[10rem] mb-auto">
+        <motion.div
+          className={cn(
+            "absolute inset-0 bg-gradient-to-br opacity-0",
+            gradient
+          )}
+          whileHover={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        />
+
+        <motion.div
+          className={cn(
+            "absolute inset-0 bg-gradient-to-br opacity-0",
+            hoverGradient
+          )}
+          whileHover={{ opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        />
+
+        <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_1px_1px,_white_1px,_transparent_0)] bg-[length:20px_20px]" />
+
+        <motion.div
+          className="absolute top-6 right-6 w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center"
+          animate={{
+            rotate: [0, 360],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            rotate: {
+              duration: 20,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "linear",
+            },
+            scale: { duration: 3, repeat: Number.POSITIVE_INFINITY },
+          }}
+        >
+          <Icon className="w-4 h-4 text-blue-400" />
+        </motion.div>
+
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-blue-400 rounded-full"
+            style={{
+              top: `${20 + i * 15}%`,
+              left: `${85 + i * 5}%`,
+            }}
+            animate={{
+              opacity: [0, 1, 0],
+              scale: [0.5, 1.5, 0.5],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Number.POSITIVE_INFINITY,
+              delay: i * 0.5,
+            }}
+          />
+        ))}
+
+        <div className="relative h-36 mb-auto overflow-hidden">
           <Pattern />
+
+          <motion.div
+            className="absolute inset-0 bg-gradient-radial from-blue-500/10 via-transparent to-transparent opacity-0"
+            whileHover={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          />
         </div>
-        <h2 className="text-2xl sm:text-3xl font-bold text-slate-50 underline decoration-transparent group-hover:decoration-current transition-colors duration-200">
-          {title}
-        </h2>
-        <p className="text-sm text-neutral-400 mt-2">{subtitle}</p>
+
+        <div className="relative z-10">
+          <motion.div
+            className="flex items-center gap-3 mb-3"
+            whileHover={{ x: 5 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Icon className="w-6 h-6 text-blue-400" />
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-50">
+              <span className="relative">
+                {title}
+                <motion.div
+                  className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full"
+                  initial={{ width: 0 }}
+                  whileHover={{ width: "100%" }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                />
+              </span>
+            </h2>
+          </motion.div>
+
+          <motion.p
+            className="text-sm text-neutral-400 leading-relaxed group-hover:text-neutral-300 transition-colors duration-500"
+            whileHover={{ x: 3 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            {subtitle}
+          </motion.p>
+        </div>
+
+        <motion.div
+          className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-500/5 via-transparent to-blue-600/5 opacity-0"
+          whileHover={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        />
+
+        <motion.div
+          className="absolute inset-0 rounded-3xl"
+          style={{
+            background:
+              "linear-gradient(45deg, transparent, blue, transparent)",
+            padding: "1px",
+            opacity: 0,
+          }}
+          whileHover={{ opacity: 0.3 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="w-full h-full rounded-3xl bg-neutral-950" />
+        </motion.div>
+
+        <motion.div
+          className="absolute top-4 right-4 w-2 h-2 rounded-full bg-blue-400/50"
+          animate={{
+            scale: [1, 1.5, 1],
+            opacity: [0.5, 1, 0.5],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Number.POSITIVE_INFINITY,
+          }}
+        />
       </Link>
     </motion.div>
   );
@@ -193,64 +522,134 @@ export function TopicsSection() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15,
+        staggerChildren: 0.3,
         delayChildren: 0.2,
       },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { y: 40, opacity: 0, scale: 0.9 },
     visible: {
       y: 0,
       opacity: 1,
+      scale: 1,
       transition: {
-        duration: 0.5,
-        ease: "easeOut",
+        duration: 0.8,
+        ease: [0.25, 0.46, 0.45, 0.94],
       },
     },
   };
 
   return (
-    <section className="bg-neutral-950 py-20 md:py-28">
+    <section className="relative py-24 md:py-36 overflow-hidden">
       <motion.div
-        className="container mx-auto px-4 md:px-6"
+        className="absolute top-20 left-10 w-2 h-2 bg-blue-500 rounded-full"
+        animate={{
+          y: [0, -20, 0],
+          opacity: [0.3, 1, 0.3],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Number.POSITIVE_INFINITY,
+        }}
+      />
+
+      <motion.div
+        className="absolute top-40 right-20 w-1 h-1 bg-blue-400 rounded-full"
+        animate={{
+          y: [0, -15, 0],
+          x: [0, 10, 0],
+          opacity: [0.5, 1, 0.5],
+        }}
+        transition={{
+          duration: 5,
+          repeat: Number.POSITIVE_INFINITY,
+          delay: 1,
+        }}
+      />
+
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-0.5 h-0.5 bg-blue-500 rounded-full"
+          style={{
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+          }}
+          animate={{
+            opacity: [0, 1, 0],
+            scale: [0, 1, 0],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Number.POSITIVE_INFINITY,
+            delay: i * 0.5,
+          }}
+        />
+      ))}
+
+      <motion.div
+        className="container mx-auto px-4 md:px-6 relative z-10"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
         variants={containerVariants}
       >
-        <div className="relative mx-auto mb-12 max-w-2xl text-center">
-          <motion.h2
+        <div className="relative mx-auto mb-20 max-w-4xl text-center">
+          <motion.div
             variants={itemVariants}
-            id="topics-heading"
-            className="font-handwriting text-2xl font-bold text-primary md:text-5xl"
+            className="relative inline-block mb-6"
           >
-            Things I Do
-          </motion.h2>
-          <div className="relative mt-1 inline-block">
-            <motion.h3
-              variants={itemVariants}
-              className="text-5xl font-extrabold tracking-tight text-primary md:text-6xl"
-            >
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <Sparkles className="w-6 h-6 text-blue-500" />
+              <h2 className="font-handwriting text-2xl font-bold md:text-4xl">
+                Things I Do
+              </h2>
+              <Sparkles className="w-6 h-6 text-blue-500" />
+            </div>
+            <motion.div
+              className="absolute -bottom-2 left-1/2 w-20 h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent rounded-full"
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              transition={{ delay: 0.8, duration: 1 }}
+            />
+          </motion.div>
+
+          <motion.h3
+            variants={itemVariants}
+            className="text-4xl md:text-7xl font-extrabold tracking-tight mb-8"
+          >
+            <span id="topics-section" className="text-foreground">
               One Thought at a Time
-            </motion.h3>
-          </div>
-          <motion.p
+            </span>
+          </motion.h3>
+
+          <motion.div
             variants={itemVariants}
-            className="mx-auto mt-8 max-w-lg text-base text-neutral-400"
+            className="flex items-center justify-center gap-4 mb-6"
           >
-            Coding, writing, and wandering through ideas — this is how I make
-            sense of the digital world.
-          </motion.p>
+            <Zap className="w-5 h-5 text-blue-500" />
+            <p className="max-w-2xl text-base md:text-lg text-neutral-400 leading-relaxed">
+              Coding, writing, and wandering through ideas — this is how I make
+              sense of the digital world.
+            </p>
+            <Globe className="w-5 h-5 text-blue-500" />
+          </motion.div>
         </div>
 
         <motion.div
           variants={containerVariants}
-          className="mt-10 mb-12 flex flex-col items-center gap-4 lg:flex-row lg:justify-center lg:gap-0 lg:space-x-[-1rem]"
+          className="flex flex-col items-center gap-8 lg:flex-row lg:justify-center lg:gap-0 lg:space-x-[-2rem]"
         >
-          {topicsData.map((topic) => (
-            <InteractiveCard key={topic.title} {...topic} />
+          {topicsData.map((topic, index) => (
+            <motion.div
+              key={topic.title}
+              variants={itemVariants}
+              custom={index}
+            >
+              <InteractiveCard {...topic} />
+            </motion.div>
           ))}
         </motion.div>
       </motion.div>
