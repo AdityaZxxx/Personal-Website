@@ -1,13 +1,15 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
   GraduationCap,
   Laptop,
   PencilLine,
+  Quote,
+  Star,
 } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -127,9 +129,11 @@ function getGroupedStaticTestimonials(): TestimonialType[][] {
 function TestimonialCard({
   testimonials,
   className,
+  index,
 }: {
   testimonials: TestimonialType[];
   className?: string;
+  index: number;
 }) {
   const [direction, setDirection] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -148,29 +152,35 @@ function TestimonialCard({
 
   useEffect(() => {
     if (testimonials.length > 1) {
-      const timer = setTimeout(() => {
-        handleNext();
-      }, 5000);
+      const timer = setTimeout(
+        () => {
+          handleNext();
+        },
+        6000 + index * 1000
+      );
       return () => clearTimeout(timer);
     }
-  }, [currentIndex, handleNext, testimonials.length]);
+  }, [currentIndex, handleNext, testimonials.length, index]);
 
   const activeTestimonial = testimonials[currentIndex];
 
-  const variants = {
+  const slideVariants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 10 : -10,
+      x: direction > 0 ? 30 : -30,
       opacity: 0,
+      scale: 0.95,
     }),
     center: {
       zIndex: 1,
       x: 0,
       opacity: 1,
+      scale: 1,
     },
     exit: (direction: number) => ({
       zIndex: 0,
-      x: direction < 0 ? 10 : -10,
+      x: direction < 0 ? 30 : -30,
       opacity: 0,
+      scale: 0.95,
     }),
   };
 
@@ -187,110 +197,178 @@ function TestimonialCard({
     }
   }, [activeTestimonial.context]);
 
+  const getContextColor = (context: string) => {
+    switch (context.toUpperCase()) {
+      case "AS A SOFTWARE DEVELOPER":
+        return "text-blue-500 bg-blue-500/10 border-blue-500/20";
+      case "AS A WRITER":
+        return "text-emerald-500 bg-emerald-500/10 border-emerald-500/20";
+      case "AS A MENTOR":
+        return "text-purple-500 bg-purple-500/10 border-purple-500/20";
+      default:
+        return "text-primary bg-primary/10 border-primary/20";
+    }
+  };
+
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 40, scale: 0.9 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{
+        duration: 0.6,
+        delay: index * 0.2,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      }}
+      whileHover={{
+        y: -8,
+        scale: 1.02,
+        transition: { duration: 0.3 },
+      }}
       className={cn(
-        "flex h-full flex-col justify-between rounded-xl border",
-        "border-neutral-200 dark:border-neutral-800",
-        "bg-primary-foreground text-card-foreground p-6 relative overflow-hidden",
-        "shadow-sm hover:shadow-md transition-shadow",
+        "group relative h-full overflow-hidden rounded-2xl border backdrop-blur-sm",
+        "border-neutral-200/50 dark:border-neutral-800/50",
+        "bg-gradient-to-br from-white/80 via-white/60 to-white/40",
+        "dark:from-neutral-900/80 dark:via-neutral-900/60 dark:to-neutral-900/40",
+        "shadow-lg hover:shadow-xl transition-all duration-500",
         className
       )}
     >
-      <div className="relative z-10 flex h-full flex-col justify-between">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-radial from-primary/10 to-transparent opacity-50" />
+
+      <motion.div
+        className="absolute top-6 right-6 text-primary/10"
+        animate={{
+          rotate: [0, 5, 0],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+        }}
+      >
+        <Quote className="w-8 h-8" />
+      </motion.div>
+
+      <div className="relative z-10 flex h-full flex-col justify-between p-8">
         <div>
-          <div className="flex items-center justify-between">
-            <p className="flex items-center gap-1.5 text-sm uppercase text-muted-foreground">
-              <Icon className="h-4 w-4" />
+          <div className="flex items-center justify-between mb-6">
+            <motion.div
+              className={cn(
+                "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider border",
+                getContextColor(activeTestimonial.context)
+              )}
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Icon className="h-3.5 w-3.5" />
               {activeTestimonial.context}
-            </p>
+            </motion.div>
+
             {testimonials.length > 1 && (
-              <div
-                className={cn(
-                  "flex items-center gap-0.5 rounded-md p-0.5 backdrop-blur-sm",
-                  "bg-neutral-100/50 dark:bg-neutral-800/50"
-                )}
-              >
-                <button
+              <div className="flex items-center gap-1 rounded-full bg-neutral-100/80 dark:bg-neutral-800/80 p-1 backdrop-blur-sm">
+                <motion.button
                   onClick={handlePrev}
-                  className={cn(
-                    "rounded p-0.5 transition-colors",
-                    "text-muted-foreground hover:text-foreground",
-                    "hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50"
-                  )}
+                  className="rounded-full p-2 text-muted-foreground transition-colors hover:text-foreground hover:bg-white/50 dark:hover:bg-neutral-700/50"
                   aria-label="Previous testimonial"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <ArrowLeft className="size-3.5" />
-                </button>
-                <button
+                  <ArrowLeft className="size-4" />
+                </motion.button>
+                <motion.button
                   onClick={handleNext}
-                  className={cn(
-                    "rounded p-0.5 transition-colors",
-                    "text-muted-foreground hover:text-foreground",
-                    "hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50"
-                  )}
+                  className="rounded-full p-2 text-muted-foreground transition-colors hover:text-foreground hover:bg-white/50 dark:hover:bg-neutral-700/50"
                   aria-label="Next testimonial"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <ArrowRight className="size-3.5" />
-                </button>
+                  <ArrowRight className="size-4" />
+                </motion.button>
               </div>
             )}
           </div>
 
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.blockquote
-              key={activeTestimonial._id}
-              variants={variants}
-              custom={direction}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.3 }}
-              className="mt-4 text-base leading-relaxed text-foreground"
-            >
-              {`"${activeTestimonial.quote}"`}
-            </motion.blockquote>
-          </AnimatePresence>
+          <div className="relative min-h-[120px]">
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.blockquote
+                key={activeTestimonial._id}
+                variants={slideVariants}
+                custom={direction}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  duration: 0.4,
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                }}
+                className="text-lg leading-relaxed text-foreground font-medium"
+              >
+                "{activeTestimonial.quote}"
+              </motion.blockquote>
+            </AnimatePresence>
+          </div>
         </div>
 
-        <div
-          className={cn(
-            "mt-10 pt-6",
-            "border-t border-neutral-200 dark:border-neutral-800"
-          )}
-        >
+        <div className="mt-8 pt-6 border-t border-neutral-200/50 dark:border-neutral-800/50">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTestimonial.author.name}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="flex items-center gap-3"
+              className="flex items-center gap-4"
             >
-              <Image
-                src={activeTestimonial.author.image.asset.url}
-                alt={
-                  activeTestimonial.author.image.alt ||
-                  activeTestimonial.author.name
-                }
-                width={36}
-                height={36}
-                className="rounded-full object-cover size-9"
-              />
+              <motion.div
+                className="relative"
+                whileHover={{ scale: 1.1 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Image
+                  src={
+                    activeTestimonial.author.image.asset.url ||
+                    "/placeholder.svg"
+                  }
+                  alt={
+                    activeTestimonial.author.image.alt ||
+                    activeTestimonial.author.name
+                  }
+                  width={48}
+                  height={48}
+                  className="rounded-full object-cover"
+                />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </motion.div>
+
               <div>
-                <p className="font-semibold text-foreground">
+                <p className="font-bold text-foreground text-base">
                   {activeTestimonial.author.name}
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground font-medium">
                   {activeTestimonial.author.role}
                 </p>
+              </div>
+
+              <div className="ml-auto flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: i * 0.1, duration: 0.3 }}
+                  >
+                    <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                  </motion.div>
+                ))}
               </div>
             </motion.div>
           </AnimatePresence>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -299,66 +377,114 @@ function TestimonialsView({
 }: {
   testimonialsByGroup: TestimonialType[][];
 }) {
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { y: 40, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      },
+    },
+  };
+
   return (
-    <section className="relative overflow-hidden bg-background py-20 md:py-28">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="relative mx-auto mb-12 max-w-2xl text-center">
-          <h2
-            className="text-4xl font-normal italic text-foreground md:text-6xl"
+    <section className="relative overflow-hidden bg-background py-24 md:py-32">
+      <motion.div
+        className="absolute top-20 left-10 w-2 h-2 bg-primary/20 rounded-full blur-sm"
+        animate={{
+          y: [0, -20, 0],
+          opacity: [0.3, 0.8, 0.3],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+        }}
+      />
+
+      <motion.div
+        className="absolute bottom-20 right-20 w-1 h-1 bg-primary/30 rounded-full"
+        animate={{
+          y: [0, -15, 0],
+          x: [0, 10, 0],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+          delay: 2,
+        }}
+      />
+
+      <motion.div
+        className="container mx-auto px-4 md:px-6"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
+        <motion.div
+          variants={itemVariants}
+          className="relative mx-auto mb-16 max-w-3xl text-center"
+        >
+          <motion.h2
+            className="text-4xl font-normal italic text-foreground md:text-6xl mb-4"
             style={{
               fontFamily: "Shadows Into Light",
               fontWeight: 600,
             }}
           >
             Some good words
-          </h2>
+          </motion.h2>
 
-          <svg
-            width="200"
-            height="100"
-            viewBox="0 0 268 97"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="absolute -right-20 top-12 hidden md:block"
-            aria-hidden="true"
+          <motion.p
+            variants={itemVariants}
+            className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed"
           >
-            <path
-              d="M265.521 2C249.521 11.4 231.521 24.8 221.021 34.5C201.521 52.5 198.021 82.5 198.521 95"
-              stroke="currentColor"
-              strokeOpacity="0.4"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeDasharray="4 6"
-            />
-            <path
-              d="M1 55.5C10.6 67.1 27.2 79.5 40 85C61.2 94.2 92.5 90.5 106.5 85C124.7 78.2 135.5 61.3333 141.5 50.5C150.3 34.3 161.833 16.6667 172.5 7C179.5 1.16667 190.3 -2.8 197 3"
-              stroke="currentColor"
-              strokeOpacity="0.4"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeDasharray="4 6"
-            />
-          </svg>
-        </div>
+            What AI assistants say about working with me across different
+            contexts
+          </motion.p>
+        </motion.div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 mt-20 relative max-w-5xl mx-auto">
+        <motion.div
+          variants={containerVariants}
+          className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto"
+        >
           {testimonialsByGroup.map((group, index) => (
-            <TestimonialCard
+            <motion.div
               key={group[0].context}
-              testimonials={group}
+              variants={itemVariants}
               className={cn(
                 "w-full h-full",
                 testimonialsByGroup.length === 3 &&
                   index === 0 &&
-                  "lg:-rotate-[2deg]",
+                  "lg:rotate-[-1deg] lg:-translate-y-4",
+                testimonialsByGroup.length === 3 &&
+                  index === 1 &&
+                  "lg:translate-y-4",
                 testimonialsByGroup.length === 3 &&
                   index === 2 &&
-                  "lg:rotate-[2deg]"
+                  "lg:rotate-[1deg] lg:-translate-y-2"
               )}
-            />
+            >
+              <TestimonialCard testimonials={group} index={index} />
+            </motion.div>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }
