@@ -17,19 +17,6 @@ const imageFields = groq`
   }
 `;
 
-const videoFields = groq`
-  videoFile->{
-    asset->{
-      _id,
-      url,
-      "width": metadata.dimensions.width,
-      "height": metadata.dimensions.height
-    }
-  },
-  caption,
-  "lqip": asset->metadata.lqip,
-  `;
-
 const postCardFields = groq`
   _id,
   title,
@@ -128,7 +115,19 @@ export async function getPostBySlug(slug: string) {
       "slug": slug.current,
       excerpt,
       "mainImage": mainImage { ${imageFields} },
-      body,
+      body[]{
+        ...,
+        _type == "image" => { ${imageFields} },
+        _type == "videoEmbed" => {
+          ...,
+          video[]{
+            ...,
+            video{
+              asset->
+            }
+          }
+        }
+      },
       publishedAt,
       _updatedAt,
       "viewCount": coalesce(viewCount, 0),
@@ -345,9 +344,14 @@ export async function getAboutPageData() {
       },
       timelineEvents[]{
         _key,
-        year,
-        description
-      }
+        title,
+        date,
+        description,
+        location,
+        icon,
+        highlight
+      },
+      aboutWebsite
     }`
   );
 }

@@ -1,5 +1,5 @@
 import { PlayIcon } from "@sanity/icons";
-import { defineField, defineType } from "sanity";
+import { defineType } from "sanity";
 
 export default defineType({
   name: "videoEmbed",
@@ -7,36 +7,42 @@ export default defineType({
   type: "object",
   icon: PlayIcon,
   fields: [
-    defineField({
-      name: "videoFile",
-      title: "Video File",
-      type: "file",
-      options: {
-        accept: "video/*",
-      },
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "caption",
-      title: "Caption",
-      type: "string",
-      description:
-        "Short description of the video will be displayed below the video.",
-    }),
-    defineField({
-      name: "autoplay",
-      title: "Autoplay",
-      type: "boolean",
-      description: "Enable autoplay for the video.",
-      initialValue: false,
-    }),
-    defineField({
-      name: "loop",
-      title: "Loop",
-      type: "boolean",
-      description: "Enable looping for the video.",
-      initialValue: false,
-    }),
+    {
+      name: "video",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "videoBlock",
+          fields: [
+            {
+              name: "video",
+              type: "mux.video",
+              title: "Video Asset",
+            },
+            {
+              name: "caption",
+              type: "string",
+              title: "Caption",
+            },
+            {
+              name: "autoplay",
+              title: "Autoplay",
+              type: "boolean",
+              description: "Enable autoplay for the video.",
+              initialValue: false,
+            },
+            {
+              name: "loop",
+              title: "Loop",
+              type: "boolean",
+              description: "Enable looping for the video.",
+              initialValue: false,
+            },
+          ],
+        },
+      ],
+    },
   ],
   preview: {
     select: {

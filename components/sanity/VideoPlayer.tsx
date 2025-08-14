@@ -1,40 +1,35 @@
 "use client";
 
-import { urlForFile } from "@/lib/sanity/file";
 import Video from "next-video";
 
-interface VideoEmbedValue {
-  videoFile: {
-    asset: {
-      _ref: string;
-    };
-  };
-  caption?: string;
-  autoplay?: boolean;
-  loop?: boolean;
-}
-
-export function VideoPlayer({ value }: { value: VideoEmbedValue }) {
-  if (!value?.videoFile?.asset?._ref) {
+export function VideoPlayer({ value }: { value: any }) {
+  if (!value || !value.video || value.video.length === 0) {
     return <p>Video not found.</p>;
   }
 
-  const videoUrl = urlForFile(value.videoFile);
+  const videoBlock = value.video[0];
+  if (!videoBlock || !videoBlock.video || !videoBlock.video.asset) {
+    return <p>Video asset not found.</p>;
+  }
+
+  const playbackId = videoBlock.video.asset.playbackId;
+  const src = `https://stream.mux.com/${playbackId}.m3u8`;
 
   return (
     <figure className="my-8">
       <div className="overflow-hidden rounded-lg border border-background">
         <Video
-          src={videoUrl}
+          src={src}
           className="h-auto w-full"
-          autoPlay={value.autoplay}
-          loop={value.loop}
-          muted={value.autoplay}
+          poster={`https://image.mux.com/${playbackId}/thumbnail.jpg`}
+          autoPlay={videoBlock.autoplay}
+          loop={videoBlock.loop}
+          muted={videoBlock.autoplay}
         />
       </div>
-      {value.caption && (
+      {videoBlock.caption && (
         <figcaption className="mt-3 text-center text-sm text-muted-foreground">
-          {value.caption}
+          {videoBlock.caption}
         </figcaption>
       )}
     </figure>
