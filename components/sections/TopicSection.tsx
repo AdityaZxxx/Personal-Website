@@ -37,61 +37,29 @@ const FlexboxPattern = () => {
               initial: {
                 scaleY: 0.6,
                 opacity: 0.7,
-                rotateX: 0,
               },
               hover: {
-                scaleY: 1.4,
+                scaleY: 1,
                 opacity: 1,
-                rotateX: -10,
                 transition: {
                   type: "spring",
-                  stiffness: 500,
-                  damping: 25,
+                  stiffness: 300,
+                  damping: 20,
                   delay: bar.delay,
                 },
               },
             }}
             animate={{
-              scaleY: [0.6, 1.1, 0.6],
+              scaleY: [0.6, 1, 0.6],
               opacity: [0.7, 1, 0.7],
             }}
             transition={{
-              duration: 2.5 + i * 0.2,
+              duration: 1.5 + i * 0.2,
               repeat: Number.POSITIVE_INFINITY,
               ease: "easeInOut",
-              delay: i * 0.15,
+              delay: i * 0.1,
             }}
-          >
-            <motion.div
-              className={cn(
-                "absolute inset-0 rounded-t-lg blur-sm",
-                `bg-gradient-to-t ${bar.color}`
-              )}
-              animate={{
-                opacity: [0.3, 0.8, 0.3],
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Number.POSITIVE_INFINITY,
-                delay: i * 0.1,
-              }}
-            />
-
-            <motion.div
-              className="absolute -top-2 left-1/2 w-1 h-1 bg-blue-300 rounded-full"
-              animate={{
-                y: [-5, -15, -5],
-                opacity: [0, 1, 0],
-                scale: [0.5, 1, 0.5],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Number.POSITIVE_INFINITY,
-                delay: i * 0.2,
-              }}
-            />
-          </motion.div>
+          />
         ))}
       </motion.div>
     </div>
@@ -343,7 +311,7 @@ const InteractiveCard = ({
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, y: 60, scale: 0.8, rotateX: -15 },
+        hidden: { opacity: 0, y: 50, scale: 0.9, rotateX: -10 },
         visible: {
           opacity: 1,
           y: 0,
@@ -351,25 +319,23 @@ const InteractiveCard = ({
           rotateX: 0,
           transition: {
             type: "spring",
-            stiffness: 100,
-            damping: 20,
-            duration: 0.8,
+            stiffness: 120,
+            damping: 25,
+            duration: 0.5,
           },
         },
       }}
       whileHover={{
-        y: -12,
-        scale: 1.05,
-        rotateX: 5,
-        rotateY: 5,
+        y: -8,
+        scale: 1.02,
         transition: {
           type: "spring",
-          stiffness: 400,
-          damping: 25,
+          stiffness: 350,
+          damping: 20,
         },
       }}
       className={cn("group w-80", rotation, zIndex, translateY, translateX)}
-      style={{ perspective: "1000px" }}
+      style={{ perspective: "800px" }}
     >
       <Link
         href={href}
@@ -378,8 +344,8 @@ const InteractiveCard = ({
           "bg-gradient-to-br from-neutral-900/90 via-neutral-950/95 to-black",
           "border border-neutral-800/60 backdrop-blur-xl",
           "text-left flex flex-col justify-end",
-          "transition-all duration-700 ease-out",
-          "hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/20",
+          "transition-all duration-300 ease-in-out",
+          "hover:border-blue-500/30 hover:shadow-xl hover:shadow-blue-500/15",
           "transform-gpu will-change-transform"
         )}
       >
@@ -389,7 +355,7 @@ const InteractiveCard = ({
             gradient
           )}
           whileHover={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.3 }}
         />
 
         <motion.div
@@ -398,65 +364,31 @@ const InteractiveCard = ({
             hoverGradient
           )}
           whileHover={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
+          transition={{ duration: 0.2, delay: 0.05 }}
         />
 
-        <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_1px_1px,_white_1px,_transparent_0)] bg-[length:20px_20px]" />
+        <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(circle_at_1px_1px,_white_1px,_transparent_0)] bg-[length:15px_15px]" />
 
         <motion.div
           className="absolute top-6 right-6 w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center"
           animate={{
-            rotate: [0, 360],
-            scale: [1, 1.1, 1],
+            rotate: 360,
           }}
           transition={{
-            rotate: {
-              duration: 20,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            },
-            scale: { duration: 3, repeat: Number.POSITIVE_INFINITY },
+            duration: 15,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "linear",
           }}
         >
           <Icon className="w-4 h-4 text-blue-400" />
         </motion.div>
 
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-blue-400 rounded-full"
-            style={{
-              top: `${20 + i * 15}%`,
-              left: `${85 + i * 5}%`,
-            }}
-            animate={{
-              opacity: [0, 1, 0],
-              scale: [0.5, 1.5, 0.5],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Number.POSITIVE_INFINITY,
-              delay: i * 0.5,
-            }}
-          />
-        ))}
-
         <div className="relative h-36 mb-auto overflow-hidden">
           <Pattern />
-
-          <motion.div
-            className="absolute inset-0 bg-gradient-radial from-blue-500/10 via-transparent to-transparent opacity-0"
-            whileHover={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          />
         </div>
 
         <div className="relative z-10">
-          <motion.div
-            className="flex items-center gap-3 mb-3"
-            whileHover={{ x: 5 }}
-            transition={{ duration: 0.3 }}
-          >
+          <div className="flex items-center gap-3 mb-3">
             <Icon className="w-6 h-6 text-blue-400" />
             <h2 className="text-2xl sm:text-3xl font-bold text-slate-50">
               <span className="relative">
@@ -465,51 +397,21 @@ const InteractiveCard = ({
                   className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full"
                   initial={{ width: 0 }}
                   whileHover={{ width: "100%" }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                 />
               </span>
             </h2>
-          </motion.div>
+          </div>
 
-          <motion.p
-            className="text-sm text-neutral-400 leading-relaxed group-hover:text-neutral-300 transition-colors duration-500"
-            whileHover={{ x: 3 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
-          >
+          <p className="text-sm text-neutral-400 leading-relaxed group-hover:text-neutral-300 transition-colors duration-300">
             {subtitle}
-          </motion.p>
+          </p>
         </div>
 
         <motion.div
           className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-500/5 via-transparent to-blue-600/5 opacity-0"
           whileHover={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        />
-
-        <motion.div
-          className="absolute inset-0 rounded-3xl"
-          style={{
-            background:
-              "linear-gradient(45deg, transparent, blue, transparent)",
-            padding: "1px",
-            opacity: 0,
-          }}
-          whileHover={{ opacity: 0.3 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="w-full h-full rounded-3xl bg-neutral-950" />
-        </motion.div>
-
-        <motion.div
-          className="absolute top-4 right-4 w-2 h-2 rounded-full bg-blue-400/50"
-          animate={{
-            scale: [1, 1.5, 1],
-            opacity: [0.5, 1, 0.5],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Number.POSITIVE_INFINITY,
-          }}
+          transition={{ duration: 0.3 }}
         />
       </Link>
     </motion.div>
@@ -522,125 +424,74 @@ export function TopicsSection() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3,
-        delayChildren: 0.2,
+        staggerChildren: 0.2,
+        delayChildren: 0.1,
       },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { y: 40, opacity: 0, scale: 0.9 },
+    hidden: { y: 30, opacity: 0, scale: 0.95 },
     visible: {
       y: 0,
       opacity: 1,
       scale: 1,
       transition: {
-        duration: 0.8,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        duration: 0.5,
+        ease: "easeOut",
       },
     },
   };
 
   return (
-    <section className="relative py-24 md:py-36 overflow-hidden">
-      <motion.div
-        className="absolute top-20 left-10 w-2 h-2 bg-blue-500 rounded-full"
-        animate={{
-          y: [0, -20, 0],
-          opacity: [0.3, 1, 0.3],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Number.POSITIVE_INFINITY,
-        }}
-      />
-
-      <motion.div
-        className="absolute top-40 right-20 w-1 h-1 bg-blue-400 rounded-full"
-        animate={{
-          y: [0, -15, 0],
-          x: [0, 10, 0],
-          opacity: [0.5, 1, 0.5],
-        }}
-        transition={{
-          duration: 5,
-          repeat: Number.POSITIVE_INFINITY,
-          delay: 1,
-        }}
-      />
-
-      {[...Array(6)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-0.5 h-0.5 bg-blue-500 rounded-full"
-          style={{
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            opacity: [0, 1, 0],
-            scale: [0, 1, 0],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Number.POSITIVE_INFINITY,
-            delay: i * 0.5,
-          }}
-        />
-      ))}
-
+    <section
+      id="topics-section"
+      className="relative py-24 md:py-36 overflow-hidden"
+    >
       <motion.div
         className="container mx-auto px-4 md:px-6 relative z-10"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.3 }}
         variants={containerVariants}
       >
-        <div className="relative mx-auto mb-20 max-w-4xl text-center">
+        <div className="relative mx-auto mb-16 max-w-3xl text-center">
           <motion.div
             variants={itemVariants}
-            className="relative inline-block mb-6"
+            className="relative inline-block mb-4"
           >
             <div className="flex items-center justify-center gap-3 mb-2">
-              <Sparkles className="w-6 h-6 text-blue-500" />
-              <h2 className="font-handwriting text-2xl font-bold md:text-4xl">
+              <Sparkles className="w-5 h-5 text-blue-500" />
+              <h2 className="font-handwriting text-2xl font-bold md:text-3xl">
                 Things I Do
               </h2>
-              <Sparkles className="w-6 h-6 text-blue-500" />
+              <Sparkles className="w-5 h-5 text-blue-500" />
             </div>
-            <motion.div
-              className="absolute -bottom-2 left-1/2 w-20 h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent rounded-full"
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              transition={{ delay: 0.8, duration: 1 }}
-            />
           </motion.div>
 
           <motion.h3
             variants={itemVariants}
-            className="text-4xl md:text-7xl font-extrabold tracking-tight mb-8"
+            className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6"
           >
-            <span id="topics-section" className="text-foreground">
-              One Thought at a Time
-            </span>
+            <span className="text-foreground">One Thought at a Time</span>
           </motion.h3>
 
           <motion.div
             variants={itemVariants}
-            className="flex items-center justify-center gap-4 mb-6"
+            className="flex items-center justify-center gap-3"
           >
-            <Zap className="w-5 h-5 text-blue-500" />
-            <p className="max-w-2xl text-base md:text-lg text-neutral-400 leading-relaxed">
+            <Zap className="w-4 h-4 text-blue-500" />
+            <p className="max-w-xl text-base md:text-lg text-muted-foreground leading-relaxed">
               Coding, writing, and wandering through ideas — this is how I make
               sense of the digital world.
             </p>
-            <Globe className="w-5 h-5 text-blue-500" />
+            <Globe className="w-4 h-4 text-blue-500" />
           </motion.div>
         </div>
 
         <motion.div
           variants={containerVariants}
-          className="flex flex-col items-center gap-8 lg:flex-row lg:justify-center lg:gap-0 lg:space-x-[-2rem]"
+          className="flex flex-col items-center gap-8 lg:flex-row lg:justify-center lg:gap-0 lg:space-x-[-1rem]"
         >
           {topicsData.map((topic, index) => (
             <motion.div
