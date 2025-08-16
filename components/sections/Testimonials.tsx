@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { AnimatePresence, motion, Variants } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
@@ -19,10 +19,7 @@ export type TestimonialType = {
   author: {
     name: string;
     role: string;
-    image: {
-      asset: { url: string };
-      alt: string;
-    };
+    image: { asset: { url: string }; alt: string };
   };
   context: string;
   quote: string;
@@ -51,10 +48,7 @@ const allTestimonials: TestimonialType[] = [
     author: {
       name: "ChatGPT",
       role: "from OpenAI",
-      image: {
-        asset: { url: "/ai-logo/openai.webp" },
-        alt: "ChatGPT Logo",
-      },
+      image: { asset: { url: "/ai-logo/openai.webp" }, alt: "ChatGPT Logo" },
     },
   },
   {
@@ -65,10 +59,7 @@ const allTestimonials: TestimonialType[] = [
     author: {
       name: "Grok",
       role: "from xAI",
-      image: {
-        asset: { url: "/ai-logo/grok.webp" },
-        alt: "Grok Logo",
-      },
+      image: { asset: { url: "/ai-logo/grok.webp" }, alt: "Grok Logo" },
     },
   },
   {
@@ -135,8 +126,8 @@ function TestimonialCard({
   className?: string;
   index: number;
 }) {
-  const [direction, setDirection] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
 
   const handleNext = useCallback(() => {
     setDirection(1);
@@ -156,33 +147,13 @@ function TestimonialCard({
         () => {
           handleNext();
         },
-        6000 + index * 1000
+        5000 + index * 500
       );
       return () => clearTimeout(timer);
     }
   }, [currentIndex, handleNext, testimonials.length, index]);
 
   const activeTestimonial = testimonials[currentIndex];
-
-  const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 30 : -30,
-      opacity: 0,
-      scale: 0.95,
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-      scale: 1,
-    },
-    exit: (direction: number) => ({
-      zIndex: 0,
-      x: direction < 0 ? 30 : -30,
-      opacity: 0,
-      scale: 0.95,
-    }),
-  };
 
   const Icon = useMemo(() => {
     switch (activeTestimonial.context.toUpperCase()) {
@@ -210,158 +181,128 @@ function TestimonialCard({
     }
   };
 
+  // Animation variants using 'x' and direction for horizontal movement
+  const slideVariants: Variants = {
+    initial: (direction: number) => ({
+      opacity: 0,
+      x: direction > 0 ? 20 : -20,
+    }),
+    animate: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.3, ease: "easeOut" },
+    },
+    exit: (direction: number) => ({
+      opacity: 0,
+      x: direction < 0 ? 20 : -20,
+      transition: { duration: 0.3, ease: "easeIn" },
+    }),
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40, scale: 0.9 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{
-        duration: 0.6,
-        delay: index * 0.2,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      }}
-      whileHover={{
-        y: -8,
-        scale: 1.02,
-        transition: { duration: 0.3 },
-      }}
+      transition={{ duration: 0.3, delay: index * 0.1, ease: "easeOut" }}
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
       className={cn(
         "group relative h-full overflow-hidden rounded-2xl border backdrop-blur-sm",
         "border-neutral-200/50 dark:border-neutral-800/50",
         "bg-gradient-to-br from-white/80 via-white/60 to-white/40",
         "dark:from-neutral-900/80 dark:via-neutral-900/60 dark:to-neutral-900/40",
-        "shadow-lg hover:shadow-xl transition-all duration-500",
+        "shadow-md hover:shadow-lg transition-shadow duration-300",
         className
       )}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-radial from-primary/10 to-transparent opacity-50" />
-
-      <motion.div
-        className="absolute top-6 right-6 text-primary/10"
-        animate={{
-          rotate: [0, 5, 0],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
-        }}
-      >
+      <div className="absolute top-6 right-6 text-primary/10">
         <Quote className="w-8 h-8" />
-      </motion.div>
-
-      <div className="relative z-10 flex h-full flex-col justify-between p-8">
+      </div>
+      <div className="relative z-10 flex h-full flex-col justify-between p-6 md:p-8">
         <div>
-          <div className="flex items-center justify-between mb-6">
-            <motion.div
+          <div className="flex items-center justify-between mb-4">
+            <div
               className={cn(
-                "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider border",
+                "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider border transition-colors duration-300",
                 getContextColor(activeTestimonial.context)
               )}
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
             >
-              <Icon className="h-3.5 w-3.5" />
-              {activeTestimonial.context}
-            </motion.div>
-
+              <Icon className="h-3.5 w-3.5" /> {activeTestimonial.context}
+            </div>
             {testimonials.length > 1 && (
               <div className="flex items-center gap-1 rounded-full bg-neutral-100/80 dark:bg-neutral-800/80 p-1 backdrop-blur-sm">
-                <motion.button
+                <button
                   onClick={handlePrev}
                   className="rounded-full p-2 text-muted-foreground transition-colors hover:text-foreground hover:bg-white/50 dark:hover:bg-neutral-700/50"
                   aria-label="Previous testimonial"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
                 >
                   <ArrowLeft className="size-4" />
-                </motion.button>
-                <motion.button
+                </button>
+                <button
                   onClick={handleNext}
                   className="rounded-full p-2 text-muted-foreground transition-colors hover:text-foreground hover:bg-white/50 dark:hover:bg-neutral-700/50"
                   aria-label="Next testimonial"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
                 >
                   <ArrowRight className="size-4" />
-                </motion.button>
+                </button>
               </div>
             )}
           </div>
-
-          <div className="relative min-h-[120px]">
+          <div className="relative min-h-[140px] md:min-h-[120px]">
             <AnimatePresence mode="wait" custom={direction}>
               <motion.blockquote
                 key={activeTestimonial._id}
-                variants={slideVariants}
                 custom={direction}
-                initial="enter"
-                animate="center"
+                variants={slideVariants}
+                initial="initial"
+                animate="animate"
                 exit="exit"
-                transition={{
-                  duration: 0.4,
-                  ease: [0.25, 0.46, 0.45, 0.94],
-                }}
-                className="text-lg leading-relaxed text-foreground font-medium"
+                className="text-base leading-relaxed text-foreground font-medium"
               >
-                "{activeTestimonial.quote}"
+                “{activeTestimonial.quote}”
               </motion.blockquote>
             </AnimatePresence>
           </div>
         </div>
-
-        <div className="mt-8 pt-6 border-t border-neutral-200/50 dark:border-neutral-800/50">
-          <AnimatePresence mode="wait">
+        <div className="mt-6 pt-4 border-t border-neutral-200/50 dark:border-neutral-800/50">
+          <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={activeTestimonial.author.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
+              custom={direction}
+              variants={slideVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
               className="flex items-center gap-4"
             >
-              <motion.div
-                className="relative"
-                whileHover={{ scale: 1.1 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Image
-                  src={
-                    activeTestimonial.author.image.asset.url ||
-                    "/placeholder.svg"
-                  }
-                  alt={
-                    activeTestimonial.author.image.alt ||
-                    activeTestimonial.author.name
-                  }
-                  width={48}
-                  height={48}
-                  className="rounded-full object-cover"
-                />
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </motion.div>
-
+              <Image
+                src={
+                  activeTestimonial.author.image.asset.url || "/placeholder.svg"
+                }
+                alt={
+                  activeTestimonial.author.image.alt ||
+                  activeTestimonial.author.name
+                }
+                width={40}
+                height={40}
+                className="rounded-full object-cover"
+              />
               <div>
-                <p className="font-bold text-foreground text-base">
+                <p className="font-bold text-foreground text-sm">
                   {activeTestimonial.author.name}
                 </p>
-                <p className="text-sm text-muted-foreground font-medium">
+                <p className="text-xs text-muted-foreground font-medium">
                   {activeTestimonial.author.role}
                 </p>
               </div>
-
               <div className="ml-auto flex gap-0.5">
                 {[...Array(5)].map((_, i) => (
-                  <motion.div
+                  <Star
                     key={i}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: i * 0.1, duration: 0.3 }}
-                  >
-                    <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                  </motion.div>
+                    className="w-3 h-3 fill-yellow-400 text-yellow-400"
+                  />
                 ))}
               </div>
             </motion.div>
@@ -377,113 +318,50 @@ function TestimonialsView({
 }: {
   testimonialsByGroup: TestimonialType[][];
 }) {
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants: Variants = {
-    hidden: { y: 40, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      },
-    },
-  };
-
   return (
-    <section className="relative overflow-hidden bg-background py-24 md:py-32">
+    <section className="relative overflow-hidden bg-background py-20 md:py-28">
+      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_left,_rgba(var(--primary-rgb),0.05),_transparent_30%)]" />
+      <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_bottom_right,_rgba(var(--primary-rgb),0.05),_transparent_30%)]" />
       <motion.div
-        className="absolute top-20 left-10 w-2 h-2 bg-primary/20 rounded-full blur-sm"
-        animate={{
-          y: [0, -20, 0],
-          opacity: [0.3, 0.8, 0.3],
-        }}
-        transition={{
-          duration: 6,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
-        }}
-      />
-
-      <motion.div
-        className="absolute bottom-20 right-20 w-1 h-1 bg-primary/30 rounded-full"
-        animate={{
-          y: [0, -15, 0],
-          x: [0, 10, 0],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
-          delay: 2,
-        }}
-      />
-
-      <motion.div
-        className="container mx-auto px-4 md:px-6"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.5 }}
+        className="container mx-auto px-4 md:px-6"
       >
-        <motion.div
-          variants={itemVariants}
-          className="relative mx-auto mb-16 max-w-3xl text-center"
-        >
-          <motion.h2
-            className="text-4xl font-normal italic text-foreground md:text-6xl mb-4"
-            style={{
-              fontFamily: "Shadows Into Light",
-              fontWeight: 600,
-            }}
+        <div className="relative mx-auto mb-12 max-w-3xl text-center">
+          <h2
+            className="text-4xl font-normal italic text-foreground md:text-5xl mb-4"
+            style={{ fontFamily: "'Shadows Into Light', cursive" }}
           >
             Some good words
-          </motion.h2>
-
-          <motion.p
-            variants={itemVariants}
-            className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed"
-          >
+          </h2>
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             What AI assistants say about working with me across different
-            contexts
-          </motion.p>
-        </motion.div>
-
-        <motion.div
-          variants={containerVariants}
-          className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto"
-        >
+            contexts.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
           {testimonialsByGroup.map((group, index) => (
-            <motion.div
+            <div
               key={group[0].context}
-              variants={itemVariants}
               className={cn(
                 "w-full h-full",
                 testimonialsByGroup.length === 3 &&
                   index === 0 &&
-                  "lg:rotate-[-1deg] lg:-translate-y-4",
+                  "lg:rotate-[-1deg] lg:-translate-y-2",
                 testimonialsByGroup.length === 3 &&
                   index === 1 &&
-                  "lg:translate-y-4",
+                  "lg:translate-y-2",
                 testimonialsByGroup.length === 3 &&
                   index === 2 &&
-                  "lg:rotate-[1deg] lg:-translate-y-2"
+                  "lg:rotate-[1deg]"
               )}
             >
               <TestimonialCard testimonials={group} index={index} />
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </motion.div>
     </section>
   );
